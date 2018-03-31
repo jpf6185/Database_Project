@@ -1,16 +1,33 @@
 import java.util.ArrayList;
 
 public class CapstoneInfo{
-
+    // fields of the Capstone_Info Table on
     private String CapstoneID;
     private String LatestDate;
     private String PlagiarismScore;
     private String Grade;
     private String DefenseDate;
-    public CapstoneInfo(String _CapstoneID){
-        CapstoneID=_CapstoneID;
-    }
+    // Arraylist of Capstone Versions associeated with this paticular capstone;
+    private ArrayList<CapstoneVersion> Versions;
 
+    //default constructor;
+    public CapstoneInfo(){
+        Versions=new ArrayList<CapstoneVersion>();
+    }
+    // constructor with both the bare minum of info as well as one for all atributes
+    public CapstoneInfo(String _CapstoneID) {
+        CapstoneID = _CapstoneID;
+        Versions=new ArrayList<CapstoneVersion>();
+    }
+    public CapstoneInfo(String capstoneID, String latestDate, String plagiarismScore, String grade, String defenseDate) {
+        CapstoneID = capstoneID;
+        LatestDate = latestDate;
+        PlagiarismScore = plagiarismScore;
+        Grade = grade;
+        DefenseDate = defenseDate;
+        Versions=new ArrayList<CapstoneVersion>();
+    }
+    // acessors and mutators
     public String getCapstoneID() {
         return CapstoneID;
     }
@@ -49,5 +66,12 @@ public class CapstoneInfo{
 
     public void setDefenseDate(String defenseDate) {
         DefenseDate = defenseDate;
+    }
+    public void addVersion(CapstoneVersion _Version){
+        Versions.add(_Version);
+    }
+
+    public ArrayList<CapstoneVersion>(){
+        return Versions;
     }
 }
