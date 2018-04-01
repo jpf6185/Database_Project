@@ -36,10 +36,25 @@ public class CapstoneTrackerServer {
             System.out.println("An error occured attempting to get the info on a capstone");
             return null;
         }
-            try
-            for (ArrayList<String> r : Values) {
-            }
-            return null;
+        try{
+            // sets the lattest date in outobj
+            outObj.setLatestDate(Values.get(0).get(1));
+            // sets the plagerism score
+            outObj.setPlagiarismScore(Values.get(0).get(2));
+            // sets the grade
+            outObj.setGrade(Values.get(0).get(3));
+            // sets the defenseDAte
+            outObj.setDefenseDate(Values.get(0).get(4));
+            // object to map to the capstone version table
+            CapstoneVersion outObj2=new CapstoneVersion(outObj.getCapstoneID(),outObj.getLatestDate());
+            // adds outobj2 to outobj.
+            outObj.addVersion(outObj2);
+            outObj2.setDescription();
+            
+        }
+        catch(Exception E){
+
+        }
 
 
     }
