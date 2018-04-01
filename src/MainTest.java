@@ -15,11 +15,7 @@ public class MainTest{
      //Equipment Object 
      CapstoneTrackerServer s= new CapstoneTrackerServer();
      CapstoneInfo i=new CapstoneInfo("1");
-     i=s.GetCapstoneInfo(i);
-     System.out.println(i.getCapstoneID());
-     System.out.println(i.getDefenseDate());
-     ArrayList<CapstoneVersion> list=i.GetVersions();
-     CapstoneVersion cv=list.get(0);
-     System.out.println(cv.getTitle());
+     i=s.GetCapstoneVersions(i);
+     System.out.println(i.GetVersions().toString());
    }
 }

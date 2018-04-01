@@ -7,19 +7,29 @@ public class CapstoneVersion{
     private String Title;
     private String Description;
     private String FilePath;
+    private String Type;
 
         public CapstoneVersion(String _CapstoneID,String _Date){
             Date=_Date;
             CapstoneID=_CapstoneID;
         }
 
-    public CapstoneVersion(String date, String capstoneID, String status, String title, String description, String filePath) {
+    public CapstoneVersion(String date, String capstoneID, String status, String title, String description, String filePath,String type) {
         Date = date;
         CapstoneID = capstoneID;
         Status = status;
         Title = title;
         Description = description;
         FilePath = filePath;
+        Type=type;
+    }
+
+    public String getType() {
+        return Type;
+    }
+
+    public void setType(String type) {
+        Type = type;
     }
 
     public String getFilePath() {
