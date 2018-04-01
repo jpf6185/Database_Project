@@ -71,7 +71,7 @@ public class CapstoneInfo{
         Versions.add(_Version);
     }
 
-    public ArrayList<CapstoneVersion>(){
+    public ArrayList<CapstoneVersion> GetVersions(){
         return Versions;
     }
 }

@@ -14,11 +14,11 @@ public class MySQLDatabase
     
    //Attributes 
    String sql;
-   String uri = "jdbc:mysql://localhost/travel?autoReconnect=true&useSSL=false";
+   String uri = "jdbc:mysql://localhost/capstone_tracker?autoReconnect=true&useSSL=false";
    String driver = "com.mysql.jdbc.Driver";
    String user = "root";
-   String password = "student";
-   
+   //String password = "student";
+   String password="L3gok!113O3";
    Connection conn = null;        
    Statement stmt = null; 
    
@@ -178,16 +178,7 @@ public class MySQLDatabase
          PreparedStatement stmnt = prepare(sql, values);
          ResultSet rs = stmnt.executeQuery();  
          ResultSetMetaData rsmd = rs.getMetaData();  
-         int numFields = rsmd.getColumnCount(); 
-        
-         //Creating a Header for column names 
-         ArrayList<String>colHeader = new ArrayList<String>(numFields); 
-        
-         for(int i = 1; i <= numFields; i++) 
-         {
-            colHeader.add(rsmd.getColumnName(i));
-         }
-         anotherData.add(colHeader);//adding another data to arraylist
+         int numFields = rsmd.getColumnCount();
       	
          while(rs.next())
          {
