@@ -1,12 +1,7 @@
 import java.sql.*;
 import java.util.*;
 
-/**
-*  Name:   Chris Bonsu
-*  Date:   3/20/2018
-*  Course: ISTE 330
-*  PE07:  
-*/
+
  
 public class MySQLDatabase
 {
