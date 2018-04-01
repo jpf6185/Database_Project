@@ -49,11 +49,13 @@ public class CapstoneTrackerServer {
             CapstoneVersion outObj2=new CapstoneVersion(outObj.getCapstoneID(),outObj.getLatestDate());
             // adds outobj2 to outobj.
             outObj.addVersion(outObj2);
-            outObj2.setDescription();
+            // sets
+            outObj2.setTitle(Values.get(0).get(5));
+            outObj2
             
         }
         catch(Exception E){
-
+        
         }
 
 
