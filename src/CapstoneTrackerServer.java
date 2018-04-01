@@ -49,13 +49,16 @@ public class CapstoneTrackerServer {
             CapstoneVersion outObj2=new CapstoneVersion(outObj.getCapstoneID(),outObj.getLatestDate());
             // adds outobj2 to outobj.
             outObj.addVersion(outObj2);
-            // sets
+            // sets the rest of the paramater for object 2
             outObj2.setTitle(Values.get(0).get(5));
-            outObj2
-            
+            outObj2.setDescription(Values.get(0).get(6));
+            outObj2.setFilePath(Values.get(0).get(7));
+            outObj2.setStatus(Values.get(0).get(8));
+            return outObj;
+
         }
         catch(Exception E){
-        
+            return null;
         }
 
 
