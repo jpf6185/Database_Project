@@ -12,7 +12,7 @@ public class CapstoneTrackerServer {
         db = new MySQLDatabase();
     }
 
-
+    // gets the info on the most recent capstone
     public CapstoneInfo GetCapstoneInfo(CapstoneInfo outObj) {
         // arraylist to hold data returned
         ArrayList<ArrayList<String>> Values;
@@ -113,7 +113,7 @@ public class CapstoneTrackerServer {
             String updateStatement="Update Capstone_Info Set Lattest_Date=? Where CapstoneID=?";
             //sets the paramaters useing inObj1 and inObj2
             Params.add(inObj2.getDate());
-            Params.add(inObj.getCapstoneID());
+            Params.add(inObj2.getCapstoneID());
             Params.add(inObj2.getStatusCode());
             Params.add(inObj2.getTitle());
             Params.add(inObj2.getDescription());
@@ -127,7 +127,7 @@ public class CapstoneTrackerServer {
             db.setData(insertStatement,Params);
             db.setData(updateStatement,Params2);
             db.close();
-            return true
+            return true;
         }
         catch(DLException dle){
             System.out.println("an error has ocured when trying to update the capstone project");
