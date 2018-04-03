@@ -8,13 +8,14 @@ public class CapstoneVersion{
     private String Description;
     private String FilePath;
     private String Type;
-
+    private String StatusCode;
+// constructor with the bare
         public CapstoneVersion(String _CapstoneID,String _Date){
             Date=_Date;
             CapstoneID=_CapstoneID;
         }
 
-    public CapstoneVersion(String date, String capstoneID, String status, String title, String description, String filePath,String type) {
+    public CapstoneVersion(String date, String capstoneID, String status, String title, String description, String filePath,String type,String statusCode) {
         Date = date;
         CapstoneID = capstoneID;
         Status = status;
@@ -22,6 +23,15 @@ public class CapstoneVersion{
         Description = description;
         FilePath = filePath;
         Type=type;
+        StatusCode=statusCode;
+    }
+
+    public String getStatusCode() {
+        return StatusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        StatusCode = statusCode;
     }
 
     public String getType() {

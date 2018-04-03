@@ -19,7 +19,7 @@ public class CapstoneTrackerServer {
         try {
             // sql statement to pull out data from database
             String sqlStatement = "select capstone_info.CapStoneId,`Date:`," +
-                    "Plagerism_Score,Grade,DefenseDate,Title,Capstone_Version.Description,FileLocation,Name,`type` from" +
+                    "Plagerism_Score,Grade,DefenseDate,Title,Capstone_Version.Description,FileLocation,Name,`type`,status from" +
                     " Capstone_Info JOIN capstone_Version ON capstone_info.capstoneId=capstone_Version.capstoneId" +
                     " JOIN status_code ON status_code.SID=capstone_Version.status WHERE capstone_info.capstoneId=?" +
                     " AND Lattest_Date=`Date:`; ";
@@ -55,6 +55,7 @@ public class CapstoneTrackerServer {
             outObj2.setFilePath(Values.get(0).get(7));
             outObj2.setStatus(Values.get(0).get(8));
             outObj2.setType(Values.get(0).get(9));
+            outObj2.setStatusCode(Values.get(0).get(10));
         }
         catch(Exception E){
             return null;
@@ -97,6 +98,41 @@ public class CapstoneTrackerServer {
             return null;
         }
         return outObj;
+    }
+    // updates the capstone info by inserts new capstone version and changing the lattest date in capstone_info table to
+    // the date in the provided capstoneVersion Object
+    public Boolean updateCapstone(CapstoneInfo inObj){
+        try {
+            // grabs the capstone version object that conatins much of the data, asside from capstoneID
+
+            CapstoneVersion inObj2=inObj.GetVersions().get(0);
+
+            ArrayList<String>Params=new ArrayList<String>();
+            ArrayList<String>Params2=new ArrayList<String>();
+            String insertStatement = "Insert INTO Capstone_Version Values(?,?,?,?,?,?,?);";
+            String updateStatement="Update Capstone_Info Set Lattest_Date=? Where CapstoneID=?";
+            //sets the paramaters useing inObj1 and inObj2
+            Params.add(inObj2.getDate());
+            Params.add(inObj.getCapstoneID());
+            Params.add(inObj2.getStatusCode());
+            Params.add(inObj2.getTitle());
+            Params.add(inObj2.getDescription());
+            Params.add(inObj2.getType());
+            Params.add(inObj2.getFilePath());
+            Params2.add(inObj2.getDate());
+            Params2.add(inObj.getCapstoneID());
+            // todo make this a transaction dont curently have enough time
+
+            db.connect();
+            db.setData(insertStatement,Params);
+            db.setData(updateStatement,Params2);
+            db.close();
+            return true
+        }
+        catch(DLException dle){
+            System.out.println("an error has ocured when trying to update the capstone project");
+        }
+        return false;
     }
 
 }
