@@ -1,12 +1,21 @@
+/* Group 1
+ * ISTE-330 Database Connectivity and access
+ *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Venutolo
+ */
+
+
 import java.util.*;
+
+/* This class is a container the stores the fields/values from an entry in the commite table
+ */
 public class commitee_info {
     //attributes
     private String userName;
-    private int capStoneID;
-    private int hasDecline;
-    private int hasAccepted;
+    private String capStoneID;
+    private String hasDecline;
+    private String hasAccepted;
     private String position;
-    private int Tracking;
+    private String Tracking;
 
     //default contructor
 
@@ -18,15 +27,15 @@ public class commitee_info {
         this.userName = userName;
     }
 
-    public void setCapStoneID(int capStoneID) {
+    public void setCapStoneID(String capStoneID) {
         this.capStoneID = capStoneID;
     }
 
-    public void setHasDecline(int hasDecline) {
+    public void setHasDecline(String hasDecline) {
         this.hasDecline = hasDecline;
     }
 
-    public void setHasAccepted(int hasAccepted) {
+    public void setHasAccepted(String hasAccepted) {
         this.hasAccepted = hasAccepted;
     }
 
@@ -34,7 +43,7 @@ public class commitee_info {
         this.position = position;
     }
 
-    public void setTracking(int tracking) {
+    public void setTracking(String tracking) {
         Tracking = tracking;
     }
 
@@ -42,15 +51,15 @@ public class commitee_info {
         return userName;
     }
 
-    public int getCapStoneID() {
+    public String getCapStoneID() {
         return capStoneID;
     }
 
-    public int getHasDecline() {
+    public String getHasDecline() {
         return hasDecline;
     }
 
-    public int getHasAccepted() {
+    public String getHasAccepted() {
         return hasAccepted;
     }
 
@@ -58,7 +67,7 @@ public class commitee_info {
         return position;
     }
 
-    public int getTracking() {
+    public String getTracking() {
         return Tracking;
     }
 

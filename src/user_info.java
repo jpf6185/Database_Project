@@ -1,16 +1,42 @@
+/* Group 1
+ * ISTE-330 Database Connectivity and access
+ *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Venutolo
+ */
 import java.util.*;
 
+/* container for the User table that stores all the fields/values associated with entry in that table except for password
+* It also stores an arraylist of any entries in the committe table that is associated with said entry
+ */
 public class user_info
 {
 
     private String userName;
     private String email;
-    private int userType;
+    private String userType;
     private String name;
     private String password;
     private String phoneNumber;
     private String department;
     private ArrayList<commitee_info> Commitees;
+    private String MasterStart;
+    private String CapstoneStartDate;
+
+    public String getMasterStart() {
+        return MasterStart;
+    }
+
+    public void setMasterStart(String masterStartDate) {
+        MasterStart = masterStartDate;
+    }
+
+    public String getCapstoneStartDate() {
+        return CapstoneStartDate;
+    }
+
+    public void setCapstoneStartDate(String capstoneStartDate) {
+        CapstoneStartDate = capstoneStartDate;
+    }
+
     //default constructor
     public user_info()
     {
@@ -27,7 +53,7 @@ public class user_info
         String phoneNumber;
         String department;
      */
-    public user_info(String userName, String email, int userType, String name, String password, String phoneNumber, String department, ArrayList<commitee_info> Commitees)
+    public user_info(String userName, String email, String userType, String name, String password, String phoneNumber, String department, ArrayList<commitee_info> Commitees)
     {
 
         this.userName = userName;
@@ -62,7 +88,7 @@ public class user_info
      *create mutator for userType
      *
      */
-    public void setUserType(int  userType)
+    public void setUserType(String  userType)
     {
         this.userType = userType;
     }
@@ -128,7 +154,7 @@ public class user_info
      *create acessor method for getUserType
      *@return userType
      */
-    public int getUserType()
+    public String getUserType()
     {
         return userType;
     }

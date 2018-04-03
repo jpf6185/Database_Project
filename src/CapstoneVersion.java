@@ -1,5 +1,11 @@
+/* Group 1
+ * ISTE-330 Database Connectivity and access
+ *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Ventutolo
+ */
 
-
+/* This class is a container the stores the fields/values from an entry in the capstoneVersion Table
+*
+ */
 public class CapstoneVersion{
     private String Date;
     private String CapstoneID;

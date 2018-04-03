@@ -5,13 +5,13 @@ import java.util.Date;
 import java.io.*; 
 import java.lang.*;
 
-/**
-*  Name:   Chris Bonsu
-*  Date:   3/20/2018
-*  Course: ISTE 330
-*  PE07:  
-*/  
+/* Group 1
+ * ISTE-330 Database Connectivity and access
+ *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Venutolo
+ */
 
+/* This a custom exception class that handels data logging on the server Side
+ */
 public class DLException extends Exception{
    
    private ArrayList<ArrayList<String>> addMsg = new ArrayList<ArrayList<String>>();

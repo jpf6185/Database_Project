@@ -1,13 +1,12 @@
 import java.sql.*;
-import java.util.*; 
+import java.util.*;
+/* Group 1
+ * ISTE-330 Database Connectivity and access
+ *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Venutolo
+ */
 
-/**
-*  Name:   Chris Bonsu
-*  Date:   3/20/2018
-*  Course: ISTE 330
-*  PE07:  
-*/
-
+/* this is a class just to hold the main method for testing purposes
+ */
 public class MainTest{
 
    public static void main(String [] args)

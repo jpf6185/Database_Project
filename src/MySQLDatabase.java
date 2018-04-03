@@ -1,13 +1,13 @@
+/* Group 1
+ * ISTE-330 Database Connectivity and access
+ *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Venutolo
+ */
 import java.sql.*;
 import java.util.*;
 
-/**
-*  Name:   Chris Bonsu
-*  Date:   3/20/2018
-*  Course: ISTE 330
-*  PE07:  
-*/
- 
+
+/* this class is the Data layer, that handle interfacing with the Mysql Database
+ */
 public class MySQLDatabase
 {
     //Modified Database class
