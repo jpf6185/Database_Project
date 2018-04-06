@@ -10,7 +10,7 @@ import java.util.*;
 * The reason that it is called server is that we hope to eventually have it running on a seprate machine from the frontend
 * and comunicting with the front end over the network
  */
-public class CapstoneTrackerServer {
+public class CapstoneTrackerDBInterface {
 
     /* method to Get a Get the info about a current version of the capstone from the database bassed on the capstoneID
      * In the CapstoneInfo object passed in and then stores that info in the capstoneInfo object passed in before reurning it
@@ -18,7 +18,7 @@ public class CapstoneTrackerServer {
     MySQLDatabase db;
 
     // default constructor to initialize database object
-    public CapstoneTrackerServer() {
+    public CapstoneTrackerDBInterface() {
         db = new MySQLDatabase();
     }
 
@@ -262,5 +262,23 @@ public class CapstoneTrackerServer {
         return null;
 
     }
+
+    /* method to get a list of all capstone projects, more specifically the capstoneID
+    * the Title of the project, its current status, and the name of the author
+    */
+    public ArrayList<CapstoneInfo> GetAllCapstones(){
+        ArrayList<CapstoneInfo>capstones=new ArrayList<CapstoneInfo>();
+        try {
+        }
+        catch (DLException dle){
+            System.out.println("An error has occured with the database when trying to get all the capstone projects");
+            return null;
+        }
+        catch (Exception e){
+            System.out.println("An unexpected error has occured when trying to get all the capstone projects");
+            return null;
+        }
+    }
+
 
 }

@@ -15,6 +15,8 @@ public class CapstoneInfo{
     private String PlagiarismScore;
     private String Grade;
     private String DefenseDate;
+    // the full name of the user who wrote the capstone gotten from the user table using some sql
+    private String Author;
     // Arraylist of Capstone Versions associeated with this paticular capstone;
     private ArrayList<CapstoneVersion> Versions;
 
@@ -27,14 +29,7 @@ public class CapstoneInfo{
         CapstoneID = _CapstoneID;
         Versions=new ArrayList<CapstoneVersion>();
     }
-    public CapstoneInfo(String capstoneID, String latestDate, String plagiarismScore, String grade, String defenseDate) {
-        CapstoneID = capstoneID;
-        LatestDate = latestDate;
-        PlagiarismScore = plagiarismScore;
-        Grade = grade;
-        DefenseDate = defenseDate;
-        Versions=new ArrayList<CapstoneVersion>();
-    }
+
     // acessors and mutators
     public String getCapstoneID() {
         return CapstoneID;
@@ -44,6 +39,12 @@ public class CapstoneInfo{
         CapstoneID = capstoneID;
     }
 
+    public void setAuthor(String author){
+        Author=author;
+    }
+    public String getAuthor(){
+        return Author;
+    }
     public String getLatestDate() {
         return LatestDate;
     }
