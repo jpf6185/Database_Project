@@ -10,7 +10,7 @@ import java.util.*;
 * The reason that it is called server is that we hope to eventually have it running on a seprate machine from the frontend
 * and comunicting with the front end over the network
  */
-public class CapstoneTrackerServer {
+public class CapstoneTrackerDBInterface {
 
     /* method to Get a Get the info about a current version of the capstone from the database bassed on the capstoneID
      * In the CapstoneInfo object passed in and then stores that info in the capstoneInfo object passed in before reurning it
@@ -18,7 +18,7 @@ public class CapstoneTrackerServer {
     MySQLDatabase db;
 
     // default constructor to initialize database object
-    public CapstoneTrackerServer() {
+    public CapstoneTrackerDBInterface() {
         db = new MySQLDatabase();
     }
 
@@ -262,5 +262,65 @@ public class CapstoneTrackerServer {
         return null;
 
     }
+
+    /* method to get a list of all capstone projects, more specifically the capstoneID
+    * the Title of the project, its current status, and the name of the author
+    */
+    public ArrayList<CapstoneInfo> GetAllCapstones(){
+        // arraylist to store capstone objects to be created
+        ArrayList<CapstoneInfo>capstones=new ArrayList<CapstoneInfo>();
+        /*arraylist to store results of query, to be parrsed in seprate try block so that if a exception is thrown during
+        * parsis it is distinct from one getting the data out
+        */
+        ArrayList<ArrayList<String>>results;
+        // try catch for getting stuff from the database
+        try {
+            // Monster SQL statement to get info from database, its huge cause it traverses 5 tables
+            String sqlStatment= "SELECT capstone_info.CapstoneID, capstone_version.Title, status_code.Name, users.Name,Capstone_Info.Lattest_date"+
+                                " FROM users JOIN committe ON users.username=committe.username"+
+                                " JOIN capstone_Info on committe.capstoneID=capstone_info.capstoneID"+
+                                "JOIN capstone_version on capstone_info.capstoneID=capstone_version.CapstoneID"+
+                                "JOIN status_code on capstone_version.status=status_code.SID"+
+                                "WHERE users.userType='student' AND capstone_version.`Date:`=capstone_info.Lattest_Date;";
+            db.connect();
+            results=db.getData(sqlStatment);
+            db.close();
+        }
+        catch (DLException dle){
+            System.out.println("An error has occured with the database when trying to get all the capstone projects");
+            return null;
+        }
+        catch (Exception e){
+            System.out.println("An unexpected error has occured when trying to get all the capstone projects");
+            return null;
+        }
+        // try catch for parsing said stuff
+        try{
+            // for each loop to go over each row in the results
+            for(ArrayList<String>r :results){
+                // creates the capstoneInfo object and sets the capstoneID
+                CapstoneInfo capInfo=new CapstoneInfo(r.get(0));
+                // adds the name of the author
+                capInfo.setAuthor(r.get(3));
+                // creates a capstoneversion object with the date retrived and capstoneID
+                CapstoneVersion capVer=new CapstoneVersion(r.get(0),r.get(4));
+                // adds the current status of the project
+                capVer.setStatus(r.get(2));
+                // and its title
+                capVer.setTitle(r.get(1));
+                // and then adds capstone version to capstone info
+                capInfo.addVersion(capVer);
+                // and then ads cpastone info the the arraylist
+                capstones.add(capInfo);
+            }
+
+        }
+        catch(Exception E){
+            System.out.println("an error has occured parsing the returned results");
+            return null;
+        }
+        return capstones;
+    }
+
 
 }
