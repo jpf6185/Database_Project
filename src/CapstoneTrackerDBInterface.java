@@ -263,10 +263,11 @@ public class CapstoneTrackerDBInterface {
 
     }
 
-    /* method to get a list of all capstone projects, more specifically the capstoneID
+    /* method to get a lisst of some pararmetns of mutliple , more specifically the capstoneID
     * the Title of the project, its current status, and the name of the author
+    * I used whenever a list of multiple capstones is needed
     */
-    public ArrayList<CapstoneInfo> GetAllCapstones(){
+    private ArrayList<CapstoneInfo> GetMultipleCapstones(String sqlWhere){
         // arraylist to store capstone objects to be created
         ArrayList<CapstoneInfo>capstones=new ArrayList<CapstoneInfo>();
         /*arraylist to store results of query, to be parrsed in seprate try block so that if a exception is thrown during
@@ -275,15 +276,15 @@ public class CapstoneTrackerDBInterface {
         ArrayList<ArrayList<String>>results;
         // try catch for getting stuff from the database
         try {
-            // Monster SQL statement to get info from database, its huge cause it traverses 5 tables
-            String sqlStatment= "SELECT capstone_info.CapstoneID, capstone_version.Title, status_code.Name, users.Name,Capstone_Info.Lattest_date"+
+            String sqlStatement="SELECT capstone_info.CapstoneID, capstone_version.Title, status_code.Name, users.Name,Capstone_Info.Lattest_date"+
                                 " FROM users JOIN committe ON users.username=committe.username"+
                                 " JOIN capstone_Info on committe.capstoneID=capstone_info.capstoneID"+
-                                "JOIN capstone_version on capstone_info.capstoneID=capstone_version.CapstoneID"+
-                                "JOIN status_code on capstone_version.status=status_code.SID"+
-                                "WHERE users.userType='student' AND capstone_version.`Date:`=capstone_info.Lattest_Date;";
+                                " JOIN capstone_version on capstone_info.capstoneID=capstone_version.CapstoneID"+
+                                " JOIN status_code on capstone_version.status=status_code.SID"+sqlWhere;
+
+            // Monster SQL statement to get info from database, its huge cause it traverses 5 tables
             db.connect();
-            results=db.getData(sqlStatment);
+            results=db.getData(sqlStatement);
             db.close();
         }
         catch (DLException dle){
@@ -320,6 +321,10 @@ public class CapstoneTrackerDBInterface {
             return null;
         }
         return capstones;
+    }
+    // gets a list of all capstones
+    public ArrayList<CapstoneInfo>GetAllCapstones(){
+        return GetMultipleCapstones(" WHERE users.userType='student' AND capstone_version.`Date:`=capstone_info.Lattest_Date;");
     }
 
 
