@@ -12,7 +12,11 @@ public class MainTest{
    public static void main(String [] args)
    {
      CapstoneTrackerDBInterface dbCon=new CapstoneTrackerDBInterface();
-
-             dbCon.GetAllCapstones();
+            user_info user=new user_info();
+            user.setUserName("mjfics");
+             ArrayList<CapstoneInfo>test=dbCon.GetTrackedCapstones(user);
+             for(CapstoneInfo ci : test){
+                 System.out.println(ci.getAuthor());
+             }
    }
 }

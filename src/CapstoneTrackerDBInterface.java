@@ -267,7 +267,7 @@ public class CapstoneTrackerDBInterface {
     * the Title of the project, its current status, and the name of the author
     * I used whenever a list of multiple capstones is needed
     */
-    private ArrayList<CapstoneInfo> GetMultipleCapstones(String sqlWhere){
+    private ArrayList<CapstoneInfo> GetMultipleCapstones(String sqlWhere, ArrayList<String>paramInfo) {
         // arraylist to store capstone objects to be created
         ArrayList<CapstoneInfo>capstones=new ArrayList<CapstoneInfo>();
         /*arraylist to store results of query, to be parrsed in seprate try block so that if a exception is thrown during
@@ -284,7 +284,7 @@ public class CapstoneTrackerDBInterface {
 
             // Monster SQL statement to get info from database, its huge cause it traverses 5 tables
             db.connect();
-            results=db.getData(sqlStatement);
+            results=db.getData(sqlStatement,paramInfo);
             db.close();
         }
         catch (DLException dle){
@@ -324,8 +324,21 @@ public class CapstoneTrackerDBInterface {
     }
     // gets a list of all capstones
     public ArrayList<CapstoneInfo>GetAllCapstones(){
-        return GetMultipleCapstones(" WHERE users.userType='student' AND capstone_version.`Date:`=capstone_info.Lattest_Date;");
+        return GetMultipleCapstones(" WHERE users.userType='student' AND capstone_version.`Date:`=capstone_info.Lattest_Date;",new ArrayList<String>());
     }
+    // gets all the capstones a faculty is a commitee member of
+    public ArrayList<CapstoneInfo>GetCommiteeCapstones(user_info user){
+        ArrayList<String> params=new ArrayList<String>();
+        params.add(user.getUsername());
+        return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
+                "(SELECT capstoneID FROM committe WHERE username=? AND HasAccepted=1);",params);
 
-
+    }
+    // gets all the capstones a faculty is tracking
+    public ArrayList<CapstoneInfo>GetTrackedCapstones(user_info user) {
+        ArrayList<String> params = new ArrayList<String>();
+        params.add(user.getUsername());
+        return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
+                "(SELECT capstoneID FROM committe WHERE username=? AND Tracking=1);", params);
+    }
 }

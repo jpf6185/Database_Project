@@ -18,7 +18,7 @@ public class MySQLDatabase
    String driver = "com.mysql.jdbc.Driver";
    String user = "root";
    //String password = "student";
-   String password="L3gok!113O3";
+   String password="RYcGEpo!OVQklmdZ3Zf0";
    Connection conn = null;        
    Statement stmt = null; 
    
@@ -106,14 +106,7 @@ public class MySQLDatabase
          int numFields = rsmd.getColumnCount(); 
         
         //Creating a Header for column names 
-         ArrayList<String>colHeader = new ArrayList<String>(numFields); 
-        
-         for(int i = 1; i <= numFields; i++) 
-         {
-            colHeader.add(rsmd.getColumnName(i));
-         }
-         anotherData.add(colHeader);
-      	
+         ArrayList<String>colHeader = new ArrayList<String>(numFields);
          while(rs.next())
          {
             ArrayList<String>in = new ArrayList<String>(); 
@@ -156,10 +149,7 @@ public class MySQLDatabase
             //data.add(in); 
             printTable.append("\n"); 
          }
-      
-         //DescTable method is being called 
-         descTable(data); 
-      
+
          return data; 
       }catch(Exception e){
          System.out.println("Exception Error"); 
