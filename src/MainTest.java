@@ -13,7 +13,7 @@ public class MainTest{
    {
      CapstoneTrackerDBInterface dbCon=new CapstoneTrackerDBInterface();
             user_info user=new user_info();
-            user.setUserName("mjfics");
+            user.setUserName("dmlics");
              ArrayList<CapstoneInfo>test=dbCon.GetTrackedCapstones(user);
              for(CapstoneInfo ci : test){
                  System.out.println(ci.getAuthor());

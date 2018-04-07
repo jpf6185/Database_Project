@@ -14,7 +14,7 @@ import java.lang.*;
  */
 public class DLException extends Exception{
    
-   private ArrayList<ArrayList<String>> addMsg = new ArrayList<ArrayList<String>>();
+   private ArrayList<String> addMsg = new ArrayList<String>();
    Exception e;  
    
    //Exception Constructor 
@@ -25,7 +25,7 @@ public class DLException extends Exception{
    }
    
    //Exception and Arraylist of String Constructor
-   public DLException(Exception _e, ArrayList<ArrayList<String>>msg)
+   public DLException(Exception _e, ArrayList<String>msg)
    {
       e = _e; 
       addMsg = msg; 
@@ -42,6 +42,9 @@ public class DLException extends Exception{
       try{
          PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("writeLog.txt", true)));
          pw.println(simpleDate.format(timeStamp) + "\n");
+         for(String s : addMsg){
+            pw.println(s);
+         }
          pw.flush(); 
          pw.close();
          

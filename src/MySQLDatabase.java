@@ -119,8 +119,10 @@ public class MySQLDatabase
          }
       
       }catch(SQLException sqle){
-         System.out.println("SQL Exception Error"); 
-         throw new DLException(sqle, anotherData ); 
+         System.out.println("SQL Exception");
+         ArrayList<String>msg=new ArrayList<String>();
+         msg.add(sql);
+         throw new DLException(sqle,msg);
       }
    
       return anotherData; 
@@ -181,8 +183,10 @@ public class MySQLDatabase
             anotherData.add(in);  //add in arraylist to main arraylis
          }//end while 
       }catch(SQLException sqle){
-         System.out.println("SQL Exception"); 
-         throw new DLException(sqle, anotherData );
+         System.out.println("SQL Exception");
+         ArrayList<String>msg=new ArrayList<String>();
+         msg.add(sql);
+         throw new DLException(sqle,msg);
       }
       return anotherData; 
    }
@@ -277,5 +281,52 @@ public class MySQLDatabase
          System.out.println("Exception Error"); 
          throw new DLException(e); 
       }
-   }   
+   }
+   // starts a transaction
+   public void startTrans() throws DLException
+   {
+
+      try
+      {
+
+         conn.setAutoCommit(false);
+
+
+      }
+      catch(SQLException sqle){
+         ArrayList<String>errorMsg=new ArrayList<String>();
+         errorMsg.add("MYSQLDatabase>startTransction");
+         throw new DLException(sqle, errorMsg);
+      }
+
+   }
+   // ends a transaction
+   public void endTrans() throws DLException
+   {
+      try
+      {
+         //conn.commit();
+         conn.setAutoCommit(true);
+      }
+      catch(SQLException sqle){
+         ArrayList<String>errorMsg=new ArrayList<String>();
+         errorMsg.add("MYSQLDatabase>endTransction");
+         throw new DLException(sqle, errorMsg);
+      }
+
+   }
+   // rolls back a transaction
+   public void rollback() throws DLException
+   {
+      try
+      {
+         conn.rollback();
+      }
+      catch(SQLException sqle){
+         ArrayList<String>errorMsg=new ArrayList<String>();
+         errorMsg.add("MYSQLDatabase>RollbackTransaction");
+         throw new DLException(sqle, errorMsg);
+      }
+
+   }
 }//end MySQL Database class
