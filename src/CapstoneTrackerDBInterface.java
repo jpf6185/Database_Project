@@ -426,6 +426,4 @@ public class CapstoneTrackerDBInterface {
                 "(SELECT capstoneID FROM committe WHERE username=? AND Tracking=1);", params);
     }
 
-
-
 }
