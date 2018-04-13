@@ -90,7 +90,7 @@ public class user_info
      */
     public void setUserType(String  userType)
     {
-        this.userType = userType;
+        this.userType = userType == null ? userType : this.userType;
     }
 
     /*

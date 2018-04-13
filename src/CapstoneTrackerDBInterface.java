@@ -22,6 +22,15 @@ public class CapstoneTrackerDBInterface {
         db = new MySQLDatabase();
     }
 
+    // method to log in user
+    public user_info Login(){
+        // checks to see if an entry exists for the information provided
+        String select="SELECT username from Users WHERE username=? and password=sha(?)";
+
+
+    }
+
+
     // gets the info on the most recent capstone
     public CapstoneInfo GetCapstoneInfo(CapstoneInfo outObj) {
         // arraylist to hold data returned
@@ -152,7 +161,6 @@ public class CapstoneTrackerDBInterface {
         }
         return false;
     }
-   // public CapstoneInfo
 
 
     //gets the date of the start of the students master, and the date of the start of the students cpastones
@@ -232,7 +240,7 @@ public class CapstoneTrackerDBInterface {
             outObj.setEmail(Values.get(0).get(4));
             outObj.setPhoneNumber(Values.get(0).get(5));
             outObj.setDepartment(Values.get(0).get(6));
-
+            outObj= GetStudentDates(outObj);
             return outObj;
 
 
@@ -244,11 +252,13 @@ public class CapstoneTrackerDBInterface {
         return null;
     }
 
-    public commitee_info GetCommitee(user_info outObj){
+    public user_info GetCommitees(user_info outObj){
 
         ArrayList<ArrayList<String>> Values;
-        commitee_info outObj2=outObj.getCommitees().get(0);
         try{
+            // fills in the user part of the output object
+            outObj= GetUserInfo(outObj);
+            // then moves onto filling out the commitee part
             String sqlStatement = "Select * From Committe where Username=?";
 
             //arraylist of parameters for the following method
@@ -264,15 +274,17 @@ public class CapstoneTrackerDBInterface {
         }
         try
         {
-            //how to pull all fields from the user table
-            outObj2.setUserName(Values.get(0).get(1));
-            outObj2.setCapStoneID(Values.get(0).get(2));
-            outObj2.setHasAccepted(Values.get(0).get(3));
-            outObj2.setHasDecline(Values.get(0).get(4));
-            outObj2.setPosition(Values.get(0).get(5));
-            outObj2.setTracking(Values.get(0).get(6));
+            for(ArrayList<String> info : Values) {
 
-            return outObj2;
+                commitee_info outObj2= new commitee_info(info.get(1));
+                outObj2.setCapStoneID(info.get(2));
+                outObj2.setHasAccepted(info.get(3));
+                outObj2.setHasDecline(info.get(4));
+                outObj2.setPosition(info.get(5));
+                outObj2.setTracking(info.get(6));
+                outObj.addCommitees(outObj2);
+            }
+            return outObj;
 
 
 
@@ -362,5 +374,7 @@ public class CapstoneTrackerDBInterface {
         return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
                 "(SELECT capstoneID FROM committe WHERE username=? AND Tracking=1);", params);
     }
+
+
 
 }
