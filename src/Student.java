@@ -104,7 +104,7 @@ public class Student extends JFrame implements ActionListener
       jpFourBtnRow = new JPanel(new FlowLayout());
       jpFiveBtnRow = new JPanel(new FlowLayout());
       
-      // JPanel Left Panel Setup
+      // Project Details Left Panel Setup
       jlDate = new JLabel("Date: ", SwingConstants.RIGHT);
       jtfDate = new JTextField(10);
       jpFirstRow.add(jlDate);
@@ -160,7 +160,7 @@ public class Student extends JFrame implements ActionListener
       
       jpNorthPanel.add(jpLeftPanel, BorderLayout.WEST);
       
-      // Right Panel Setup
+      // Button Right Panel Setup
       jbImport = new JButton("Import");
       jpFirstBtnRow.add(jbImport);
       jbImport.addActionListener(this);
@@ -190,13 +190,15 @@ public class Student extends JFrame implements ActionListener
       
       
       // Currently Faculty Member Panel Setup
-      
       jlCurrentFaculty = new JLabel("Currently Invited Faculty Members: ", SwingConstants.LEFT);
       
       jtfCurrentFaculty = new JTextField(10);
-      jpCenterFirstRow.add(jlCurrentFaculty, 0,0);
       jpCenterFirstRow.add(jtfCurrentFaculty, 1,0);
+      jpCenterFirstRow.add((new JLabel(" ")), 0,1);
+      jpCenterFirstRow.add(jlCurrentFaculty, 0,0);
+      jpCenterFirstRow.add((new JLabel(" ")), 1,1);
       
+      // Send Invitation Panel Setup
       jlRole = new JLabel("Roles: ", SwingConstants.RIGHT);
       JComboBox jcbRoleDropList = new JComboBox(roleList);
       jcbRoleDropList.setSelectedIndex(2);
