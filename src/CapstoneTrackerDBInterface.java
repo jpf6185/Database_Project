@@ -3,6 +3,8 @@
 *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Ventutolo
  */
 
+import com.mysql.fabric.xmlrpc.base.Array;
+
 import java.util.ArrayList;
 import java.util.*;
 
@@ -23,10 +25,41 @@ public class CapstoneTrackerDBInterface {
     }
 
     // method to log in user
-    public user_info Login(){
-        // checks to see if an entry exists for the information provided
-        String select="SELECT username from Users WHERE username=? and password=sha(?)";
+    public user_info Login(loginInfo info){
+        try {
+            // checks to see if an entry exists for the information provided
+            String select = "SELECT username from Users WHERE username=? and password=sha(?)";
+            ArrayList<String>params=new ArrayList<String>();
+            params.add(info.getUserName());
+            params.add(info.getPassword());
+            db.connect();
+            ArrayList<ArrayList<String>>result=db.getData(select,params);
+            db.close();
+            // if the results are not empty creates a user_info object, calls the GetUserInfo to fill it, and returns the object
+            if (result.size()>0) {
+                user_info user=new user_info();
+                user.setUserName(info.getUserName());
+                user=GetUserInfo(user);
+                return user;
+            }
+            else{
+                return null;
+            }
 
+        } catch (DLException dle) {
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
+            System.out.println("An error occured attempting to log in");
+            return null;
+        }
+        catch (Exception e){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e2){}
+            System.out.println("An unxepcted error occured when attempting to log in");
+            return null;
+        }
 
     }
 
@@ -52,6 +85,9 @@ public class CapstoneTrackerDBInterface {
 
 
         } catch (DLException dle) {
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
             System.out.println("An error occured attempting to get the info on a capstone");
             return null;
         }
@@ -100,6 +136,9 @@ public class CapstoneTrackerDBInterface {
 
 
         } catch (DLException dle) {
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
             System.out.println("An error occured attempting to get the info on a capstone");
             return null;
         }
@@ -228,6 +267,9 @@ public class CapstoneTrackerDBInterface {
             db.close();
 
         }catch(DLException dle){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
             return null;
 
         }
@@ -269,6 +311,9 @@ public class CapstoneTrackerDBInterface {
             db.close();
 
         }catch(DLException dle){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
             return null;
 
         }
@@ -321,10 +366,16 @@ public class CapstoneTrackerDBInterface {
             db.close();
         }
         catch (DLException dle){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
             System.out.println("An error has occured with the database when trying to get all the capstone projects");
             return null;
         }
         catch (Exception e){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e2){}
             System.out.println("An unexpected error has occured when trying to get all the capstone projects");
             return null;
         }
