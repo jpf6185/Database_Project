@@ -28,7 +28,7 @@ public class CapstoneTrackerDBInterface {
    user_info Login(loginInfo info){
         try {
             // checks to see if an entry exists for the information provided
-            String select = "SELECT username from Users WHERE username=? and password=sha(?)";
+            String select = "SELECT username from Users WHERE username=? and password=sha(?);";
             ArrayList<String>params=new ArrayList<String>();
             params.add(info.getUserName());
             params.add(info.getPassword());
@@ -240,7 +240,7 @@ public class CapstoneTrackerDBInterface {
 
             //
             outObj.setCapstoneStartDate(Values.get(0).get(0));
-            outObj.setMasterStart(Value.get(0).get(1));
+            outObj.setMasterStart(Value.get(0).get(0));
 
             return outObj;
 
@@ -257,7 +257,7 @@ public class CapstoneTrackerDBInterface {
 
         ArrayList<ArrayList<String>> Values;
         try{
-            String sqlStatement = "SELECT UserType,Name,Email,`Phone Number`,Department FROM users WHERE Username=?;";
+            String sqlStatement = "SELECT Username,UserType,Name,Email,`Phone Number`,Department FROM users WHERE Username=?;";
 
             //arraylist of parameters for the following method
             ArrayList<String> Params = new ArrayList<String>();
@@ -276,12 +276,12 @@ public class CapstoneTrackerDBInterface {
         try
         {
             //how to pull all fields from the user table
-            outObj.setUserName(Values.get(0).get(1));
-            outObj.setUserType(Values.get(0).get(2));
-            outObj.setName(Values.get(0).get(3));
-            outObj.setEmail(Values.get(0).get(4));
-            outObj.setPhoneNumber(Values.get(0).get(5));
-            outObj.setDepartment(Values.get(0).get(6));
+            outObj.setUserName(Values.get(0).get(0));
+            outObj.setUserType(Values.get(0).get(1));
+            outObj.setName(Values.get(0).get(2));
+            outObj.setEmail(Values.get(0).get(3));
+            outObj.setPhoneNumber(Values.get(0).get(4));
+            outObj.setDepartment(Values.get(0).get(5));
             outObj= GetStudentDates(outObj);
             return outObj;
 

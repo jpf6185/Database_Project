@@ -11,7 +11,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
 
-public class CapstoneTrackerDbServer {
+
+public class CapstoneTrackerDbServer extends Thread{
 
     private CapstoneTrackerDBInterface dbInterface;
     // objects to handle  io for connected client
@@ -22,10 +23,9 @@ public class CapstoneTrackerDbServer {
     // constructor that creates a interface for this instance and then goes into the listenForConnection method to wait for a connection
     public CapstoneTrackerDbServer(){
         dbInterface=new CapstoneTrackerDBInterface();
-        listenForConnection();
     }
     // method that has a serverSocket that Listens for a connection
-    public void listenForConnection(){
+    public void run(){
         try{
             // creates a server socket
             ServerSocket ss=new ServerSocket(4242);
@@ -45,6 +45,7 @@ public class CapstoneTrackerDbServer {
             System.out.println("An error occured while listening for connection, please restart the server");
         }
         catch (Exception e){
+            System.out.println(e.getMessage());
             System.out.println("An  unexpected error occured while listening for connection, please restart the server");
         }
 
