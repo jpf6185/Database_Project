@@ -52,7 +52,7 @@ public class Student extends JFrame implements ActionListener
    private JPanel jpFirstRow, jpSecondRow, jpThirdRow, jpFourRow, jpFiveRow, jpSixRow, jpSevenRow, jpEightRow;
    private JPanel jpFirstBtnRow, jpSecondBtnRow, jpThirdBtnRow, jpFourBtnRow, jpFiveBtnRow;
    
-   private JPanel jpCenterPanel;
+   private JPanel jpCenterPanel,jpPaddedCenterPanel;
    private JPanel jpCenterFirstRow, jpCenterSecondRow;
    private JPanel jpCenterLeftPanel, jpCenterRightPanel;
    
@@ -76,8 +76,9 @@ public class Student extends JFrame implements ActionListener
       setTitle("Student Information");
    
       // JPanel Setup
-      jpNorthPanel = new JPanel(new GridLayout(0,2));
-      jpCenterPanel = new JPanel(new GridLayout(2,0));
+      jpNorthPanel = new JPanel(new GridLayout(0,2,30,30));
+      jpCenterPanel = new JPanel(new GridLayout(2,0,30,30));
+      jpPaddedCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30,30));
       add(jpNorthPanel, BorderLayout.NORTH);
       
       jpLeftPanel = new JPanel(new GridLayout(8,0));
@@ -221,22 +222,22 @@ public class Student extends JFrame implements ActionListener
       
       jpCenterPanel.add(jpCenterFirstRow);
       jpCenterPanel.add(jpCenterSecondRow);
-      
-      add(jpCenterPanel, BorderLayout.CENTER);
+      jpPaddedCenterPanel.add(jpCenterPanel);
+      add(jpPaddedCenterPanel, BorderLayout.CENTER);
       
       // JPanel jpFirst = new JPanel(new FlowLayout());
-//       
-//       jtfType = new JTextField(20);
-//       jpFirst.add(jtfType);
-//       jtfType.setText("Name, Email");
-//       jtfType.addActionListener(this);
-//       
-//       
-//       jbCancel = new JButton("Cancel");
-//       jpFirst.add(jbCancel);
-//       jbCancel.addActionListener(this);
-//       
-//       add(jpFirst, BorderLayout.SOUTH);
+   //       
+   //       jtfType = new JTextField(20);
+   //       jpFirst.add(jtfType);
+   //       jtfType.setText("Name, Email");
+   //       jtfType.addActionListener(this);
+   //       
+   //       
+   //       jbCancel = new JButton("Cancel");
+   //       jpFirst.add(jbCancel);
+   //       jbCancel.addActionListener(this);
+   //       
+   //       add(jpFirst, BorderLayout.SOUTH);
      
             
       pack();
