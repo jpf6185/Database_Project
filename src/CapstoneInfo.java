@@ -2,13 +2,14 @@
  * ISTE-330 Database Connectivity and access
  *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Venutolo
  */
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
 /* This class is a contain to hold the info stored in the capstonInfo table, as well as to store all associated
 * Capstone Version Objects, which represent entries in the Capstone Version Table
  */
-public class CapstoneInfo{
+public class CapstoneInfo implements Serializable {
     // fields of the Capstone_Info Table on
     private String CapstoneID;
     private String LatestDate;

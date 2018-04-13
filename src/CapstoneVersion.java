@@ -3,10 +3,12 @@
  *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Ventutolo
  */
 
+import java.io.Serializable;
+
 /* This class is a container the stores the fields/values from an entry in the capstoneVersion Table
 *
  */
-public class CapstoneVersion{
+public class CapstoneVersion implements Serializable {
     private String Date;
     private String CapstoneID;
     private String Status;

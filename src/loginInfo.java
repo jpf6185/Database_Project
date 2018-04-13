@@ -1,7 +1,8 @@
+import java.io.Serializable;
 
 // a class to contain the info the is used to login, it is only used for this
 // use this classtologin
-public class loginInfo {
+public class loginInfo implements Serializable {
     private String userName;
     private String password;
 
