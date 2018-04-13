@@ -5,6 +5,7 @@ import java.io.*;
 
 /**
 * 04/06/2018
+
 */
 
 public class Student extends JFrame implements ActionListener
@@ -51,7 +52,7 @@ public class Student extends JFrame implements ActionListener
    private JPanel jpFirstRow, jpSecondRow, jpThirdRow, jpFourRow, jpFiveRow, jpSixRow, jpSevenRow, jpEightRow;
    private JPanel jpFirstBtnRow, jpSecondBtnRow, jpThirdBtnRow, jpFourBtnRow, jpFiveBtnRow;
    
-   private JPanel jpCenterPanel;
+   private JPanel jpCenterPanel,jpPaddedCenterPanel;
    private JPanel jpCenterFirstRow, jpCenterSecondRow;
    private JPanel jpCenterLeftPanel, jpCenterRightPanel;
    
@@ -75,8 +76,9 @@ public class Student extends JFrame implements ActionListener
       setTitle("Student Information");
    
       // JPanel Setup
-      jpNorthPanel = new JPanel(new GridLayout(0,2));
-      jpCenterPanel = new JPanel(new GridLayout(2,0));
+      jpNorthPanel = new JPanel(new GridLayout(0,2,30,30));
+      jpCenterPanel = new JPanel(new GridLayout(2,0,30,30));
+      jpPaddedCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30,30));
       add(jpNorthPanel, BorderLayout.NORTH);
       
       jpLeftPanel = new JPanel(new GridLayout(8,0));
@@ -104,7 +106,7 @@ public class Student extends JFrame implements ActionListener
       jpFourBtnRow = new JPanel(new FlowLayout());
       jpFiveBtnRow = new JPanel(new FlowLayout());
       
-      // JPanel Left Panel Setup
+      // Project Details Left Panel Setup
       jlDate = new JLabel("Date: ", SwingConstants.RIGHT);
       jtfDate = new JTextField(10);
       jpFirstRow.add(jlDate);
@@ -160,7 +162,7 @@ public class Student extends JFrame implements ActionListener
       
       jpNorthPanel.add(jpLeftPanel, BorderLayout.WEST);
       
-      // Right Panel Setup
+      // Button Right Panel Setup
       jbImport = new JButton("Import");
       jpFirstBtnRow.add(jbImport);
       jbImport.addActionListener(this);
@@ -190,13 +192,15 @@ public class Student extends JFrame implements ActionListener
       
       
       // Currently Faculty Member Panel Setup
-      
       jlCurrentFaculty = new JLabel("Currently Invited Faculty Members: ", SwingConstants.LEFT);
       
       jtfCurrentFaculty = new JTextField(10);
-      jpCenterFirstRow.add(jlCurrentFaculty, 0,0);
       jpCenterFirstRow.add(jtfCurrentFaculty, 1,0);
+      jpCenterFirstRow.add((new JLabel(" ")), 0,1);
+      jpCenterFirstRow.add(jlCurrentFaculty, 0,0);
+      jpCenterFirstRow.add((new JLabel(" ")), 1,1);
       
+      // Send Invitation Panel Setup
       jlRole = new JLabel("Roles: ", SwingConstants.RIGHT);
       JComboBox jcbRoleDropList = new JComboBox(roleList);
       jcbRoleDropList.setSelectedIndex(2);
@@ -218,22 +222,22 @@ public class Student extends JFrame implements ActionListener
       
       jpCenterPanel.add(jpCenterFirstRow);
       jpCenterPanel.add(jpCenterSecondRow);
-      
-      add(jpCenterPanel, BorderLayout.CENTER);
+      jpPaddedCenterPanel.add(jpCenterPanel);
+      add(jpPaddedCenterPanel, BorderLayout.CENTER);
       
       // JPanel jpFirst = new JPanel(new FlowLayout());
-//       
-//       jtfType = new JTextField(20);
-//       jpFirst.add(jtfType);
-//       jtfType.setText("Name, Email");
-//       jtfType.addActionListener(this);
-//       
-//       
-//       jbCancel = new JButton("Cancel");
-//       jpFirst.add(jbCancel);
-//       jbCancel.addActionListener(this);
-//       
-//       add(jpFirst, BorderLayout.SOUTH);
+   //       
+   //       jtfType = new JTextField(20);
+   //       jpFirst.add(jtfType);
+   //       jtfType.setText("Name, Email");
+   //       jtfType.addActionListener(this);
+   //       
+   //       
+   //       jbCancel = new JButton("Cancel");
+   //       jpFirst.add(jbCancel);
+   //       jbCancel.addActionListener(this);
+   //       
+   //       add(jpFirst, BorderLayout.SOUTH);
      
             
       pack();
