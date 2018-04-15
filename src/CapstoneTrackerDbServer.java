@@ -6,6 +6,7 @@
 *  choice to make things simpler for now
 */
 
+import java.io.Console;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,6 +22,14 @@ public class CapstoneTrackerDbServer extends Thread{
     private ObjectOutputStream output;
 
     // constructor that creates a interface for this instance and then goes into the listenForConnection method to wait for a connection
+
+    public static void main(String [] args){
+        CapstoneTrackerDbServer server=new CapstoneTrackerDbServer();
+        Thread th =new Thread(server);
+        th.run();
+    }
+
+
     public CapstoneTrackerDbServer(){
         dbInterface=new CapstoneTrackerDBInterface();
     }
@@ -97,7 +106,7 @@ public class CapstoneTrackerDbServer extends Thread{
             }
             // if the loop w
             if(quit==false){
-                controlerFunction();
+                controllerFunction();
             }
 
 
@@ -109,9 +118,23 @@ public class CapstoneTrackerDbServer extends Thread{
             System.out.println("An  unexpected error occured while listening for connection");
         }
     }
+    // function with a switch that takes in a imput from the client and decides what to do.
+    private void controllerFunction(){
+        // boolean to control loop
+        try {
+            boolean keepGoing = true;
+            while (keepGoing) {
+                String action = (String) input.readObject();
 
-    private void controlerFunction(){
-
+                switch (action){
+                    
+                }
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("A error occured in operation");
+        }
     }
 
 

@@ -117,7 +117,7 @@ public class CapstoneTrackerDBInterface {
         }
         return outObj;
     }
-    //gets all the versions of a paticular capstone project
+    //gets all the versions of a paticular capstone
     CapstoneInfo GetCapstoneVersions(CapstoneInfo outObj) {
         // arraylist to hold data returned
         ArrayList<ArrayList<String>> Values;
@@ -345,7 +345,7 @@ public class CapstoneTrackerDBInterface {
     * the Title of the project, its current status, and the name of the author
     * I used whenever a list of multiple capstones is needed
     */
-    ArrayList<CapstoneInfo> GetMultipleCapstones(String sqlWhere, ArrayList<String>paramInfo) {
+    private ArrayList<CapstoneInfo> GetMultipleCapstones(String sqlWhere, ArrayList<String>paramInfo) {
         // arraylist to store capstone objects to be created
         ArrayList<CapstoneInfo>capstones=new ArrayList<CapstoneInfo>();
         /*arraylist to store results of query, to be parrsed in seprate try block so that if a exception is thrown during
@@ -425,5 +425,53 @@ public class CapstoneTrackerDBInterface {
         return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
                 "(SELECT capstoneID FROM committe WHERE username=? AND Tracking=1);", params);
     }
+    // gets all  the pending invites to a commite a faculty has
+    ArrayList<InviteInfo> getPendingInvites(user_info user){
+        // the ultimate output of this fuction
+        ArrayList<InviteInfo>invites=new ArrayList<InviteInfo>();
+        // the results of the sql statements
+        ArrayList<ArrayList<String>>results;
+        try{
+            // gets all the pending none accped,declined or tracking invites using this sql
+            String sql ="SELECT Author,Title,Position,Lattest_Date,committe.CapstoneID,Username FROM committe" +
+                    " JOIN capstone_info ON committe.CapstoneID = capstone_info.CapstoneID" +
+                    " JOIN capstone_version ON capstone_info.CapstoneID = capstone_version.capstoneID AND capstone_info.Lattest_Date=capstone_version.`Date:`\n" +
+                    " WHERE Username=? AND Tracking=0 AND HasAccepted=0 and HasDecline=0;";
+            ArrayList<String>params=new ArrayList<String>();
+            params.add(user.getUsername());
+            db.connect();
+            results=db.getData(sql,params);
+            db.close();
+        }
+        catch (DLException dle){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
+            System.out.println("An error has occured with the database when trying to get pending invites");
+            return null;
+        }
+        catch (Exception e){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e2){}
+            System.out.println("An unexpected error has occured when trying to get pending invites");
+            return null;
+        }
+        // populating the array of objects and returning it
+        try{
+            for (ArrayList<String> row : results){
+                // creates the inviteINfo object
+                InviteInfo info=new InviteInfo(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5));
+                invites.add(info);
+            }
+            return invites;
+        }
+        catch (Exception e){
+            System.out.println("An error has occured populating objects to get a list of current invites");
+            return null;
+        }
+
+    }
+
 
 }
