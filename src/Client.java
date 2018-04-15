@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.Thread.*;
+import java.sql.*;
 /*
 * @author   Vincent Venutolo, Jacob Feiner, Chris Bonsu, and Ian Anyala
 * @version  1.0
@@ -25,12 +26,25 @@ public class Client extends JFrame {
    private ObjectOutputStream outputStream = null;
    private boolean loginProcess = true;
    private String username;
-   private String password;
+   //private String password;
+   
+   //Attributes for Connection
+   String uri = "jdbc:mysql://localhost/Project_Database?autoReconnect=true&useSSL=false";
+   String driver = "com.mysql.jdbc.Driver";
+   //String user = "iste330t21";
+   //String password = "ChrJacIanVin"; //My password is root on my laptop
+   
+   String user = "root";
+   String password = "root"; //My password is root on my laptop
+
+   Connection conn = null;
+
 
    // Client Constructor
    public Client() {
       try {
-            cs = new Socket("localHost", 4445);
+            conn = DriverManager.getConnection(uri, user, password); 
+            cs = new Socket("localHost", 4242);
             System.out.println("Connected");
             
             //////////////////////////////////////////
