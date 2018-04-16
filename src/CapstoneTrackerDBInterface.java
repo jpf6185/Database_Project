@@ -200,7 +200,8 @@ public class CapstoneTrackerDBInterface {
         }
         return false;
     }
-
+    // method to get an older capstoneversion
+    CapstoneVersion getOlderVersion(CapstoneVersion input){}
 
     //gets the date of the start of the students master, and the date of the start of the students cpastones
     user_info GetStudentDates(user_info outObj){
@@ -473,5 +474,39 @@ public class CapstoneTrackerDBInterface {
 
     }
 
+    // adds an invite to the database or adds a tracking to a project.
+    boolean addInvite(commitee_info input){
+        try{
+            String sql="INSERT INTO committe VALUES (?,?,0,0,?,?);";
+            ArrayList<String>values=new ArrayList<String>();
+            values.add(input.getUserName());
+            values.add(input.getCapStoneID());
+            values.add(input.getPosition());
+            values.add(input.getTracking());
+            db.connect();
+            boolean res=db.setData(sql,values);
+            db.close();
+            return res;
+
+        }
+        catch (DLException dle){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
+            System.out.println("An error has occured with the database when trying to invite the faculty");
+            return false;
+        }
+        catch (Exception e){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e2){}
+            System.out.println("An unexpected error has occured when trying to invite the faculty");
+            return false;
+        }
+    }
+    // accepts or declines an Invite to a commitee
+    boolean acceptOrDeclineInvite(commitee_info input){
+
+    }
 
 }

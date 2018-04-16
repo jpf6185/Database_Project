@@ -71,7 +71,7 @@ public class CapstoneTrackerDbServer extends Thread{
             boolean quit=false;
             while(notLoggedIn){
                 // string to determine if the user wants to log in or quit
-                String action= (String)input.readObject();
+                String action= ((String)input.readObject()).toLowerCase();
                 // tries to log in if the user wants to
                 if(action.equals("login")){
                     // gets the loginInfo object that should be sent
@@ -124,10 +124,15 @@ public class CapstoneTrackerDbServer extends Thread{
         try {
             boolean keepGoing = true;
             while (keepGoing) {
-                String action = (String) input.readObject();
+                // reads in the action the server send
+                String action = ((String) input.readObject()).toLowerCase();
 
                 switch (action){
-                    
+                    case "getcapstoneinfo": callGetCapstoneInfo();
+                        break;
+                    case ""
+
+
                 }
             }
         }
@@ -135,6 +140,9 @@ public class CapstoneTrackerDbServer extends Thread{
             System.out.println(e.getMessage());
             System.out.println("A error occured in operation");
         }
+    }
+    private void callGetCapstoneInfo(){
+        
     }
 
 
