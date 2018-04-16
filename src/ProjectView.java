@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.table.*;
 import javax.swing.*;
 import java.io.*;
 
@@ -56,7 +57,19 @@ public class ProjectView extends JFrame implements ActionListener{
       jProjectTable = new JTable(dataStatus,columnNames);
       jProjectTable.setTableHeader(null);
       jScrollPane = new JScrollPane(jProjectTable);
+      jProjectTable.setPreferredScrollableViewportSize(jProjectTable.getPreferredSize());
       jProjectTable.setFillsViewportHeight(true);
+      
+      // Right Align 1st Column and Center Align 2nd Column
+      TableColumnModel cm = jProjectTable.getColumnModel();
+      TableColumn colOne = cm.getColumn(0);
+      TableColumn colTwo = cm.getColumn(1);
+      DefaultTableCellRenderer rendererForOne = new DefaultTableCellRenderer();
+      DefaultTableCellRenderer rendererForTwo = new DefaultTableCellRenderer();
+      rendererForOne.setHorizontalAlignment(JLabel.RIGHT);
+      colOne.setCellRenderer(rendererForOne);
+      rendererForTwo.setHorizontalAlignment(JLabel.CENTER);
+      colTwo.setCellRenderer(rendererForTwo);
       
       jpCenterPanel.add(jScrollPane, BorderLayout.CENTER);
       add(jpCenterPanel, BorderLayout.CENTER);
