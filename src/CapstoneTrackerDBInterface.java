@@ -200,8 +200,6 @@ public class CapstoneTrackerDBInterface {
         }
         return false;
     }
-    // method to get an older capstoneversion
-    CapstoneVersion getOlderVersion(CapstoneVersion input){}
 
     //gets the date of the start of the students master, and the date of the start of the students cpastones
     user_info GetStudentDates(user_info outObj){
