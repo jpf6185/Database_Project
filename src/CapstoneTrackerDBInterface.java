@@ -20,15 +20,15 @@ public class CapstoneTrackerDBInterface {
     MySQLDatabase db;
 
     // default constructor to initialize database object
-    public CapstoneTrackerDBInterface() {
+    CapstoneTrackerDBInterface() {
         db = new MySQLDatabase();
     }
 
     // method to log in user
-    public user_info Login(loginInfo info){
+   user_info Login(loginInfo info){
         try {
             // checks to see if an entry exists for the information provided
-            String select = "SELECT username from Users WHERE username=? and password=sha(?)";
+            String select = "SELECT username from Users WHERE username=? and password=sha(?);";
             ArrayList<String>params=new ArrayList<String>();
             params.add(info.getUserName());
             params.add(info.getPassword());
@@ -65,7 +65,7 @@ public class CapstoneTrackerDBInterface {
 
 
     // gets the info on the most recent capstone
-    public CapstoneInfo GetCapstoneInfo(CapstoneInfo outObj) {
+    CapstoneInfo GetCapstoneInfo(CapstoneInfo outObj) {
         // arraylist to hold data returned
         ArrayList<ArrayList<String>> Values;
         try {
@@ -118,7 +118,7 @@ public class CapstoneTrackerDBInterface {
         return outObj;
     }
     //gets all the versions of a paticular capstone project
-    public CapstoneInfo GetCapstoneVersions(CapstoneInfo outObj) {
+    CapstoneInfo GetCapstoneVersions(CapstoneInfo outObj) {
         // arraylist to hold data returned
         ArrayList<ArrayList<String>> Values;
         try {
@@ -160,7 +160,7 @@ public class CapstoneTrackerDBInterface {
     }
     // updates the capstone info by inserts new capstone version and changing the lattest date in capstone_info table to
     // the date in the provided capstoneVersion Object
-    public Boolean updateCapstone(CapstoneInfo inObj){
+    Boolean updateCapstone(CapstoneInfo inObj){
         try {
             // grabs the capstone version object that conatins much of the data, asside from capstoneID
 
@@ -203,7 +203,7 @@ public class CapstoneTrackerDBInterface {
 
 
     //gets the date of the start of the students master, and the date of the start of the students cpastones
-    public user_info GetStudentDates(user_info outObj){
+    user_info GetStudentDates(user_info outObj){
 
         // arraylist to hold data returned
         ArrayList<ArrayList<String>> Values;
@@ -240,7 +240,7 @@ public class CapstoneTrackerDBInterface {
 
             //
             outObj.setCapstoneStartDate(Values.get(0).get(0));
-            outObj.setMasterStart(Value.get(0).get(1));
+            outObj.setMasterStart(Value.get(0).get(0));
 
             return outObj;
 
@@ -253,11 +253,11 @@ public class CapstoneTrackerDBInterface {
         return null;
     }
 // gets the info about a students to fill the user info object
-    public user_info GetUserInfo(user_info outObj){
+    user_info GetUserInfo(user_info outObj){
 
         ArrayList<ArrayList<String>> Values;
         try{
-            String sqlStatement = "SELECT UserType,Name,Email,`Phone Number`,Department FROM users WHERE Username=?;";
+            String sqlStatement = "SELECT Username,UserType,Name,Email,`Phone Number`,Department FROM users WHERE Username=?;";
 
             //arraylist of parameters for the following method
             ArrayList<String> Params = new ArrayList<String>();
@@ -276,12 +276,12 @@ public class CapstoneTrackerDBInterface {
         try
         {
             //how to pull all fields from the user table
-            outObj.setUserName(Values.get(0).get(1));
-            outObj.setUserType(Values.get(0).get(2));
-            outObj.setName(Values.get(0).get(3));
-            outObj.setEmail(Values.get(0).get(4));
-            outObj.setPhoneNumber(Values.get(0).get(5));
-            outObj.setDepartment(Values.get(0).get(6));
+            outObj.setUserName(Values.get(0).get(0));
+            outObj.setUserType(Values.get(0).get(1));
+            outObj.setName(Values.get(0).get(2));
+            outObj.setEmail(Values.get(0).get(3));
+            outObj.setPhoneNumber(Values.get(0).get(4));
+            outObj.setDepartment(Values.get(0).get(5));
             outObj= GetStudentDates(outObj);
             return outObj;
 
@@ -294,7 +294,7 @@ public class CapstoneTrackerDBInterface {
         return null;
     }
 
-    public user_info GetCommitees(user_info outObj){
+    user_info GetCommitees(user_info outObj){
 
         ArrayList<ArrayList<String>> Values;
         try{
@@ -345,7 +345,7 @@ public class CapstoneTrackerDBInterface {
     * the Title of the project, its current status, and the name of the author
     * I used whenever a list of multiple capstones is needed
     */
-    private ArrayList<CapstoneInfo> GetMultipleCapstones(String sqlWhere, ArrayList<String>paramInfo) {
+    ArrayList<CapstoneInfo> GetMultipleCapstones(String sqlWhere, ArrayList<String>paramInfo) {
         // arraylist to store capstone objects to be created
         ArrayList<CapstoneInfo>capstones=new ArrayList<CapstoneInfo>();
         /*arraylist to store results of query, to be parrsed in seprate try block so that if a exception is thrown during
@@ -407,11 +407,11 @@ public class CapstoneTrackerDBInterface {
         return capstones;
     }
     // gets a list of all capstones
-    public ArrayList<CapstoneInfo>GetAllCapstones(){
+    ArrayList<CapstoneInfo>GetAllCapstones(){
         return GetMultipleCapstones(" WHERE users.userType='student' AND capstone_version.`Date:`=capstone_info.Lattest_Date;",new ArrayList<String>());
     }
     // gets all the capstones a faculty is a commitee member of
-    public ArrayList<CapstoneInfo>GetCommiteeCapstones(user_info user){
+    ArrayList<CapstoneInfo>GetCommiteeCapstones(user_info user){
         ArrayList<String> params=new ArrayList<String>();
         params.add(user.getUsername());
         return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
@@ -419,7 +419,7 @@ public class CapstoneTrackerDBInterface {
 
     }
     // gets all the capstones a faculty is tracking
-    public ArrayList<CapstoneInfo>GetTrackedCapstones(user_info user) {
+    ArrayList<CapstoneInfo>GetTrackedCapstones(user_info user) {
         ArrayList<String> params = new ArrayList<String>();
         params.add(user.getUsername());
         return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
