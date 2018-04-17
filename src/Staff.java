@@ -40,7 +40,7 @@ public class Staff extends JFrame implements ActionListener{
       
       // Center Panel Setup
       jpCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,30,10));
-      jStaffTable = new JTable(dataStatus, columnNames);
+      jStaffTable = new JTable(getDataObject(), columnNames);
       jScrollPane = new JScrollPane(jStaffTable);
       jStaffTable.setFillsViewportHeight(true);
       
@@ -72,6 +72,11 @@ public class Staff extends JFrame implements ActionListener{
    
    public void openProjectManagementWindow(){
       
+   }
+   
+   public Object[][] getDataObject(){
+   
+      return data;
    }
    
 } // end class

@@ -3,6 +3,7 @@ import java.awt.event.*;
 import javax.swing.table.*;
 import javax.swing.*;
 import java.io.*;
+import java.util.*;
 
 public class ProjectView extends JFrame implements ActionListener{
 
@@ -15,17 +16,21 @@ public class ProjectView extends JFrame implements ActionListener{
    // JComponent ScrollPane
    private JScrollPane jScrollPane;
    
+   // ArrayList Attributes
+   private String[] dataHeaders = {
+                                 "Date:",
+                                 "Student Name:",
+                                 "Project Title:",
+                                 "Description:",
+                                 "Plagiarism Score:",
+                                 "Grade:",
+                                 "Type:",
+                                 "Status:"};
+                                 
+   
    // Attributes
    private String[] columnNames = {"null","null"};
-   private Object[][] dataStatus ={
-   {"Date:", "Test"},
-   {"Student Name:", "Test"},
-   {"Project Title:", "Test"},
-   {"Description:", "Test"},
-   {"Plagiarism Score:", "Test"},
-   {"Grade:", "Test"},
-   {"Type:", "Test"},
-   {"Status:", "Test"}};
+   private Object[][] currentData = new Object[8][2];
    
    private String getRole = "Faculty";
    private String changeTitle;
@@ -54,13 +59,13 @@ public class ProjectView extends JFrame implements ActionListener{
       
       // Center Panel Setup
       jpCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,30,10));
-      jProjectTable = new JTable(dataStatus,columnNames);
+      jProjectTable = new JTable(getDataObject(currentData),columnNames);
       jProjectTable.setTableHeader(null);
       jScrollPane = new JScrollPane(jProjectTable);
       jProjectTable.setPreferredScrollableViewportSize(jProjectTable.getPreferredSize());
       jProjectTable.setFillsViewportHeight(true);
       
-      // Right Align 1st Column and Center Align 2nd Column
+      /* Right Align 1st Column and Center Align 2nd Column
       TableColumnModel cm = jProjectTable.getColumnModel();
       TableColumn colOne = cm.getColumn(0);
       TableColumn colTwo = cm.getColumn(1);
@@ -69,10 +74,14 @@ public class ProjectView extends JFrame implements ActionListener{
       rendererForOne.setHorizontalAlignment(JLabel.RIGHT);
       colOne.setCellRenderer(rendererForOne);
       rendererForTwo.setHorizontalAlignment(JLabel.CENTER);
-      colTwo.setCellRenderer(rendererForTwo);
+      colTwo.setCellRenderer(rendererForTwo);*/
+      
+      // Set Size of the Project View Table
+      jProjectTable.getColumnModel().getColumn(0).setPreferredWidth(200);
+      jProjectTable.getColumnModel().getColumn(1).setPreferredWidth(30);
       
       jpCenterPanel.add(jScrollPane, BorderLayout.CENTER);
-      add(jpCenterPanel, BorderLayout.CENTER);
+      add(jpCenterPanel, BorderLayout.CENTER); 
       
       // South Panel Setup
       jpSouthPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -117,5 +126,21 @@ public class ProjectView extends JFrame implements ActionListener{
    public void actionPerformed(ActionEvent ae){
       Object choice = ae.getSource();
    }
+   
+   public Object[][] getDataObject(Object[][] data){
+   
+      // iterate dataHeaders into table
+      int iteratedNum = 0;
+      for (String dh : dataHeaders){
+         
+         data[iteratedNum][0] = dh;
+         iteratedNum++;
+      }
+      
+      
+   
+      return data;
+   }
+   
 
 } // end class
