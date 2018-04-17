@@ -23,18 +23,12 @@ public class LoginGUI extends JFrame{
    
    // Constant Attributes
    private static final int MAX_LENGTH = 7;
-
-   // Constructor for getting ClientSocket
+   // Default Constructor
    public LoginGUI(Socket _cs, BufferedReader _br, PrintWriter _pw){
+   
       this.cs = _cs;
       this.br = _br;
       this.pw = _pw;
-      new LoginGUI();
-   }
-
-   // Default Constructor
-   public LoginGUI(){
-   
       //////////////////////////////////////////
       //////////// Login GUI Setup /////////////
       //////////////////////////////////////////
@@ -120,6 +114,29 @@ public class LoginGUI extends JFrame{
          this.jtxtPassword = _jtxtPassword;
       }
       
+      // communicateLogin Method
+      public void communicateLogin(Object _objClientLogin){
+         
+         try{
+         ObjectOutputStream outputStream;
+         
+         System.out.println("Begins comm");
+         outputStream = new ObjectOutputStream(cs.getOutputStream());
+         outputStream.writeObject("login");
+         System.out.println("Sent login object");
+         outputStream.flush();
+         outputStream.writeObject(_objClientLogin);
+         System.out.println("Sent UserInfo object");
+         outputStream.flush();
+         
+         }
+         catch (IOException ioe){
+            System.out.println("LoginGUI()-communicateLogin Method Error Occurred:\n" + ioe.getMessage());
+            
+         }
+      
+      } // end communicateLogin
+      
       // ActionPerformed Method for listening to Login Button
       @Override
       public void actionPerformed(ActionEvent ae){
@@ -137,7 +154,7 @@ public class LoginGUI extends JFrame{
                status = showErrorMsg("Please enter username at least 7 characters.", 1);
             }
             // Password cannot be entered nothing
-            if (status && !(currentPassword == null)){
+            if (status && (currentPassword == null)){
                status = showErrorMsg("Please enter your password.", 2);
             }
             // Checking if Login Credentials are found on database
@@ -151,24 +168,6 @@ public class LoginGUI extends JFrame{
          
       } // end actionPerformed Method
       
-      // communicateLogin Method
-      public void communicateLogin(Object _objClientLogin){
-         
-         try{
-         ObjectOutputStream outputStream;
-         
-         System.out.println("Begins comm");
-         outputStream = new ObjectOutputStream(cs.getOutputStream());
-         outputStream.writeObject(_objClientLogin);
-         outputStream.flush();
-         
-         }
-         catch (IOException ioe){
-            System.out.println("LoginGUI()-communicateLogin Method Error Occurred:\n" + ioe.getMessage());
-            
-         }
-      
-      } // end communicateLogin
       
       // Show Error Message
       public boolean showErrorMsg(String msg, int cmd){

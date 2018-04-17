@@ -4,9 +4,7 @@ import javax.swing.table.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
-
-public class ProjectView extends JFrame implements ActionListener{
-
+public class ProjectView extends JFrame{
    // JComponent Attributes
    private JPanel jpNorthPanel, jpCenterPanel, jpSouthPanel;
    private JLabel jlTitle;
@@ -88,26 +86,31 @@ public class ProjectView extends JFrame implements ActionListener{
       
       if (!getRole.equals("Faculty")){
          jbChangeStatus = new JButton("Change Status");
-         jbChangeStatus.addActionListener(this);
+         //jbChangeStatus.addActionListener
          jpSouthPanel.add(jbChangeStatus);
          
          jbPlagiarismScore = new JButton("Enter a Plagiarism Score");
-         jbPlagiarismScore.addActionListener(this);
+         //jbPlagiarismScore.addActionListener(this);
          jpSouthPanel.add(jbPlagiarismScore);
          
          jbApply = new JButton("Apply");
-         jbApply.addActionListener(this);
+         //jbApply.addActionListener(this);
          jpSouthPanel.add(jbApply);
       }
       else{
          // This else when role is Staff
          jbFinalGrade = new JButton("Enter a final grade");
-         jbFinalGrade.addActionListener(this);
+         //jbFinalGrade.addActionListener(this);
          jpSouthPanel.add(jbFinalGrade);
       }
       
       jbClose = new JButton("Close");
-      jbClose.addActionListener(this);
+      jbClose.addActionListener((new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(0);
+                }
+            }));
+            
       jpSouthPanel.add(jbClose);
       
       add(jpSouthPanel, BorderLayout.SOUTH);
@@ -122,10 +125,6 @@ public class ProjectView extends JFrame implements ActionListener{
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    }
    
-   @Override
-   public void actionPerformed(ActionEvent ae){
-      Object choice = ae.getSource();
-   }
    
    public Object[][] getDataObject(Object[][] data){
    
@@ -142,5 +141,4 @@ public class ProjectView extends JFrame implements ActionListener{
       return data;
    }
    
-
 } // end class

@@ -25,7 +25,7 @@ public class CapstoneTrackerDBInterface {
     }
 
     // method to log in user
-   user_info Login(loginInfo info){
+   UserInfo Login(LoginInfo info){
         try {
             // checks to see if an entry exists for the information provided
             String select = "SELECT username from Users WHERE username=? and password=sha(?);";
@@ -35,9 +35,9 @@ public class CapstoneTrackerDBInterface {
             db.connect();
             ArrayList<ArrayList<String>>result=db.getData(select,params);
             db.close();
-            // if the results are not empty creates a user_info object, calls the GetUserInfo to fill it, and returns the object
+            // if the results are not empty creates a UserInfo object, calls the GetUserInfo to fill it, and returns the object
             if (result.size()>0) {
-                user_info user=new user_info();
+                UserInfo user=new UserInfo();
                 user.setUserName(info.getUserName());
                 user=GetUserInfo(user);
                 return user;
@@ -202,7 +202,7 @@ public class CapstoneTrackerDBInterface {
     }
 
     //gets the date of the start of the students master, and the date of the start of the students cpastones
-    user_info GetStudentDates(user_info outObj){
+    UserInfo GetStudentDates(UserInfo outObj){
 
         // arraylist to hold data returned
         ArrayList<ArrayList<String>> Values;
@@ -252,7 +252,7 @@ public class CapstoneTrackerDBInterface {
         return null;
     }
 // gets the info about a students to fill the user info object
-    user_info GetUserInfo(user_info outObj){
+    UserInfo GetUserInfo(UserInfo outObj){
 
         ArrayList<ArrayList<String>> Values;
         try{
@@ -281,10 +281,10 @@ public class CapstoneTrackerDBInterface {
             outObj.setEmail(Values.get(0).get(3));
             outObj.setPhoneNumber(Values.get(0).get(4));
             outObj.setDepartment(Values.get(0).get(5));
-            if(outObj.getUserType().toLowerCase().equals("strudent")) {
-                outObj = GetStudentDates(outObj);
-            }
-            outObj=GetCommitees(outObj);
+            //if(outObj.getUserType().toLowerCase().equals("strudent")) {
+            //    outObj = GetStudentDates(outObj);
+            //}
+            //outObj=GetCommitees(outObj);
             return outObj;
 
 
@@ -296,7 +296,7 @@ public class CapstoneTrackerDBInterface {
         return null;
     }
 
-    user_info GetCommitees(user_info outObj){
+    UserInfo GetCommitees(UserInfo outObj){
 
         ArrayList<ArrayList<String>> Values;
         try{
@@ -413,7 +413,7 @@ public class CapstoneTrackerDBInterface {
         return GetMultipleCapstones(" WHERE users.userType='student' AND capstone_version.`Date:`=capstone_info.Lattest_Date;",new ArrayList<String>());
     }
     // gets all the capstones a faculty is a commitee member of
-    ArrayList<CapstoneInfo>GetCommiteeCapstones(user_info user){
+    ArrayList<CapstoneInfo>GetCommiteeCapstones(UserInfo user){
         ArrayList<String> params=new ArrayList<String>();
         params.add(user.getUsername());
         return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
@@ -421,14 +421,14 @@ public class CapstoneTrackerDBInterface {
 
     }
     // gets all the capstones a faculty is tracking
-    ArrayList<CapstoneInfo>GetTrackedCapstones(user_info user) {
+    ArrayList<CapstoneInfo>GetTrackedCapstones(UserInfo user) {
         ArrayList<String> params = new ArrayList<String>();
         params.add(user.getUsername());
         return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
                 "(SELECT capstoneID FROM committe WHERE username=? AND Tracking=1);", params);
     }
     // gets all  the pending invites to a commite a faculty has
-    ArrayList<InviteInfo> getPendingInvites(user_info user){
+    ArrayList<InviteInfo> getPendingInvites(UserInfo user){
         // the ultimate output of this fuction
         ArrayList<InviteInfo>invites=new ArrayList<InviteInfo>();
         // the results of the sql statements

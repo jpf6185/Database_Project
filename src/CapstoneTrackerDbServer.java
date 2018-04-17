@@ -6,10 +6,7 @@
 *  choice to make things simpler for now
 */
 
-import java.io.Console;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -43,8 +40,14 @@ public class CapstoneTrackerDbServer extends Thread{
                 System.out.println("Waiting for a client...");
                 Socket connect= ss.accept();
                 System.out.println("A client has connectedw waiting for login");
-                input=new ObjectInputStream(connect.getInputStream());
-                output=new ObjectOutputStream(connect.getOutputStream());
+                InputStream in=connect.getInputStream();
+                System.out.println("creating input");
+                input=new ObjectInputStream(in);
+                System.out.println("input created");
+                OutputStream out=connect.getOutputStream();
+                System.out.println("creating output");
+                output=new ObjectOutputStream(out);
+                System.out.println("Output created");
                 login();
 
 
@@ -52,6 +55,7 @@ public class CapstoneTrackerDbServer extends Thread{
             }
         }
         catch(IOException ioe){
+            System.out.println(ioe.getMessage());
             System.out.println("An error occured while listening for connection, please restart the server");
         }
         catch (Exception e){
@@ -66,20 +70,20 @@ public class CapstoneTrackerDbServer extends Thread{
     private void login(){
         // try catch to handle errors
         try{
-            // boolean to control loop
+            // boolean to control loop  
             boolean notLoggedIn=true;
             // boolean to control whether or not to move ont the next part
             boolean quit=false;
             while(notLoggedIn){
                 // string to determine if the user wants to log in or quit
-                String action= ((String)input.readObject()).toLowerCase();
+               String action= ((String)input.readObject()).toLowerCase();
                 // tries to log in if the user wants to
                 if(action.equals("login")){
-                    // gets the loginInfo object that should be sent
-                    loginInfo credentials=(loginInfo)input.readObject();
+                    // gets the LoginInfo object that should be sent
+                    LoginInfo credentials=(LoginInfo)input.readObject();
                     //then calls the login function using that object and stores the results
-                    user_info user=dbInterface.Login(credentials);
-                    /* if login was success the returned result is not null so the server then indicates the login sucedded and sends back the user_info object before changing
+                    UserInfo user=dbInterface.Login(credentials);
+                    /* if login was success the returned result is not null so the server then indicates the login sucedded and sends back the UserInfo object before changing
                     *  the not Logged in to false and which breaks out of the loop allowing the program to go to the controlfuction;
                     */
                     if(user!=null){
@@ -92,11 +96,12 @@ public class CapstoneTrackerDbServer extends Thread{
                     // otherwise infomrs the client the login failed
                     else{
                         output.writeObject("login_failed");
+                        System.out.println("Login_failed");
                         output.flush();
                     }
                 }
                 // if the user does not it ends the connection, sets quit to true, sets notLoggedIn to false to break out, and then ends the connection
-                else{
+                else{   
                     output.writeObject("Closeing conection");
                     output.flush();
                     quit=true;
@@ -116,6 +121,7 @@ public class CapstoneTrackerDbServer extends Thread{
             System.out.println("An network error has occured when trying to login");
         }
         catch (Exception e){
+            System.out.println(e.getMessage());
             System.out.println("An  unexpected error occured while listening for connection");
         }
     }
@@ -165,7 +171,7 @@ public class CapstoneTrackerDbServer extends Thread{
     // method to get info about a user and send it to the client
     private void callGetUserInfo(){
         try{
-            user_info user=(user_info)input.readObject();
+            UserInfo user=(UserInfo)input.readObject();
             user=dbInterface.GetUserInfo(user);
             output.writeObject(user);
             output.flush();
@@ -181,7 +187,7 @@ public class CapstoneTrackerDbServer extends Thread{
     // gets all the capstones a staff is the commitee member of
     private void callGetCommiteeCapstones(){
         try{
-            user_info user=(user_info)input.readObject();
+            UserInfo user=(UserInfo)input.readObject();
             ArrayList<CapstoneInfo>capstones=dbInterface.GetCommiteeCapstones(user);
             output.writeObject(capstones);
             output.flush();
@@ -197,7 +203,7 @@ public class CapstoneTrackerDbServer extends Thread{
     // gets all the pending invites a faculty has;
     private void callGetPendingInvites(){
         try{
-            user_info user=(user_info)input.readObject();
+            UserInfo user=(UserInfo)input.readObject();
             ArrayList<InviteInfo>capstones=dbInterface.getPendingInvites(user);
             output.writeObject(capstones);
             output.flush();

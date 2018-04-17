@@ -39,7 +39,7 @@ public class Client extends JFrame {
    //String password = "ChrJacIanVin"; //My password is root on my laptop
    
    String user = "root";
-   String password = "root"; //My password is root on my laptop
+   String password = "student"; //My password is root on my laptop
 
    Connection conn = null;
 
@@ -48,7 +48,7 @@ public class Client extends JFrame {
    public Client() {
       try {
             // Create socket to be connected to Server 
-            conn = DriverManager.getConnection(url, user, password); 
+            //conn = DriverManager.getConnection(url, user, password); 
             cs = new Socket("localHost", 4242);
             System.out.println("Connected");
             br = new BufferedReader(new InputStreamReader(cs.getInputStream()));
@@ -61,8 +61,6 @@ public class Client extends JFrame {
             // Process Login
             //clientLogin();
          
-         } catch(SQLException sqle){
-            sqle.printStackTrace();
          }
          
          catch (SocketException se) {
@@ -78,36 +76,5 @@ public class Client extends JFrame {
       new Client();
    } // end Main Method
    
-   /////////////////////////////////////////////////////////
-   //////////// Open Login GUI & Process login /////////////
-   /////////////////////////////////////////////////////////
-   public void clientLogin(){
-      
-      // Attributes
-      ArrayList<String> loginData = new ArrayList<String>();
-      
-      try{
-         while (loginProcess){
-            try{
-               Thread.sleep(1000);}
-            catch(InterruptedException ie){
-               System.out.println(ie.getMessage());}
-         }
-         System.out.println("Begins send info to server");
-         loginData.add(username);
-         loginData.add(password);
-         // select * from people where username='abc1234@rit.edu' and password=md5('password');
-         outputStream = new ObjectOutputStream(cs.getOutputStream());
-         // Sends ArrayList Object to Server
-         outputStream.writeObject(loginData);
-         outputStream.close();
-   
-      } catch (SocketException se) {
-         se.printStackTrace();
-         System.exit(0);
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-   }
    
 } // end Client Class
