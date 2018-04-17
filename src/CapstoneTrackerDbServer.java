@@ -130,7 +130,8 @@ public class CapstoneTrackerDbServer extends Thread{
                 switch (action){
                     case "getcapstoneinfo": callGetCapstoneInfo();
                         break;
-                    case ""
+                    case "getuserinfo":
+                        break;
 
 
                 }
@@ -142,7 +143,23 @@ public class CapstoneTrackerDbServer extends Thread{
         }
     }
     private void callGetCapstoneInfo(){
-        
+        try{
+            CapstoneInfo capstone=(CapstoneInfo)input.readObject();
+            dbInterface.GetCapstoneInfo(capstone);
+            output.writeObject(capstone);
+            output.flush();
+        }
+        catch(IOException ioe){
+            System.out.println("the following IOException has occured trying to get info on a capstone: "+ ioe.getMessage());
+        }
+        catch(Exception e){
+            System.out.println("the following exception has occured trying to get the info on a capstone: "+e.getMessage());
+        }
+    }
+    private void callGetUserInfo(){
+        try{
+            
+        }
     }
 
 

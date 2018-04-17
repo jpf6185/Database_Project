@@ -281,7 +281,10 @@ public class CapstoneTrackerDBInterface {
             outObj.setEmail(Values.get(0).get(3));
             outObj.setPhoneNumber(Values.get(0).get(4));
             outObj.setDepartment(Values.get(0).get(5));
-            outObj= GetStudentDates(outObj);
+            if(outObj.getUserType().toLowerCase().equals("strudent")) {
+                outObj = GetStudentDates(outObj);
+            }
+            outObj=GetCommitees(outObj);
             return outObj;
 
 
@@ -503,8 +506,37 @@ public class CapstoneTrackerDBInterface {
         }
     }
     // accepts or declines an Invite to a commitee
-    boolean acceptOrDeclineInvite(commitee_info input){
-
+    boolean acceptOrDeclineInvite(commitee_info input) {
+        try {
+            String SQL="UPDATE committe SET hasAccepted=?, HasDeclined=? WHERE Username=? and CapstoneID=?;";
+            ArrayList<String>params=new ArrayList<String>();
+            params.add(input.getHasAccepted());
+            params.add(input.getHasDecline());
+            params.add(input.getUserName());
+            params.add(input.getCapStoneID());
+            db.connect();
+            boolean result=db.setData(SQL,params);
+            db.close();
+            return result;
+        }
+        catch (DLException dle) {
+            // closes the database if it is open since an exception occured
+            try {
+                db.close();
+            } catch (Exception e) {
+            }
+            System.out.println("An error has occured with the database when trying to invite the faculty");
+            return false;
+        }
+        catch (Exception e) {
+            // closes the database if it is open since an exception occured
+            try {
+                db.close();
+            } catch (Exception e2) {
+            }
+            System.out.println("An unexpected error has occured when trying to invite the faculty");
+            return false;
+        }
     }
 
 }
