@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
+import java.util.ArrayList;
 
 
 public class CapstoneTrackerDbServer extends Thread{
@@ -129,10 +130,14 @@ public class CapstoneTrackerDbServer extends Thread{
 
                 switch (action){
                     case "getcapstoneinfo": callGetCapstoneInfo();
-                        break;
-                    case "getuserinfo":
-                        break;
-
+                    break;
+                    case "getuserinfo": callGetUserInfo();
+                    break;
+                    case "getcommiteecapstones": callGetCommiteeCapstones();
+                    break;
+                    case "getpendinginvites": callGetPendingInvites();
+                    break;
+                    default: keepGoing=false;
 
                 }
             }
@@ -142,10 +147,11 @@ public class CapstoneTrackerDbServer extends Thread{
             System.out.println("A error occured in operation");
         }
     }
+    // method to get the info about a capstone
     private void callGetCapstoneInfo(){
         try{
             CapstoneInfo capstone=(CapstoneInfo)input.readObject();
-            dbInterface.GetCapstoneInfo(capstone);
+            capstone=dbInterface.GetCapstoneInfo(capstone);
             output.writeObject(capstone);
             output.flush();
         }
@@ -156,12 +162,53 @@ public class CapstoneTrackerDbServer extends Thread{
             System.out.println("the following exception has occured trying to get the info on a capstone: "+e.getMessage());
         }
     }
+    // method to get info about a user and send it to the client
     private void callGetUserInfo(){
         try{
-            
+            user_info user=(user_info)input.readObject();
+            user=dbInterface.GetUserInfo(user);
+            output.writeObject(user);
+            output.flush();
+
+        }
+        catch(IOException ioe){
+            System.out.println("the following IOException has occured trying to get info on a user"+ ioe.getMessage());
+        }
+        catch(Exception e){
+            System.out.println("the following exception has occured trying to get the info on a user"+e.getMessage());
         }
     }
+    // gets all the capstones a staff is the commitee member of
+    private void callGetCommiteeCapstones(){
+        try{
+            user_info user=(user_info)input.readObject();
+            ArrayList<CapstoneInfo>capstones=dbInterface.GetCommiteeCapstones(user);
+            output.writeObject(capstones);
+            output.flush();
 
+        }
+        catch(IOException ioe){
+            System.out.println("the following IOException has occured trying to get info on a user"+ ioe.getMessage());
+        }
+        catch(Exception e){
+            System.out.println("the following exception has occured trying to get the info on a user"+e.getMessage());
+        }
+    }
+    // gets all the pending invites a faculty has;
+    private void callGetPendingInvites(){
+        try{
+            user_info user=(user_info)input.readObject();
+            ArrayList<InviteInfo>capstones=dbInterface.getPendingInvites(user);
+            output.writeObject(capstones);
+            output.flush();
 
+        }
+        catch(IOException ioe){
+            System.out.println("the following IOException has occured trying to get info on a user"+ ioe.getMessage());
+        }
+        catch(Exception e){
+            System.out.println("the following exception has occured trying to get the info on a user"+e.getMessage());
+        }
+    }
 
 }
