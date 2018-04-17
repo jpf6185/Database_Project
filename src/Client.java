@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.Thread.*;
+import java.sql.*;
 /*
 * @author   Vincent Venutolo, Jacob Feiner, Chris Bonsu, and Ian Anyala
 * @version  1.0
@@ -14,6 +15,7 @@ import java.lang.Thread.*;
 public class Client extends JFrame {
    
    // JComponent Declarations
+   private JFrame login;
    private JPanel loginPanel, loginFirstRow, loginSecondRow, loginThirdRow;
    private JTextField jtxtUsername;
    private JPasswordField jtxtPassword;
@@ -23,71 +25,47 @@ public class Client extends JFrame {
    private Socket cs = null;
    private ObjectInputStream inputStream = null;
    private ObjectOutputStream outputStream = null;
+   private BufferedReader br;
+   private PrintWriter pw;
    private boolean loginProcess = true;
    private String username;
-   private String password;
+   
+   //private String password;
+   
+   //Attributes for Connection
+   String url = "jdbc:mysql://localhost/Project_Database?autoReconnect=true&useSSL=false";
+   String driver = "com.mysql.jdbc.Driver";
+   //String user = "iste330t21";
+   //String password = "ChrJacIanVin"; //My password is root on my laptop
+   
+   String user = "root";
+   String password = "root"; //My password is root on my laptop
+
+   Connection conn = null;
+
 
    // Client Constructor
    public Client() {
       try {
-            cs = new Socket("localHost", 4445);
+            // Create socket to be connected to Server 
+            conn = DriverManager.getConnection(url, user, password); 
+            cs = new Socket("localHost", 4242);
             System.out.println("Connected");
+            br = new BufferedReader(new InputStreamReader(cs.getInputStream()));
+            pw = new PrintWriter(cs.getOutputStream(), true);
             
-            //////////////////////////////////////////
-            //////////// Login GUI Setup /////////////
-            //////////////////////////////////////////
-            // JPanel Setup
-            loginPanel = new JPanel(new GridLayout(3,3));
-            
-            // First Row for Username input
-            loginFirstRow = new JPanel(new FlowLayout());
-            loginFirstRow.add(new JLabel("Username:", JLabel.LEFT));
-            jtxtUsername = new JTextField(20);
-            loginFirstRow.add(jtxtUsername);
-            
-            // Second Row for Password input
-            loginSecondRow = new JPanel(new FlowLayout());
-            loginSecondRow.add(new JLabel("Password:", JLabel.LEFT));
-            jtxtPassword = new JPasswordField(20);
-            loginSecondRow.add(jtxtPassword);
-            
-            // Third Row for Login Button
-            loginThirdRow = new JPanel(new FlowLayout());
-            loginButton = new JButton("Login");
-               // Activates when Login button was clicked
-               loginButton.addActionListener(new ActionListener() {
-                  public void actionPerformed(ActionEvent evt) {
-                   
-                     username = jtxtUsername.getText();
-                     password = new String(jtxtPassword.getPassword());
-                     System.out.println("TEST");
-                     loginProcess = false;
-         
-                  }
-               }); // end ActionListener
-               
-            loginThirdRow.add(loginButton);
-            
-            // add JComponents to JFrame
-            loginPanel.add(loginFirstRow, BorderLayout.NORTH);
-            loginPanel.add(loginSecondRow, BorderLayout.NORTH);
-            loginPanel.add(loginThirdRow, BorderLayout.NORTH);
-            add(loginPanel, BorderLayout.CENTER);
-            
-            // JFrame Setup
-            pack();
-            setLocationRelativeTo(null);
-            setVisible(true);
-            setDefaultCloseOperation(EXIT_ON_CLOSE);
-            
-            /////////////////////////////////////////////////
-            //////////// End of Login GUI Setup /////////////
-            /////////////////////////////////////////////////
+            if (loginProcess){
+               LoginGUI openLoginGUI = new LoginGUI(cs, br, pw);
+            }
             
             // Process Login
-            clientLogin();
+            //clientLogin();
          
-         } catch (SocketException se) {
+         } catch(SQLException sqle){
+            sqle.printStackTrace();
+         }
+         
+         catch (SocketException se) {
             se.printStackTrace();
             System.exit(0);
          } catch (IOException e) {
@@ -100,10 +78,15 @@ public class Client extends JFrame {
       new Client();
    } // end Main Method
    
-   // Login Process
+   /////////////////////////////////////////////////////////
+   //////////// Open Login GUI & Process login /////////////
+   /////////////////////////////////////////////////////////
    public void clientLogin(){
+      
+      // Attributes
+      ArrayList<String> loginData = new ArrayList<String>();
+      
       try{
-         ArrayList<String> loginData = new ArrayList<String>();
          while (loginProcess){
             try{
                Thread.sleep(1000);}

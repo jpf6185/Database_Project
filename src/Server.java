@@ -10,6 +10,7 @@ import java.awt.*;
 public class Server {
    
    // Attribute Declarations
+   private ArrayList<String> errorLog = new ArrayList<String>();
    private int randomNum = -1;
    private boolean noBingo = true;
    private Vector<PrintWriter> clients = new Vector<PrintWriter>();
@@ -54,35 +55,49 @@ public class Server {
    class ThreadedServer extends Thread{
       
       // Attributes
+      private Thread.UncaughtExceptionHandler ex;
       private Socket innerCs;
       private String fromClient;
-      private ArrayList<String> loginData = new ArrayList<String>();
+      private ArrayList<String> data = new ArrayList<String>();
       private ObjectInputStream inStream = null;
       private ObjectOutputStream outStream = null;
       private Object obj = null;
+      private MySQLDatabase openDB = null;
+      private boolean loginStatus = true;
+      
       //private PrintWriter pout;
       //private BufferedReader br;
       
       // ThreadedServer Constructor
       public ThreadedServer( Socket _cs ){
          innerCs = _cs;
+         openDB = new MySQLDatabase();
       } // end Constructor Method
       
       // Begins running Thread
       public void run(){
          
-         System.out.println("awaiting for login action from" + innerCs.getPort() + ".");
          try{
          
-            while (true){
+            while (loginStatus){
+            
+               System.out.println("awaiting for login action from" + innerCs.getPort() + ".");
                inStream = new ObjectInputStream(innerCs.getInputStream());
-               obj = inStream.readObject();
-               loginData = (ArrayList<String>) obj;
+               obj = (LoginInfo)inStream.readObject();
                inStream.close();
-               System.out.println(loginData.get(0));
-               System.out.println(loginData.get(1));
+               try{
+               // Connect to Database
+               loginStatus = processLogin(obj);
+               }
+               catch (InterruptedException ie){
+                  throw new DLException(ie);
+               }
+               
             }
          
+         }
+         catch (RuntimeException rte){
+            throw new DLException(rte);
          }
          catch (IOException ioe){
             System.out.println(innerCs.getPort() + " has left.");
@@ -92,6 +107,21 @@ public class Server {
          }
          
       } // end run() Method
+
+      
+      public boolean processLogin(Object _obj) throws DLException{
+      
+         boolean status = true;
+      
+         try{
+            openDB.connect();
+         }
+         catch (DLException dle){
+            System.out.println("Error: Server-processLogin(): " + dle.getMessage());
+            throw new DLException(dle);
+         }
+         return status;
+      }
       
    } // end ThreadedServer class
 } // end Server class
