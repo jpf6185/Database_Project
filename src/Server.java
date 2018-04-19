@@ -83,21 +83,18 @@ public class Server {
             
                System.out.println("awaiting for login action from" + innerCs.getPort() + ".");
                inStream = new ObjectInputStream(innerCs.getInputStream());
-               obj = (LoginInfo)inStream.readObject();
+               obj = (loginInfo)inStream.readObject();
                inStream.close();
                try{
                // Connect to Database
                loginStatus = processLogin(obj);
                }
-               catch (InterruptedException ie){
-                  throw new DLException(ie);
-               }
+               catch(Exception e){}
                
             }
          
          }
          catch (RuntimeException rte){
-            throw new DLException(rte);
          }
          catch (IOException ioe){
             System.out.println(innerCs.getPort() + " has left.");

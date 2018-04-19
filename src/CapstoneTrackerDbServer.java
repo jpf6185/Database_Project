@@ -79,8 +79,8 @@ public class CapstoneTrackerDbServer extends Thread{
                String action= ((String)input.readObject()).toLowerCase();
                 // tries to log in if the user wants to
                 if(action.equals("login")){
-                    // gets the LoginInfo object that should be sent
-                    LoginInfo credentials=(LoginInfo)input.readObject();
+                    // gets the loginInfo object that should be sent
+                    loginInfo credentials=(loginInfo)input.readObject();
                     //then calls the login function using that object and stores the results
                     UserInfo user=dbInterface.Login(credentials);
                     /* if login was success the returned result is not null so the server then indicates the login sucedded and sends back the UserInfo object before changing
@@ -92,6 +92,7 @@ public class CapstoneTrackerDbServer extends Thread{
                         output.writeObject(user);
                         output.flush();
                         notLoggedIn=false;
+                        System.out.println(user.getUsername());
                     }
                     // otherwise infomrs the client the login failed
                     else{
@@ -118,6 +119,7 @@ public class CapstoneTrackerDbServer extends Thread{
 
         }
         catch(IOException ioe){
+            System.out.println(ioe.getStackTrace());
             System.out.println("An network error has occured when trying to login");
         }
         catch (Exception e){

@@ -29,6 +29,7 @@ public class Client extends JFrame {
    private PrintWriter pw;
    private boolean loginProcess = true;
    private String username;
+   private UserInfo
    
    //private String password;
    

@@ -25,7 +25,7 @@ public class CapstoneTrackerDBInterface {
     }
 
     // method to log in user
-   UserInfo Login(LoginInfo info){
+   UserInfo Login(loginInfo info){
         try {
             // checks to see if an entry exists for the information provided
             String select = "SELECT username from Users WHERE username=? and password=sha(?);";
@@ -281,10 +281,7 @@ public class CapstoneTrackerDBInterface {
             outObj.setEmail(Values.get(0).get(3));
             outObj.setPhoneNumber(Values.get(0).get(4));
             outObj.setDepartment(Values.get(0).get(5));
-            //if(outObj.getUserType().toLowerCase().equals("strudent")) {
-            //    outObj = GetStudentDates(outObj);
-            //}
-            //outObj=GetCommitees(outObj);
+            System.out.println(outObj.getUserType());
             return outObj;
 
 

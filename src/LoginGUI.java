@@ -128,11 +128,19 @@ public class LoginGUI extends JFrame{
          outputStream.writeObject(_objClientLogin);
          System.out.println("Sent UserInfo object");
          outputStream.flush();
-         
+         ObjectInputStream in=new ObjectInputStream(cs.getInputStream());
+            UserInfo user;
+         if(in.readObject().equals("login"))
+             Thread.sleep(2000);
+            user=(UserInfo)in.readObject();
+            System.out.println(user.getUsername());
          }
          catch (IOException ioe){
             System.out.println("LoginGUI()-communicateLogin Method Error Occurred:\n" + ioe.getMessage());
             
+         }
+         catch(Exception e){
+            System.out.println("an unpexted error occured when loging in");
          }
       
       } // end communicateLogin
@@ -159,8 +167,8 @@ public class LoginGUI extends JFrame{
             }
             // Checking if Login Credentials are found on database
             if (status){
-                  // Create LoginInfo Object
-                  LoginInfo objClientLogin = new LoginInfo(currentUsername,currentPassword);
+                  // Create loginInfo Object
+                  loginInfo objClientLogin = new loginInfo(currentUsername,currentPassword);
                   communicateLogin(objClientLogin);
             }
          
