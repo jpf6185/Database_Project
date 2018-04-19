@@ -119,7 +119,7 @@ public class CapstoneTrackerDbServer extends Thread{
 
         }
         catch(IOException ioe){
-            System.out.println(ioe.getStackTrace());
+            System.out.println(ioe.getMessage());
             System.out.println("An network error has occured when trying to login");
         }
         catch (Exception e){

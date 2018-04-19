@@ -18,17 +18,20 @@ public class LoginGUI extends JFrame{
    
    // Attributes
    private Socket cs;
-   private BufferedReader br;
-   private PrintWriter pw;
-   
-   // Constant Attributes
+   ObjectOutputStream outputStream;
+   ObjectInputStream in;
+    // Constant Attributes
    private static final int MAX_LENGTH = 7;
    // Default Constructor
-   public LoginGUI(Socket _cs, BufferedReader _br, PrintWriter _pw){
-   
+   public LoginGUI(Socket _cs){
+
       this.cs = _cs;
-      this.br = _br;
-      this.pw = _pw;
+
+       try {
+           outputStream = new ObjectOutputStream(cs.getOutputStream());
+           in = new ObjectInputStream(cs.getInputStream());
+       }
+       catch(Exception e){}
       //////////////////////////////////////////
       //////////// Login GUI Setup /////////////
       //////////////////////////////////////////
@@ -71,7 +74,7 @@ public class LoginGUI extends JFrame{
       loginButton = new JButton("Login");
       
       // Activates when Login button was clicked
-      loginButton.addActionListener(new ManageLogin(this, cs, br, pw, jlErrorText, jtxtUsername, jtxtPassword));
+      loginButton.addActionListener(new ManageLogin(this, cs, jlErrorText, jtxtUsername, jtxtPassword));
          
       jpLoginThirdRow.add(loginButton);
       
@@ -98,42 +101,41 @@ public class LoginGUI extends JFrame{
       // Attributes
       private LoginGUI window;
       private Socket cs;
-      private BufferedReader br;
-      private PrintWriter pw;
       private JLabel jlErrorText;
       private JTextField jtxtUsername;
       private JPasswordField jtxtPassword;
       
-      public ManageLogin(LoginGUI _window, Socket _cs, BufferedReader _br, PrintWriter _pw, JLabel _jlErrorText, JTextField _jtxtUsername, JPasswordField _jtxtPassword){
+      public ManageLogin(LoginGUI _window, Socket _cs, JLabel _jlErrorText, JTextField _jtxtUsername, JPasswordField _jtxtPassword){
          this.window = _window;
          this.cs = _cs;
-         this.br = _br;
-         this.pw = _pw;
          this.jlErrorText = _jlErrorText;
          this.jtxtUsername = _jtxtUsername;
          this.jtxtPassword = _jtxtPassword;
+
       }
       
       // communicateLogin Method
       public void communicateLogin(Object _objClientLogin){
          
-         try{
-         ObjectOutputStream outputStream;
-         
-         System.out.println("Begins comm");
-         outputStream = new ObjectOutputStream(cs.getOutputStream());
-         outputStream.writeObject("login");
-         System.out.println("Sent login object");
-         outputStream.flush();
-         outputStream.writeObject(_objClientLogin);
-         System.out.println("Sent UserInfo object");
-         outputStream.flush();
-         ObjectInputStream in=new ObjectInputStream(cs.getInputStream());
+         try {
+
+
+            System.out.println("Begins comm");
+
+
+            outputStream.writeObject("login");
+            System.out.println("Sent login object");
+            outputStream.flush();
+            outputStream.writeObject(_objClientLogin);
+            System.out.println("Sent UserInfo object");
+            outputStream.flush();
             UserInfo user;
-         if(in.readObject().equals("login"))
-             Thread.sleep(2000);
-            user=(UserInfo)in.readObject();
-            System.out.println(user.getUsername());
+            if (in.readObject().equals("login")) {
+               user = (UserInfo) in.readObject();
+               System.out.println(user.getUsername());
+            } else {
+               System.out.println("Login failed");
+            }
          }
          catch (IOException ioe){
             System.out.println("LoginGUI()-communicateLogin Method Error Occurred:\n" + ioe.getMessage());
