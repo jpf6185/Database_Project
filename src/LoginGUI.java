@@ -30,6 +30,8 @@ public class LoginGUI extends JFrame{
        try {
            outputStream = new ObjectOutputStream(cs.getOutputStream());
            in = new ObjectInputStream(cs.getInputStream());
+           c.setOutputStream(outputStream);
+           c.setInputStream(in);
        }
        catch(Exception e){}
       //////////////////////////////////////////

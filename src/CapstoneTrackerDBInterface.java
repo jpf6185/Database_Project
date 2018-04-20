@@ -19,6 +19,13 @@ public class CapstoneTrackerDBInterface {
      */
     MySQLDatabase db;
 
+    public static void main(String[]args){
+        CapstoneTrackerDBInterface inter=new CapstoneTrackerDBInterface();
+        UserInfo test=new UserInfo();
+        test.setUserName("jpf6185");
+        test=inter.GetCommitees(test);
+        System.out.println(test.getCommitees().get(0).getCapStoneID());
+    }
     // default constructor to initialize database object
     CapstoneTrackerDBInterface() {
         db = new MySQLDatabase();
@@ -92,6 +99,7 @@ public class CapstoneTrackerDBInterface {
             return null;
         }
         try{
+
             // sets the lattest date in outobj
             outObj.setLatestDate(Values.get(0).get(1));
             // sets the plagerism score
@@ -168,10 +176,9 @@ public class CapstoneTrackerDBInterface {
 
             ArrayList<String>Params=new ArrayList<String>();
             ArrayList<String>Params2=new ArrayList<String>();
-            String insertStatement = "Insert INTO Capstone_Version Values(?,?,?,?,?,?,?);";
-            String updateStatement="Update Capstone_Info Set Lattest_Date=? Where CapstoneID=?";
+            String insertStatement = "Insert INTO Capstone_Version Values(NOW(),?,?,?,?,?,?);";
+            String updateStatement="Update Capstone_Info Set Lattest_Date=NOW() Where CapstoneID=?";
             //sets the paramaters useing inObj1 and inObj2
-            Params.add(inObj2.getDate());
             Params.add(inObj2.getCapstoneID());
             Params.add(inObj2.getStatusCode());
             Params.add(inObj2.getTitle());
@@ -269,7 +276,7 @@ public class CapstoneTrackerDBInterface {
             // closes the database if it is open since an exception occured
             try{ db.close(); }
             catch (Exception e){}
-            return null;
+            return null;   
 
         }
         try
@@ -300,7 +307,7 @@ public class CapstoneTrackerDBInterface {
             // fills in the user part of the output object
             outObj= GetUserInfo(outObj);
             // then moves onto filling out the commitee part
-            String sqlStatement = "Select * From Committe where Username=?";
+            String sqlStatement = "Select * From Committe where Username=?;";
 
             //arraylist of parameters for the following method
             ArrayList<String> Params = new ArrayList<String>();
@@ -320,23 +327,23 @@ public class CapstoneTrackerDBInterface {
         {
             for(ArrayList<String> info : Values) {
 
-                commitee_info outObj2= new commitee_info(info.get(1));
-                outObj2.setCapStoneID(info.get(2));
-                outObj2.setHasAccepted(info.get(3));
-                outObj2.setHasDecline(info.get(4));
-                outObj2.setPosition(info.get(5));
-                outObj2.setTracking(info.get(6));
+                commitee_info outObj2= new commitee_info(info.get(0));
+                outObj2.setCapStoneID(info.get(1));
+                outObj2.setHasAccepted(info.get(2));
+                outObj2.setHasDecline(info.get(3));
+                outObj2.setPosition(info.get(4));
+                outObj2.setTracking(info.get(5));
                 outObj.addCommitees(outObj2);
             }
-            return outObj;
+            
 
 
 
         }catch(Exception e){
-
+            e.printStackTrace();
 
         }
-        return null;
+        return outObj;
 
     }
 

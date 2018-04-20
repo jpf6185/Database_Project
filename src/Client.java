@@ -125,4 +125,33 @@ public class Client extends JFrame {
     public void setOutputStream(ObjectOutputStream outputStream) {
         this.outputStream = outputStream;
     }
+
+    public CapstoneInfo getCapstoneInfo(){
+       try{
+           outputStream.writeObject("getcommitees");
+           outputStream.flush();
+           outputStream.writeObject(user);
+           outputStream.flush();
+           user=(UserInfo)inputStream.readObject();
+           String id=user.getCommitees().get(0).getCapStoneID();
+           CapstoneInfo cap=new CapstoneInfo();
+           cap.setCapstoneID(id);
+           outputStream.writeObject("getcapstoneinfo");
+           outputStream.flush();
+           outputStream.writeObject(cap);
+           outputStream.flush();
+           cap=(CapstoneInfo)inputStream.readObject();
+           return cap;
+       }
+       catch (IOException ioe){
+           ioe.printStackTrace();
+           System.out.println("error when getting capstone info");
+       }
+       catch (Exception e){
+           e.printStackTrace();
+           System.out.println("unexpected error when getting capstone info");
+       }
+       return null;
+    }
+    public saveCapsone
 } // end Client Class

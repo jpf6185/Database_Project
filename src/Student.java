@@ -62,6 +62,7 @@ public class Student extends JFrame //implements ActionListener
 
    // the type of uesr that opens it, determiens what they are allowed to eddit
    private String userType;
+   private UserInfo user;
    // the main client class that handels comumication
     private Client c;
 
@@ -81,7 +82,9 @@ public class Student extends JFrame //implements ActionListener
       //This will show at the top Title 
       setTitle("Student Information");
       this.c=client;
+      user=c.getUser();
       userType=c.getUser().getUserType();
+      capstoneInfos=c.getCapstoneInfo();
       // JPanel Setup
       jpNorthPanel = new JPanel(new GridLayout(0,2,30,30));
       jpCenterPanel = new JPanel(new GridLayout(2,0,30,30));
@@ -115,53 +118,53 @@ public class Student extends JFrame //implements ActionListener
       
       // Project Details Left Panel Setup
       jlDate = new JLabel("Date: ", SwingConstants.RIGHT);
-      jtfDate = new JTextField(10);
+          jtfDate = new JTextField(capstoneInfos.getLatestDate(),50);
       
       jpFirstRow.add(jlDate);
       jpFirstRow.add(jtfDate);
       jtfDate.setEditable(false);
       
       jlName = new JLabel("Student Name: ", SwingConstants.RIGHT);
-      jtfName = new JTextField(10);
+      jtfName = new JTextField(capstoneInfos.getAuthor(),50);
       jpSecondRow.add(jlDate);
       jpSecondRow.add(jtfDate);
       jtfName.setEditable(false);
       
       
       jlProject = new JLabel("Project Title: ", SwingConstants.RIGHT);
-      jtfProject = new JTextField(10);
+      jtfProject = new JTextField(capstoneInfos.GetVersions().get(0).getTitle(),50);
       jpThirdRow.add(jlProject);
       jpThirdRow.add(jtfProject);
       jtfProject.setEditable(false);
       
       jlDescription = new JLabel("Description: ", SwingConstants.RIGHT);
-      jtfDescription = new JTextField(10);
+      jtfDescription = new JTextField(capstoneInfos.GetVersions().get(0).getDescription(),50);
       jpFourRow.add(jlDescription);
       jpFourRow.add(jtfDescription);
       jtfDescription.setEditable(false);
       
       
       jlPlagiarism = new JLabel("Plagiarism Score: ", SwingConstants.RIGHT);
-      jtfPlagiarism = new JTextField(10);
+      jtfPlagiarism = new JTextField(capstoneInfos.getPlagiarismScore(),50);
       jpFiveRow.add(jlPlagiarism);
       jpFiveRow.add(jtfPlagiarism);
       jtfPlagiarism.setEditable(false);
       
       
       jlGrade = new JLabel("Grade: ", SwingConstants.RIGHT);
-      jtfGrade = new JTextField(10);
+      jtfGrade = new JTextField(capstoneInfos.getGrade(),50);
       jpSixRow.add(jlGrade);
       jpSixRow.add(jtfGrade);
       jtfGrade.setEditable(false);
       
       jlType = new JLabel("Type: ", SwingConstants.RIGHT);
-      jtfType = new JTextField(10);
+      jtfType = new JTextField(capstoneInfos.GetVersions().get(0).getType(),50);
       jpSevenRow.add(jlType);
       jpSevenRow.add(jtfType);
       jtfType.setEditable(false);
       
       jlStatus = new JLabel("Status: ", SwingConstants.RIGHT);
-      jtfStatus = new JTextField(10);
+      jtfStatus = new JTextField(50);
       jpEightRow.add(jlStatus);
       jpEightRow.add(jtfStatus);
       jtfStatus.setEditable(false);

@@ -145,8 +145,9 @@ public class CapstoneTrackerDbServer extends Thread{
                     break;
                     case "getpendinginvites": callGetPendingInvites();
                     break;
-                    case "getcapstoneversions":
-                        break;
+                    case "getcapstoneversions": break;
+                    case "getcommitees": callGetCommitees();
+                    break;
                     default: keepGoing=false;
 
                 }
@@ -157,6 +158,23 @@ public class CapstoneTrackerDbServer extends Thread{
             System.out.println("A error occured in operation");
         }
     }
+
+    // gets the commmitees associated with a user
+    private void callGetCommitees(){
+        try{
+            UserInfo user=(UserInfo)input.readObject();
+            user=dbInterface.GetCommitees(user);
+            output.writeObject(user);
+            output.flush();
+        }
+        catch(IOException ioe){
+            System.out.println("the following IOException has occured trying to get info on committes: "+ ioe.getMessage());
+        }
+        catch(Exception e){
+            System.out.println("the following exception has occured trying to get the info on a comitees: "+e.getMessage());
+        }
+    }
+
     // method to get the info about a capstone
     private void callGetCapstoneInfo(){
         try{
