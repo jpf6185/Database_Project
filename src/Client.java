@@ -30,6 +30,8 @@ public class Client extends JFrame {
    private boolean loginProcess = true;
    private String username;
    private UserInfo user;
+   private LoginGUI loginGui;
+   private Student studentGui;
 
    
    //private String password;
@@ -55,7 +57,7 @@ public class Client extends JFrame {
             System.out.println("Connected");
             
             if (loginProcess){
-               LoginGUI openLoginGUI = new LoginGUI(cs);
+               LoginGUI login = new LoginGUI(cs,this);
             }
             
             // Process Login
@@ -78,10 +80,36 @@ public class Client extends JFrame {
    public static void main(String[] args) {
       new Client();
    } // end Main Method
+    // sets the userobject for this item to be passed to the new gui opend
 
     public void setUser(UserInfo user) {
         this.user = user;
     }
+    // determine which gui to open based on the user type and does that
+    public void OpenGui(){
+        switch(user.getUserType().toLowerCase()){
+            case "student": openStudent();
+            loginGui.setVisible(false);
+            loginGui.dispose();
+            break;
+            case "faculty": openFaculty();
+            loginGui.setVisible(false);
+            loginGui.dispose();
+            break;
+            case "staff": openStaff();
+            loginGui.setVisible(false);
+            loginGui.dispose();
+            break;
+            default: break;
+
+        }
+    }
+    // methods to open the various guis
+    public void openStudent(){
+       studentGui=new Student();
+    }
+    public void openFaculty(){}
+    public void openStaff(){}
 
     public void setInputStream(ObjectInputStream inputStream) {
         this.inputStream = inputStream;

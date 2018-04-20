@@ -135,7 +135,7 @@ public class CapstoneTrackerDbServer extends Thread{
             while (keepGoing) {
                 // reads in the action the server send
                 String action = ((String) input.readObject()).toLowerCase();
-
+                // uses a big switch statement to decide what Iam
                 switch (action){
                     case "getcapstoneinfo": callGetCapstoneInfo();
                     break;
@@ -145,6 +145,7 @@ public class CapstoneTrackerDbServer extends Thread{
                     break;
                     case "getpendinginvites": callGetPendingInvites();
                     break;
+                    case "getcapstoneversions"
                     default: keepGoing=false;
 
                 }

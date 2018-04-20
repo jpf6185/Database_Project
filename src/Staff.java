@@ -78,5 +78,4 @@ public class Staff extends JFrame implements ActionListener{
       Object[][]data=null;
       return data;
    }
-
 } // end class

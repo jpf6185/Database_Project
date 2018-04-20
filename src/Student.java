@@ -25,7 +25,7 @@ public class Student extends JFrame implements ActionListener
    private JTextField jtfProject;
    
    private JLabel jlDescription;
-   private JTextField jtfDescription;
+   private JTextField jtfDescription;s
    
    private JLabel jlPlagiarism;
    private JTextField jtfPlagiarism;
@@ -246,7 +246,7 @@ public class Student extends JFrame implements ActionListener
       setLocationRelativeTo(null);
       setVisible(true);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      
+
    }
    
    @Override

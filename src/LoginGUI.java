@@ -15,7 +15,7 @@ public class LoginGUI extends JFrame{
    private JPasswordField jtxtPassword;
    private JButton loginButton;
    private LineBorder redBorder = new LineBorder(new Color(204,0,0),1);
-   
+   Client c;
    // Attributes
    private Socket cs;
    ObjectOutputStream outputStream;
@@ -23,10 +23,10 @@ public class LoginGUI extends JFrame{
     // Constant Attributes
    private static final int MAX_LENGTH = 7;
    // Default Constructor
-   public LoginGUI(Socket _cs){
+   public LoginGUI(Socket _cs, Client c){
 
       this.cs = _cs;
-
+      this.c=c;
        try {
            outputStream = new ObjectOutputStream(cs.getOutputStream());
            in = new ObjectInputStream(cs.getInputStream());
@@ -89,7 +89,8 @@ public class LoginGUI extends JFrame{
       setLocationRelativeTo(null);
       setVisible(true);
       setDefaultCloseOperation(EXIT_ON_CLOSE);
-      
+      c.setInputStream(in);
+      c.setOutputStream(outputStream);
       /////////////////////////////////////////////////
       //////////// End of Login GUI Setup /////////////
       /////////////////////////////////////////////////
@@ -133,6 +134,8 @@ public class LoginGUI extends JFrame{
             if (in.readObject().equals("login")) {
                user = (UserInfo) in.readObject();
                System.out.println(user.getUsername());
+               c.setUser(user);
+               c.OpenGui();
             } else {
                System.out.println("Login failed");
             }
