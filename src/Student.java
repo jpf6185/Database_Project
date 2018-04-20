@@ -14,7 +14,7 @@ public class Student extends JFrame //implements ActionListener
    //Attributes
    private JTextArea jtextArea;
    
-   private JButton jbEdit, jbCancel, jbView, jbImport, jbExport, jbDiscard;
+   private JButton jbEdit, jbCancel, jbView, jbUpload, jbDownload, jbDiscard;
    private JButton jbInvite;
    
    private JTextField jtfTypes;
@@ -178,9 +178,9 @@ public class Student extends JFrame //implements ActionListener
       jpNorthPanel.add(jpLeftPanel, BorderLayout.WEST);
       
       // Button Right Panel Setup
-      jbImport = new JButton("Import");
+      jbUpload = new JButton("Upload");
       jpFirstBtnRow.add(jbImport);
-      jbImport.addActionListener(
+      jbUpload.addActionListener(
          new ActionListener()
          {
             public void actionPerformed(ActionEvent e)
@@ -189,9 +189,9 @@ public class Student extends JFrame //implements ActionListener
             }
          });
       
-      jbExport = new JButton("Export");
+      jbDownload = new JButton("Download");
       jpSecondBtnRow.add(jbExport);
-      jbExport.addActionListener(
+      jbDownload.addActionListener(
          new ActionListener()
          {
             public void actionPerformed(ActionEvent e)
