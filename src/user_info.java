@@ -2,12 +2,13 @@
  * ISTE-330 Database Connectivity and access
  *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Venutolo
  */
+import java.io.Serializable;
 import java.util.*;
 
 /* container for the User table that stores all the fields/values associated with entry in that table except for password
 * It also stores an arraylist of any entries in the committe table that is associated with said entry
  */
-public class user_info
+public class user_info implements Serializable
 {
 
     private String userName;
@@ -90,7 +91,7 @@ public class user_info
      */
     public void setUserType(String  userType)
     {
-        this.userType = userType;
+        this.userType = userType == null ? userType : this.userType;
     }
 
     /*

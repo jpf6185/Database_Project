@@ -3,6 +3,8 @@
 *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Ventutolo
  */
 
+import com.mysql.fabric.xmlrpc.base.Array;
+
 import java.util.ArrayList;
 import java.util.*;
 
@@ -18,12 +20,52 @@ public class CapstoneTrackerDBInterface {
     MySQLDatabase db;
 
     // default constructor to initialize database object
-    public CapstoneTrackerDBInterface() {
+    CapstoneTrackerDBInterface() {
         db = new MySQLDatabase();
     }
 
+    // method to log in user
+   user_info Login(loginInfo info){
+        try {
+            // checks to see if an entry exists for the information provided
+            String select = "SELECT username from Users WHERE username=? and password=sha(?);";
+            ArrayList<String>params=new ArrayList<String>();
+            params.add(info.getUserName());
+            params.add(info.getPassword());
+            db.connect();
+            ArrayList<ArrayList<String>>result=db.getData(select,params);
+            db.close();
+            // if the results are not empty creates a user_info object, calls the GetUserInfo to fill it, and returns the object
+            if (result.size()>0) {
+                user_info user=new user_info();
+                user.setUserName(info.getUserName());
+                user=GetUserInfo(user);
+                return user;
+            }
+            else{
+                return null;
+            }
+
+        } catch (DLException dle) {
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
+            System.out.println("An error occured attempting to log in");
+            return null;
+        }
+        catch (Exception e){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e2){}
+            System.out.println("An unxepcted error occured when attempting to log in");
+            return null;
+        }
+
+    }
+
+
     // gets the info on the most recent capstone
-    public CapstoneInfo GetCapstoneInfo(CapstoneInfo outObj) {
+    CapstoneInfo GetCapstoneInfo(CapstoneInfo outObj) {
         // arraylist to hold data returned
         ArrayList<ArrayList<String>> Values;
         try {
@@ -43,6 +85,9 @@ public class CapstoneTrackerDBInterface {
 
 
         } catch (DLException dle) {
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
             System.out.println("An error occured attempting to get the info on a capstone");
             return null;
         }
@@ -72,7 +117,8 @@ public class CapstoneTrackerDBInterface {
         }
         return outObj;
     }
-    public CapstoneInfo GetCapstoneVersions(CapstoneInfo outObj) {
+    //gets all the versions of a paticular capstone project
+    CapstoneInfo GetCapstoneVersions(CapstoneInfo outObj) {
         // arraylist to hold data returned
         ArrayList<ArrayList<String>> Values;
         try {
@@ -90,6 +136,9 @@ public class CapstoneTrackerDBInterface {
 
 
         } catch (DLException dle) {
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
             System.out.println("An error occured attempting to get the info on a capstone");
             return null;
         }
@@ -111,7 +160,7 @@ public class CapstoneTrackerDBInterface {
     }
     // updates the capstone info by inserts new capstone version and changing the lattest date in capstone_info table to
     // the date in the provided capstoneVersion Object
-    public Boolean updateCapstone(CapstoneInfo inObj){
+    Boolean updateCapstone(CapstoneInfo inObj){
         try {
             // grabs the capstone version object that conatins much of the data, asside from capstoneID
 
@@ -131,20 +180,30 @@ public class CapstoneTrackerDBInterface {
             Params.add(inObj2.getFilePath());
             Params2.add(inObj2.getDate());
             Params2.add(inObj.getCapstoneID());
-            // todo make this a transaction dont curently have enough time
-
+            db.startTrans();
             db.connect();
             db.setData(insertStatement,Params);
             db.setData(updateStatement,Params2);
+            db.endTrans();
             db.close();
             return true;
         }
         catch(DLException dle){
             System.out.println("an error has ocured when trying to update the capstone project");
+            try {
+                db.rollback();
+                db.close();
+            }
+            catch (DLException dle2){
+                System.out.println("you should not see this message and if you do that is really REALLY bad and you should contact the developers");
+            }
         }
         return false;
     }
-    public user_info GetStudentDates(user_info outObj){
+
+
+    //gets the date of the start of the students master, and the date of the start of the students cpastones
+    user_info GetStudentDates(user_info outObj){
 
         // arraylist to hold data returned
         ArrayList<ArrayList<String>> Values;
@@ -156,15 +215,24 @@ public class CapstoneTrackerDBInterface {
             ArrayList<String> Params = new ArrayList<String>();
             Params.add(outObj.getUsername() );
 
-            // connects to and runs the query against the database returns null if an error occurs connecting to or closing the dabatse
+            // connects to and runs the query against the database returns null if an error occurs connecting to or closing the database
             db.connect();
+            db.startTrans();
             Values = db.getData(sqlStatement, Params);
             Value = db.getData(sqlStatementTwo, Params);
+            db.endTrans();
             db.close();
 
         }
         catch(DLException dle){
             System.out.println("An error occured attempting to get the info on a capstone");
+            try {
+                db.rollback();
+                db.close();
+            }
+            catch (DLException dle2){
+                System.out.println("you should not see this message and if you do that is really REALLY bad and you should contact the developers");
+            }
             return null;
         }
 
@@ -172,7 +240,7 @@ public class CapstoneTrackerDBInterface {
 
             //
             outObj.setCapstoneStartDate(Values.get(0).get(0));
-            outObj.setMasterStart(Value.get(0).get(1));
+            outObj.setMasterStart(Value.get(0).get(0));
 
             return outObj;
 
@@ -184,12 +252,12 @@ public class CapstoneTrackerDBInterface {
         }
         return null;
     }
-
-    public user_info GetUserInfo(user_info outObj){
+// gets the info about a students to fill the user info object
+    user_info GetUserInfo(user_info outObj){
 
         ArrayList<ArrayList<String>> Values;
         try{
-            String sqlStatement = "SELECT UserType,Name,Email,`Phone Number`,Department FROM users WHERE Username=?;";
+            String sqlStatement = "SELECT Username,UserType,Name,Email,`Phone Number`,Department FROM users WHERE Username=?;";
 
             //arraylist of parameters for the following method
             ArrayList<String> Params = new ArrayList<String>();
@@ -199,19 +267,22 @@ public class CapstoneTrackerDBInterface {
             db.close();
 
         }catch(DLException dle){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
             return null;
 
         }
         try
         {
             //how to pull all fields from the user table
-            outObj.setUserName(Values.get(0).get(1));
-            outObj.setUserType(Values.get(0).get(2));
-            outObj.setName(Values.get(0).get(3));
-            outObj.setEmail(Values.get(0).get(4));
-            outObj.setPhoneNumber(Values.get(0).get(5));
-            outObj.setDepartment(Values.get(0).get(6));
-
+            outObj.setUserName(Values.get(0).get(0));
+            outObj.setUserType(Values.get(0).get(1));
+            outObj.setName(Values.get(0).get(2));
+            outObj.setEmail(Values.get(0).get(3));
+            outObj.setPhoneNumber(Values.get(0).get(4));
+            outObj.setDepartment(Values.get(0).get(5));
+            outObj= GetStudentDates(outObj);
             return outObj;
 
 
@@ -223,11 +294,13 @@ public class CapstoneTrackerDBInterface {
         return null;
     }
 
-    public commitee_info GetCommitee(user_info outObj){
+    user_info GetCommitees(user_info outObj){
 
         ArrayList<ArrayList<String>> Values;
-        commitee_info outObj2=outObj.getCommitees().get(0);
         try{
+            // fills in the user part of the output object
+            outObj= GetUserInfo(outObj);
+            // then moves onto filling out the commitee part
             String sqlStatement = "Select * From Committe where Username=?";
 
             //arraylist of parameters for the following method
@@ -238,20 +311,25 @@ public class CapstoneTrackerDBInterface {
             db.close();
 
         }catch(DLException dle){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
             return null;
 
         }
         try
         {
-            //how to pull all fields from the user table
-            outObj2.setUserName(Values.get(0).get(1));
-            outObj2.setCapStoneID(Values.get(0).get(2));
-            outObj2.setHasAccepted(Values.get(0).get(3));
-            outObj2.setHasDecline(Values.get(0).get(4));
-            outObj2.setPosition(Values.get(0).get(5));
-            outObj2.setTracking(Values.get(0).get(6));
+            for(ArrayList<String> info : Values) {
 
-            return outObj2;
+                commitee_info outObj2= new commitee_info(info.get(1));
+                outObj2.setCapStoneID(info.get(2));
+                outObj2.setHasAccepted(info.get(3));
+                outObj2.setHasDecline(info.get(4));
+                outObj2.setPosition(info.get(5));
+                outObj2.setTracking(info.get(6));
+                outObj.addCommitees(outObj2);
+            }
+            return outObj;
 
 
 
@@ -263,10 +341,11 @@ public class CapstoneTrackerDBInterface {
 
     }
 
-    /* method to get a list of all capstone projects, more specifically the capstoneID
+    /* method to get a lisst of some pararmetns of mutliple , more specifically the capstoneID
     * the Title of the project, its current status, and the name of the author
+    * I used whenever a list of multiple capstones is needed
     */
-    public ArrayList<CapstoneInfo> GetAllCapstones(){
+    ArrayList<CapstoneInfo> GetMultipleCapstones(String sqlWhere, ArrayList<String>paramInfo) {
         // arraylist to store capstone objects to be created
         ArrayList<CapstoneInfo>capstones=new ArrayList<CapstoneInfo>();
         /*arraylist to store results of query, to be parrsed in seprate try block so that if a exception is thrown during
@@ -275,22 +354,28 @@ public class CapstoneTrackerDBInterface {
         ArrayList<ArrayList<String>>results;
         // try catch for getting stuff from the database
         try {
-            // Monster SQL statement to get info from database, its huge cause it traverses 5 tables
-            String sqlStatment= "SELECT capstone_info.CapstoneID, capstone_version.Title, status_code.Name, users.Name,Capstone_Info.Lattest_date"+
+            String sqlStatement="SELECT capstone_info.CapstoneID, capstone_version.Title, status_code.Name, users.Name,Capstone_Info.Lattest_date"+
                                 " FROM users JOIN committe ON users.username=committe.username"+
                                 " JOIN capstone_Info on committe.capstoneID=capstone_info.capstoneID"+
-                                "JOIN capstone_version on capstone_info.capstoneID=capstone_version.CapstoneID"+
-                                "JOIN status_code on capstone_version.status=status_code.SID"+
-                                "WHERE users.userType='student' AND capstone_version.`Date:`=capstone_info.Lattest_Date;";
+                                " JOIN capstone_version on capstone_info.capstoneID=capstone_version.CapstoneID"+
+                                " JOIN status_code on capstone_version.status=status_code.SID"+sqlWhere;
+
+            // Monster SQL statement to get info from database, its huge cause it traverses 5 tables
             db.connect();
-            results=db.getData(sqlStatment);
+            results=db.getData(sqlStatement,paramInfo);
             db.close();
         }
         catch (DLException dle){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
             System.out.println("An error has occured with the database when trying to get all the capstone projects");
             return null;
         }
         catch (Exception e){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e2){}
             System.out.println("An unexpected error has occured when trying to get all the capstone projects");
             return null;
         }
@@ -321,6 +406,24 @@ public class CapstoneTrackerDBInterface {
         }
         return capstones;
     }
+    // gets a list of all capstones
+    ArrayList<CapstoneInfo>GetAllCapstones(){
+        return GetMultipleCapstones(" WHERE users.userType='student' AND capstone_version.`Date:`=capstone_info.Lattest_Date;",new ArrayList<String>());
+    }
+    // gets all the capstones a faculty is a commitee member of
+    ArrayList<CapstoneInfo>GetCommiteeCapstones(user_info user){
+        ArrayList<String> params=new ArrayList<String>();
+        params.add(user.getUsername());
+        return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
+                "(SELECT capstoneID FROM committe WHERE username=? AND HasAccepted=1);",params);
 
+    }
+    // gets all the capstones a faculty is tracking
+    ArrayList<CapstoneInfo>GetTrackedCapstones(user_info user) {
+        ArrayList<String> params = new ArrayList<String>();
+        params.add(user.getUsername());
+        return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
+                "(SELECT capstoneID FROM committe WHERE username=? AND Tracking=1);", params);
+    }
 
 }

@@ -4,11 +4,12 @@
  */
 
 
+import java.io.Serializable;
 import java.util.*;
 
 /* This class is a container the stores the fields/values from an entry in the commite table
  */
-public class commitee_info {
+public class commitee_info implements Serializable {
     //attributes
     private String userName;
     private String capStoneID;
