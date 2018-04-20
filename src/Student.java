@@ -179,7 +179,7 @@ public class Student extends JFrame //implements ActionListener
       
       // Button Right Panel Setup
       jbUpload = new JButton("Upload");
-      jpFirstBtnRow.add(jbImport);
+      jpFirstBtnRow.add(jbUpload);
       jbUpload.addActionListener(
          new ActionListener()
          {
@@ -190,7 +190,7 @@ public class Student extends JFrame //implements ActionListener
          });
       
       jbDownload = new JButton("Download");
-      jpSecondBtnRow.add(jbExport);
+      jpSecondBtnRow.add(jbDownload);
       jbDownload.addActionListener(
          new ActionListener()
          {
