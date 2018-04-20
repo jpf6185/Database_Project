@@ -41,53 +41,33 @@ public class Faculty extends JFrame
    private JButton btOpenDetails, btTrack, btApprove, btDecline;
    private JTable committeesTable, trackingTable, inviteTable;
    
-   private String [] columns = {
+   private Object [] columns = {
       "StudentName", "Project Title", "Current Status", "Date"
    };
    
-   private String [] columns1 = {
-      "StudentName", "Project Title", "Role", "Date"
-   };
    
-   
-    //add rows to the table
-    private Object [][] rowData = {{"Ian", "Dragon", "single", "9/9/90"}}; 
-    
+    private Object[][] rowData;
     private Socket cs;
     private BufferedReader br;
     private PrintWriter pw;
    
-   DefaultTableModel model;
-   DefaultTableModel model1 = new DefaultTableModel();
+   DefaultTableModel model = new DefaultTableModel();
 
    
    //default constructor 
    public Faculty()
    {
          
-         // Committees table with data
-          model = new DefaultTableModel(rowData, columns){
-            @Override
-            public boolean isCellEditable(int _arg0, int _arg1) { return false; }
-        };
-         committeesTable = new JTable();
-         committeesTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent mouse) {
-                if (mouse.getClickCount() == 2) {
-                     ProjectView view = new ProjectView();
-                }
-              }
-            });
-
+         // Tracking table with data
+         committeesTable = new JTable(rowData, columns);
          model.setColumnIdentifiers( columns);
          committeesTable.setModel(model);
-  //        committeesTable.setBackground(Color.cyan);
-//          committeesTable.setForeground(Color.white);
-//          committeesTable.setRowHeight(30);   
+         committeesTable.setBackground(Color.cyan);
+         committeesTable.setForeground(Color.white);
+         committeesTable.setRowHeight(30);
          
-         // Tracking Table with data
-         trackingTable = new JTable(rowData, columns);
+         // Committees Table with data
+         trackingTable = new JTable();
          model.setColumnIdentifiers(columns);
          trackingTable.setModel(model);
          trackingTable.setBackground(Color.cyan);
@@ -95,34 +75,29 @@ public class Faculty extends JFrame
          trackingTable.setRowHeight(30);
          
          // Invitations table with data
-         inviteTable = new JTable(rowData, columns1);
-         model1.setColumnIdentifiers(columns1);
-         inviteTable.setModel(model1);
+         inviteTable = new JTable();
+         model.setColumnIdentifiers(columns);
+         inviteTable.setModel(model);
          inviteTable.setBackground(Color.cyan);
          inviteTable.setForeground(Color.white);
          inviteTable.setRowHeight(30);
           
          //create a View Committies GUI
          JPanel jpNorthRow = new JPanel(new FlowLayout(FlowLayout.CENTER,10,10));
+         JPanel jpCenterRow = new JPanel();
          JPanel jpBottomRow = new JPanel(new FlowLayout());
          JPanel jpFirstTabPanel = new JPanel(new FlowLayout());
          btOpenDetails = new JButton("OpenProjectDetails");
-         btOpenDetails.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    ProjectView view = new ProjectView();
-                }
-            });
-            
-     //     committeesTable.getModel().addTableModelListener(new TableModelListener() {
-// 
-//             public void tableChanged(TableModelEvent e) {
-//                System.out.println(e);
-//             }
-//           });
+         committeesTable.getModel().addTableModelListener(new TableModelListener() {
+
+            public void tableChanged(TableModelEvent e) {
+               System.out.println(e);
+            }
+          });
          
          jpNorthRow.add(new JScrollPane(committeesTable));
          jpBottomRow.add(btOpenDetails);
-         jpFirstTabPanel.add(jpNorthRow, BorderLayout.NORTH);   
+         jpFirstTabPanel.add(jpNorthRow, BorderLayout.NORTH);
          jpFirstTabPanel.add(jpBottomRow, BorderLayout.SOUTH);
          
          //create new tabs 
@@ -138,12 +113,7 @@ public class Faculty extends JFrame
          JPanel jp2BottomRow = new JPanel(new FlowLayout());
          JPanel jpSecondTabPanel = new JPanel(new FlowLayout());
          btTrack = new JButton("Add Track");
-         btOpenDetails = new JButton("OpenProjectDetails");
-         btOpenDetails.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    ProjectView view = new ProjectView();
-                }
-            });
+          btOpenDetails = new JButton("OpenProjectDetails");
          
          jp2NorthRow.add(new JScrollPane(trackingTable));
          jp2BottomRow.add(btOpenDetails);
@@ -160,25 +130,10 @@ public class Faculty extends JFrame
          JPanel jp3NorthRow = new JPanel(new FlowLayout(FlowLayout.CENTER,10,10));
          JPanel jp3BottomRow = new JPanel(new FlowLayout());
          JPanel jpThirdTabPanel = new JPanel(new FlowLayout());
-         
-         //actionListener for approve
          btApprove = new JButton("Approve");
-         btApprove.addActionListener(new ActionListener(){
-               public void actionPerformed(ActionEvent e){
-                   
-               }
-         });
-         
-         //actionListener for decline 
          btDecline = new JButton("Decline");
-         
-         //actionListener for openProjectDetails
          btOpenDetails = new JButton("OpenProjectDetails");
-         btOpenDetails.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    ProjectView view = new ProjectView();
-                }
-            });
+         
          
          jp3NorthRow.add(new JScrollPane(inviteTable));
          jp3BottomRow.add(btApprove);
@@ -231,8 +186,6 @@ public class Faculty extends JFrame
          
          
    }//end of faculty constructor
-   
-   
    
 
    protected JComponent makeTextPanel(String text){

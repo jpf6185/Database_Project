@@ -2,13 +2,14 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
+import java.net.Socket;
 
 /**
 * 04/06/2018
 
 */
 
-public class Student extends JFrame implements ActionListener
+public class Student extends JFrame //implements ActionListener
 {
    //Attributes
    private JTextArea jtextArea;
@@ -21,11 +22,14 @@ public class Student extends JFrame implements ActionListener
    private JLabel jlDate;
    private JTextField jtfDate;
    
+   private JLabel jlName;
+   private JTextField jtfName;
+   
    private JLabel jlProject;
    private JTextField jtfProject;
    
    private JLabel jlDescription;
-   private JTextField jtfDescription;s
+   private JTextField jtfDescription;
    
    private JLabel jlPlagiarism;
    private JTextField jtfPlagiarism;
@@ -61,7 +65,9 @@ public class Student extends JFrame implements ActionListener
    
    private JScrollPane jScrollPane1;
    
-   
+   //CapstoneInfo Object
+   CapstoneInfo capstoneInfos;
+    
    //private JTextField jtfDate4;
 
    public static void main(String [] args)
@@ -109,47 +115,55 @@ public class Student extends JFrame implements ActionListener
       // Project Details Left Panel Setup
       jlDate = new JLabel("Date: ", SwingConstants.RIGHT);
       jtfDate = new JTextField(10);
+      
       jpFirstRow.add(jlDate);
       jpFirstRow.add(jtfDate);
+      jtfDate.setEditable(false);
       
-      jlDate = new JLabel("Student Name: ", SwingConstants.RIGHT);
-      jtfDate = new JTextField(10);
+      jlName = new JLabel("Student Name: ", SwingConstants.RIGHT);
+      jtfName = new JTextField(10);
       jpSecondRow.add(jlDate);
       jpSecondRow.add(jtfDate);
+      jtfName.setEditable(false);
       
       
       jlProject = new JLabel("Project Title: ", SwingConstants.RIGHT);
       jtfProject = new JTextField(10);
       jpThirdRow.add(jlProject);
       jpThirdRow.add(jtfProject);
-      
+      jtfProject.setEditable(false);
       
       jlDescription = new JLabel("Description: ", SwingConstants.RIGHT);
       jtfDescription = new JTextField(10);
       jpFourRow.add(jlDescription);
       jpFourRow.add(jtfDescription);
+      jtfDescription.setEditable(false);
       
       
       jlPlagiarism = new JLabel("Plagiarism Score: ", SwingConstants.RIGHT);
       jtfPlagiarism = new JTextField(10);
       jpFiveRow.add(jlPlagiarism);
       jpFiveRow.add(jtfPlagiarism);
+      jtfPlagiarism.setEditable(false);
       
       
       jlGrade = new JLabel("Grade: ", SwingConstants.RIGHT);
       jtfGrade = new JTextField(10);
       jpSixRow.add(jlGrade);
       jpSixRow.add(jtfGrade);
+      jtfGrade.setEditable(false);
       
       jlType = new JLabel("Type: ", SwingConstants.RIGHT);
       jtfType = new JTextField(10);
       jpSevenRow.add(jlType);
       jpSevenRow.add(jtfType);
+      jtfType.setEditable(false);
       
       jlStatus = new JLabel("Status: ", SwingConstants.RIGHT);
       jtfStatus = new JTextField(10);
       jpEightRow.add(jlStatus);
       jpEightRow.add(jtfStatus);
+      jtfStatus.setEditable(false);
       
       jpLeftPanel.add(jpFirstRow);
       jpLeftPanel.add(jpSecondRow);
@@ -165,22 +179,68 @@ public class Student extends JFrame implements ActionListener
       // Button Right Panel Setup
       jbImport = new JButton("Import");
       jpFirstBtnRow.add(jbImport);
-      jbImport.addActionListener(this);
+      jbImport.addActionListener(
+         new ActionListener()
+         {
+            public void actionPerformed(ActionEvent e)
+            {
+            
+            }
+         });
       
       jbExport = new JButton("Export");
       jpSecondBtnRow.add(jbExport);
-      jbExport.addActionListener(this);
+      jbExport.addActionListener(
+         new ActionListener()
+         {
+            public void actionPerformed(ActionEvent e)
+            {
+            
+            }
+         });
       
       jbEdit = new JButton("Edit");
       jpThirdBtnRow.add(jbEdit);
-      jbEdit.addActionListener(this);
+      jbEdit.addActionListener(
+         new ActionListener()
+         {
+            public void actionPerformed(ActionEvent e)
+            {
+               jtfDate.setEditable(true);
+               jtfName.setEditable(true);
+               jtfProject.setEditable(true);
+               jtfDescription.setEditable(true);
+               jtfPlagiarism.setEditable(true);
+               jtfGrade.setEditable(true);
+               jtfType.setEditable(true);
+               jtfStatus.setEditable(true);
+               System.out.print("test");
+            }
+         });
       
       jbDiscard = new JButton("Discard");
       jpFourBtnRow.add(jbDiscard);
-      jbDiscard.addActionListener(this);
+      jbDiscard.addActionListener(
+         new ActionListener()
+         {
+            public void actionPerformed(ActionEvent e)
+            {
+               //UndoManager manager = new UndoManager();
+               //Document document = textField.getDocument();
+               //document.addUndoableEditListener(manager);
+            }
+         });
       
       jbView = new JButton("View History");
       jpFiveBtnRow.add(jbView);
+      jbView.addActionListener(
+         new ActionListener()
+         {
+            public void actionPerformed(ActionEvent e)
+            {
+               JOptionPane.showMessageDialog(null, jtfDate.getText() + " " + jtfProject.getText() + " " + jtfStatus.getText());
+            }
+         });
       
       jpRightPanel.add(jpFirstBtnRow);
       jpRightPanel.add(jpSecondBtnRow);
@@ -204,7 +264,14 @@ public class Student extends JFrame implements ActionListener
       jlRole = new JLabel("Roles: ", SwingConstants.RIGHT);
       JComboBox jcbRoleDropList = new JComboBox(roleList);
       jcbRoleDropList.setSelectedIndex(2);
-      jcbRoleDropList.addActionListener(this);
+      jcbRoleDropList.addActionListener(
+         new ActionListener()
+         {
+            public void actionPerformed(ActionEvent e)
+            {
+            
+            }
+         });
       jpCenterLeftPanel.add(jlRole);
       jpCenterLeftPanel.add(jcbRoleDropList);
       
@@ -214,7 +281,15 @@ public class Student extends JFrame implements ActionListener
       jpCenterLeftPanel.add(jtfEmail);
       
       jbInvite = new JButton("Send an Invitation");
-      jbInvite.addActionListener(this);
+      jbInvite.addActionListener(
+         new ActionListener()
+         {
+            public void actionPerformed(ActionEvent e)
+            {
+            
+            }
+         });
+   
       jpCenterRightPanel.add(jbInvite);
       
       jpCenterSecondRow.add(jpCenterLeftPanel, BorderLayout.WEST);
@@ -246,23 +321,80 @@ public class Student extends JFrame implements ActionListener
       setLocationRelativeTo(null);
       setVisible(true);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
    }
    
-   @Override
+   private String capstoneInfo;
+   private String date;
+   private String name;
+   private String project;
+   private String description;
+   private String plagiarism;
+   private String grade;
+   private String type;
+   private String status;
+   
+   /*
+   public Student(String _capstoneInfo, String _date, String _name, String _project, String _description, String _plagiarism, String _grade, String _type, String _status)
+   {
+      capstoneInfo = _capstoneInfo;
+      date = _date;
+      name = _name;
+      project = _project;
+      description = _description;
+      plagiarism = _plagiarism;
+      grade = _grade;
+      type = _type;
+      status = _status; 
+   }
+   */
+   
+   public Boolean studentUpdate(CapstoneInfo inObj)
+   {
+     //CapstoneVersion inObj2 = inObj.GetVersion().get(0);
+     return true;
+   }
+   
+   /*
+   public Student(CapstoneInfo _cap, JTextField _jtfDate, JTextField _jtfName, JTextField _jtfProject, JTextField _jtfDescription, JTextField _jtfPlagiarism, JTextField _jtfGrade, JTextField _jtfType, JTextField _jtfStatus)
+   {
+      capstoneInfo = _cap;
+      jtfDate = _jtfDate;
+      jtfName = _jtfName;
+      jtfProject = _jtfProject;
+      jtfDescription = _jtfDescription;
+      jtfPlagiarism = _jtfPlagiarism;
+      jtfGrade = _jtfGrade;
+      jtfType = _jtfType;
+      jtfStatus = _jtfStatus; 
+   }
+   */
+  
+   
+   
+   
+   /*
+   //@Override
    public void actionPerformed(ActionEvent ae)
    {
       Object choice = ae.getSource();
    
       //This will cancel the the text field
-      if(choice == jbCancel)
+      if(choice.equals(jbImport))
       {
-         System.exit(0);
+        
+         //System.exit(0);
       }
+      else if(choice.equals(jbExport))
+      {
       
+      }
       else if(choice.equals(jbEdit))
       {
-           
+       
+      }
+      else if(choice.equals(jbDiscard))
+      {
+         //jtfItemName.setText("");
       }
       else if(choice.equals(jbView))
       {
@@ -270,8 +402,30 @@ public class Student extends JFrame implements ActionListener
       }
       else if(choice.equals(jbInvite))
       {
-         
+      
       }
+   }
+   */
+   
+   class ManageInvite implements ActionListener
+   {
+      //Attributes
+      private Student form;
+      private Socket cs;
+      private BufferedReader br;
+      private PrintWriter pw;
+      public void actionPerformed(ActionEvent ae)
+      { 
+         if(ae.getActionCommand().equals("Send an Invitation"))
+         {
+         
+         }
+      }
+   }
+   
+   public class UndoManager
+   {
+   
    }
          
 }//end class

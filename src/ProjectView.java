@@ -1,10 +1,10 @@
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.table.*;
 import javax.swing.*;
 import java.io.*;
-import java.util.*;
-public class ProjectView extends JFrame{
+
+public class ProjectView extends JFrame implements ActionListener{
+
    // JComponent Attributes
    private JPanel jpNorthPanel, jpCenterPanel, jpSouthPanel;
    private JLabel jlTitle;
@@ -14,21 +14,17 @@ public class ProjectView extends JFrame{
    // JComponent ScrollPane
    private JScrollPane jScrollPane;
    
-   // ArrayList Attributes
-   private String[] dataHeaders = {
-                                 "Date:",
-                                 "Student Name:",
-                                 "Project Title:",
-                                 "Description:",
-                                 "Plagiarism Score:",
-                                 "Grade:",
-                                 "Type:",
-                                 "Status:"};
-                                 
-   
    // Attributes
    private String[] columnNames = {"null","null"};
-   private Object[][] currentData = new Object[8][2];
+   private Object[][] dataStatus ={
+   {"Date:", "Test"},
+   {"Student Name:", "Test"},
+   {"Project Title:", "Test"},
+   {"Description:", "Test"},
+   {"Plagiarism Score:", "Test"},
+   {"Grade:", "Test"},
+   {"Type:", "Test"},
+   {"Status:", "Test"}};
    
    private String getRole = "Faculty";
    private String changeTitle;
@@ -57,60 +53,39 @@ public class ProjectView extends JFrame{
       
       // Center Panel Setup
       jpCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,30,10));
-      jProjectTable = new JTable(getDataObject(currentData),columnNames);
+      jProjectTable = new JTable(dataStatus,columnNames);
       jProjectTable.setTableHeader(null);
       jScrollPane = new JScrollPane(jProjectTable);
-      jProjectTable.setPreferredScrollableViewportSize(jProjectTable.getPreferredSize());
       jProjectTable.setFillsViewportHeight(true);
       
-      /* Right Align 1st Column and Center Align 2nd Column
-      TableColumnModel cm = jProjectTable.getColumnModel();
-      TableColumn colOne = cm.getColumn(0);
-      TableColumn colTwo = cm.getColumn(1);
-      DefaultTableCellRenderer rendererForOne = new DefaultTableCellRenderer();
-      DefaultTableCellRenderer rendererForTwo = new DefaultTableCellRenderer();
-      rendererForOne.setHorizontalAlignment(JLabel.RIGHT);
-      colOne.setCellRenderer(rendererForOne);
-      rendererForTwo.setHorizontalAlignment(JLabel.CENTER);
-      colTwo.setCellRenderer(rendererForTwo);*/
-      
-      // Set Size of the Project View Table
-      jProjectTable.getColumnModel().getColumn(0).setPreferredWidth(200);
-      jProjectTable.getColumnModel().getColumn(1).setPreferredWidth(30);
-      
       jpCenterPanel.add(jScrollPane, BorderLayout.CENTER);
-      add(jpCenterPanel, BorderLayout.CENTER); 
+      add(jpCenterPanel, BorderLayout.CENTER);
       
       // South Panel Setup
       jpSouthPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
       
       if (!getRole.equals("Faculty")){
          jbChangeStatus = new JButton("Change Status");
-         //jbChangeStatus.addActionListener
+         jbChangeStatus.addActionListener(this);
          jpSouthPanel.add(jbChangeStatus);
          
          jbPlagiarismScore = new JButton("Enter a Plagiarism Score");
-         //jbPlagiarismScore.addActionListener(this);
+         jbPlagiarismScore.addActionListener(this);
          jpSouthPanel.add(jbPlagiarismScore);
          
          jbApply = new JButton("Apply");
-         //jbApply.addActionListener(this);
+         jbApply.addActionListener(this);
          jpSouthPanel.add(jbApply);
       }
       else{
          // This else when role is Staff
          jbFinalGrade = new JButton("Enter a final grade");
-         //jbFinalGrade.addActionListener(this);
+         jbFinalGrade.addActionListener(this);
          jpSouthPanel.add(jbFinalGrade);
       }
       
       jbClose = new JButton("Close");
-      jbClose.addActionListener((new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.exit(0);
-                }
-            }));
-            
+      jbClose.addActionListener(this);
       jpSouthPanel.add(jbClose);
       
       add(jpSouthPanel, BorderLayout.SOUTH);
@@ -125,20 +100,9 @@ public class ProjectView extends JFrame{
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    }
    
-   
-   public Object[][] getDataObject(Object[][] data){
-   
-      // iterate dataHeaders into table
-      int iteratedNum = 0;
-      for (String dh : dataHeaders){
-         
-         data[iteratedNum][0] = dh;
-         iteratedNum++;
-      }
-      
-      
-   
-      return data;
+   @Override
+   public void actionPerformed(ActionEvent ae){
+      Object choice = ae.getSource();
    }
-   
+
 } // end class
