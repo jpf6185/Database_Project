@@ -30,7 +30,7 @@ public class  MainTest{
            out.writeObject(info);
            out.flush();
            System.out.println((String)in.readObject());
-           System.out.println(((user_info)in.readObject()).getName());
+           System.out.println(((UserInfo)in.readObject()).getName());
            out.close();
            conn.close();
 

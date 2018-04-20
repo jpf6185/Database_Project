@@ -145,7 +145,8 @@ public class CapstoneTrackerDbServer extends Thread{
                     break;
                     case "getpendinginvites": callGetPendingInvites();
                     break;
-                    case "getcapstoneversions"
+                    case "getcapstoneversions":
+                        break;
                     default: keepGoing=false;
 
                 }

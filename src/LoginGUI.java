@@ -145,6 +145,7 @@ public class LoginGUI extends JFrame{
             
          }
          catch(Exception e){
+            e.printStackTrace();
             System.out.println("an unpexted error occured when loging in");
          }
       

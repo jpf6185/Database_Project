@@ -57,7 +57,7 @@ public class Client extends JFrame {
             System.out.println("Connected");
             
             if (loginProcess){
-               LoginGUI login = new LoginGUI(cs,this);
+               loginGui = new LoginGUI(cs,this);
             }
             
             // Process Login
@@ -106,10 +106,17 @@ public class Client extends JFrame {
     }
     // methods to open the various guis
     public void openStudent(){
-       studentGui=new Student();
+       studentGui=new Student(this);
     }
     public void openFaculty(){}
     public void openStaff(){}
+
+    // getters and setters
+
+
+    public UserInfo getUser() {
+        return user;
+    }
 
     public void setInputStream(ObjectInputStream inputStream) {
         this.inputStream = inputStream;

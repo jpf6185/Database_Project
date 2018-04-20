@@ -59,7 +59,12 @@ public class Student extends JFrame //implements ActionListener
    private JPanel jpCenterPanel,jpPaddedCenterPanel;
    private JPanel jpCenterFirstRow, jpCenterSecondRow;
    private JPanel jpCenterLeftPanel, jpCenterRightPanel;
-   
+
+   // the type of uesr that opens it, determiens what they are allowed to eddit
+   private String userType;
+   // the main client class that handels comumication
+    private Client c;
+
    
    //private JLabel jlDate4;
    
@@ -70,17 +75,13 @@ public class Student extends JFrame //implements ActionListener
     
    //private JTextField jtfDate4;
 
-   public static void main(String [] args)
-   {
-      Student gui = new Student(); 
-   }//end main
-   
    //Default Constructor
-   public Student()
+   public Student(Client client)
    {   
       //This will show at the top Title 
       setTitle("Student Information");
-   
+      this.c=client;
+      userType=c.getUser().getUserType();
       // JPanel Setup
       jpNorthPanel = new JPanel(new GridLayout(0,2,30,30));
       jpCenterPanel = new JPanel(new GridLayout(2,0,30,30));
@@ -206,15 +207,57 @@ public class Student extends JFrame //implements ActionListener
          {
             public void actionPerformed(ActionEvent e)
             {
-               jtfDate.setEditable(true);
-               jtfName.setEditable(true);
-               jtfProject.setEditable(true);
-               jtfDescription.setEditable(true);
-               jtfPlagiarism.setEditable(true);
-               jtfGrade.setEditable(true);
-               jtfType.setEditable(true);
-               jtfStatus.setEditable(true);
-               System.out.print("test");
+                    // bunch of booleans to control what is editable
+                if(jbEdit.getText().toLowerCase().equals("edit")) {
+                    boolean nameEdit = false;
+                    boolean projectEdit = false;
+                    boolean descEdit = false;
+                    boolean plagEdit = false;
+                    boolean gradEdit = false;
+                    boolean TypeEdit = false;
+                    boolean StatusEdit = false;
+                    switch (userType.toLowerCase()) {
+                        case "student":
+                            nameEdit = true;
+                            projectEdit = true;
+                            descEdit = true;
+                            TypeEdit = true;
+                            jbEdit.setText("save");
+                            break;
+                        case "faculty":
+                            gradEdit = true;
+                            jbEdit.setText("save");
+                            break;
+                        case "staff":
+                            StatusEdit = true;
+                            jbEdit.setText("save");
+                            break;
+                        default:
+                            break;
+
+                    }
+
+
+                    jtfName.setEditable(nameEdit);
+                    jtfProject.setEditable(projectEdit);
+                    jtfDescription.setEditable(descEdit);
+                    jtfPlagiarism.setEditable(plagEdit);
+                    jtfGrade.setEditable(gradEdit);
+                    jtfType.setEditable(TypeEdit);
+                    jtfStatus.setEditable(StatusEdit);
+                }
+                else if(jbEdit.getText().equals("save")){
+
+                    jbEdit.setText("edit");
+                    jtfName.setEditable(false);
+                    jtfProject.setEditable(false);
+                    jtfDescription.setEditable(false);
+                    jtfPlagiarism.setEditable(false);
+                    jtfGrade.setEditable(false);
+                    jtfType.setEditable(false);
+                    jtfStatus.setEditable(false);
+                }
+                else{}
             }
          });
       
@@ -299,25 +342,10 @@ public class Student extends JFrame //implements ActionListener
       jpCenterPanel.add(jpCenterSecondRow);
       jpPaddedCenterPanel.add(jpCenterPanel);
       add(jpPaddedCenterPanel, BorderLayout.CENTER);
-      
-      // JPanel jpFirst = new JPanel(new FlowLayout());
-   //       
-   //       jtfType = new JTextField(20);
-   //       jpFirst.add(jtfType);
-   //       jtfType.setText("Name, Email");
-   //       jtfType.addActionListener(this);
-   //       
-   //       
-   //       jbCancel = new JButton("Cancel");
-   //       jpFirst.add(jbCancel);
-   //       jbCancel.addActionListener(this);
-   //       
-   //       add(jpFirst, BorderLayout.SOUTH);
+
      
             
       pack();
-      //Color c = new Color(0,0,0,100);
-      //jtextArea.setBackground(c);
       setLocationRelativeTo(null);
       setVisible(true);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -332,81 +360,16 @@ public class Student extends JFrame //implements ActionListener
    private String grade;
    private String type;
    private String status;
-   
-   /*
-   public Student(String _capstoneInfo, String _date, String _name, String _project, String _description, String _plagiarism, String _grade, String _type, String _status)
-   {
-      capstoneInfo = _capstoneInfo;
-      date = _date;
-      name = _name;
-      project = _project;
-      description = _description;
-      plagiarism = _plagiarism;
-      grade = _grade;
-      type = _type;
-      status = _status; 
-   }
-   */
-   
+
+
+
    public Boolean studentUpdate(CapstoneInfo inObj)
    {
      //CapstoneVersion inObj2 = inObj.GetVersion().get(0);
      return true;
    }
    
-   /*
-   public Student(CapstoneInfo _cap, JTextField _jtfDate, JTextField _jtfName, JTextField _jtfProject, JTextField _jtfDescription, JTextField _jtfPlagiarism, JTextField _jtfGrade, JTextField _jtfType, JTextField _jtfStatus)
-   {
-      capstoneInfo = _cap;
-      jtfDate = _jtfDate;
-      jtfName = _jtfName;
-      jtfProject = _jtfProject;
-      jtfDescription = _jtfDescription;
-      jtfPlagiarism = _jtfPlagiarism;
-      jtfGrade = _jtfGrade;
-      jtfType = _jtfType;
-      jtfStatus = _jtfStatus; 
-   }
-   */
-  
-   
-   
-   
-   /*
-   //@Override
-   public void actionPerformed(ActionEvent ae)
-   {
-      Object choice = ae.getSource();
-   
-      //This will cancel the the text field
-      if(choice.equals(jbImport))
-      {
-        
-         //System.exit(0);
-      }
-      else if(choice.equals(jbExport))
-      {
-      
-      }
-      else if(choice.equals(jbEdit))
-      {
-       
-      }
-      else if(choice.equals(jbDiscard))
-      {
-         //jtfItemName.setText("");
-      }
-      else if(choice.equals(jbView))
-      {
-         
-      }
-      else if(choice.equals(jbInvite))
-      {
-      
-      }
-   }
-   */
-   
+
    class ManageInvite implements ActionListener
    {
       //Attributes
