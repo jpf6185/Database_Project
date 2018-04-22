@@ -153,5 +153,23 @@ public class Client extends JFrame {
        }
        return null;
     }
-    public saveCapsone
+    public CapstoneInfo saveCapstone(CapstoneInfo info){
+       try{
+           outputStream.writeObject("updatecapstone");
+           outputStream.flush();
+           outputStream.writeObject(info);
+           outputStream.flush();
+           info=(CapstoneInfo)inputStream.readObject();
+           return info;
+       }
+       catch (IOException ioe){
+           ioe.printStackTrace();
+           System.out.println("error when updating capstone info");
+       }
+       catch (Exception e){
+           e.printStackTrace();
+           System.out.println("unexpected error when updating capstone info");
+       }
+       return null;
+    }
 } // end Client Class

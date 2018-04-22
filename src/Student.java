@@ -64,7 +64,7 @@ public class Student extends JFrame //implements ActionListener
    private String userType;
    private UserInfo user;
    // the main client class that handels comumication
-    private Client c;
+   private Client c;
 
    
    //private JLabel jlDate4;
@@ -164,7 +164,7 @@ public class Student extends JFrame //implements ActionListener
       jtfType.setEditable(false);
       
       jlStatus = new JLabel("Status: ", SwingConstants.RIGHT);
-      jtfStatus = new JTextField(50);
+      jtfStatus = new JTextField(capstoneInfos.GetVersions().get(0).getStatus(),50);
       jpEightRow.add(jlStatus);
       jpEightRow.add(jtfStatus);
       jtfStatus.setEditable(false);
@@ -251,7 +251,10 @@ public class Student extends JFrame //implements ActionListener
                 }
                 else if(jbEdit.getText().equals("save")){
 
+
+
                     jbEdit.setText("edit");
+                    // disables edditing on fields
                     jtfName.setEditable(false);
                     jtfProject.setEditable(false);
                     jtfDescription.setEditable(false);
@@ -259,6 +262,15 @@ public class Student extends JFrame //implements ActionListener
                     jtfGrade.setEditable(false);
                     jtfType.setEditable(false);
                     jtfStatus.setEditable(false);
+                    // gets the new values of the fields
+                    capstoneInfos.GetVersions().get(0).setTitle(jtfProject.getText());
+                    capstoneInfos.GetVersions().get(0).setDescription(jtfDescription.getText());
+                    capstoneInfos.setPlagiarismScore(jtfPlagiarism.getText());
+                    capstoneInfos.setGrade(jtfGrade.getText());
+                    capstoneInfos.GetVersions().get(0).setType(jtfType.getText());
+                    capstoneInfos.GetVersions().get(0).setStatus(jtfStatus.getText());
+                    capstoneInfos=c.saveCapstone(capstoneInfos);
+                    updateFields();
                 }
                 else{}
             }
@@ -353,7 +365,19 @@ public class Student extends JFrame //implements ActionListener
       setVisible(true);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    }
-   
+
+   public void updateFields(){
+       jtfDate.setText(capstoneInfos.getLatestDate());
+       jtfName.setText(capstoneInfos.getAuthor());
+       jtfProject.setText(capstoneInfos.GetVersions().get(0).getTitle());
+       jtfDescription.setText(capstoneInfos.GetVersions().get(0).getDescription());
+       jtfPlagiarism.setText(capstoneInfos.getPlagiarismScore());
+       jtfGrade.setText(capstoneInfos.getGrade());
+       jtfType.setText(capstoneInfos.GetVersions().get(0).getType());
+       jtfStatus.setText(capstoneInfos.GetVersions().get(0).getStatus());
+   }
+
+
    private String capstoneInfo;
    private String date;
    private String name;

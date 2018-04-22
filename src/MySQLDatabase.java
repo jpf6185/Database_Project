@@ -86,6 +86,7 @@ public class MySQLDatabase
             stmt.setString(i +1, values.get(i)); 
          }
       }catch(SQLException sqle){
+         System.out.println(sqle.getMessage());
          System.out.println("Prepared Statement error"); 
       }
       return stmt;
@@ -294,6 +295,7 @@ public class MySQLDatabase
 
       }
       catch(SQLException sqle){
+         System.out.println(sqle.getMessage());
          ArrayList<String>errorMsg=new ArrayList<String>();
          errorMsg.add("MYSQLDatabase>startTransction");
          throw new DLException(sqle, errorMsg);
