@@ -546,5 +546,43 @@ public class CapstoneTrackerDBInterface {
             return false;
         }
     }
+    // code to get a list of all of the statuses in the status table
+    ArrayList<StatusInfo> getAllStatuses(){
+
+        ArrayList<ArrayList<String>>results;
+        ArrayList<StatusInfo>outObj=new ArrayList<StatusInfo>();
+        try{
+            String selectStatement="SELECT SID,Name FROM status_code;";
+            db.connect();
+            results=db.getData(selectStatement);
+            db.close();
+        }
+        catch (DLException dle){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
+            System.out.println("An error has occured with the database when trying to get all the statuses");
+            return null;
+        }
+        catch (Exception e){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e2){}
+            System.out.println("An unexpected error has occured when trying to get all the statuses");
+            return null;
+        }
+        try {
+            // for each to loop throught resutts
+            for(ArrayList<String> row : results){
+                outObj.add(new StatusInfo(row.get(1),row.get(0)));
+            }
+            return outObj;
+        }
+        catch (Exception e){
+            System.out.println("an error occured when trying to populate the data about status codes");
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
 }

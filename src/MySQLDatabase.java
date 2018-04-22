@@ -106,8 +106,7 @@ public class MySQLDatabase
          ResultSetMetaData rsmd = rs.getMetaData();  
          int numFields = rsmd.getColumnCount(); 
         
-        //Creating a Header for column names 
-         ArrayList<String>colHeader = new ArrayList<String>(numFields);
+        //Creating a Header for column names
          while(rs.next())
          {
             ArrayList<String>in = new ArrayList<String>(); 
