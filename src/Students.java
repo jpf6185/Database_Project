@@ -9,7 +9,7 @@ import java.net.Socket;
 
 */
 
-public class Students extends JFrame //implements ActionListener
+public class Student extends JFrame //implements ActionListener
 {
    //Attributes
    private JTextArea jtextArea;
@@ -47,7 +47,7 @@ public class Students extends JFrame //implements ActionListener
    private JTextField jtfCurrentFaculty;
    
    private JLabel jlRole;
-   private String[] roleList = { "Students", "Faculty", "Staff" };
+   private String[] roleList = { "Student", "Faculty", "Staff" };
    
    private String[] addList = { "Sample1", "Sample2", "Sample3" };
    
@@ -80,10 +80,10 @@ public class Students extends JFrame //implements ActionListener
    //private JTextField jtfDate4;
 
    //Default Constructor
-   public Students(Client client)
+   public Student(Client client)
    {   
       //This will show at the top Title 
-      setTitle("Students Information");
+      setTitle("Student Information");
       this.c=client;
       userType=c.getUser().getUserType();
       // JPanel Setup
@@ -125,7 +125,7 @@ public class Students extends JFrame //implements ActionListener
       jpFirstRow.add(jtfDate);
       jtfDate.setEditable(false);
       
-      jlName = new JLabel("Students Name: ", SwingConstants.RIGHT);
+      jlName = new JLabel("Student Name: ", SwingConstants.RIGHT);
       jtfName = new JTextField(10);
       jpSecondRow.add(jlDate);
       jpSecondRow.add(jtfDate);
@@ -381,7 +381,7 @@ public class Students extends JFrame //implements ActionListener
    class ManageInvite implements ActionListener
    {
       //Attributes
-      private Students form;
+      private Student form;
       private Socket cs;
       private BufferedReader br;
       private PrintWriter pw;

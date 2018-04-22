@@ -49,6 +49,10 @@ public class Student extends JFrame //implements ActionListener
    private JLabel jlRole;
    private String[] roleList = { "Student", "Faculty", "Staff" };
    
+   private String[] addList = { "Sample1", "Sample2", "Sample3" };
+   
+   private String[] statusList = {"Status1", "Status2", "Status3"};
+   
    private JLabel jlEmail;
    private JTextField jtfEmail;
    
@@ -155,15 +159,19 @@ public class Student extends JFrame //implements ActionListener
       jtfGrade.setEditable(false);
       
       jlType = new JLabel("Type: ", SwingConstants.RIGHT);
+      JComboBox addDropList = new JComboBox(addList);
+      addDropList.setSelectedIndex(2);
       jtfType = new JTextField(10);
       jpSevenRow.add(jlType);
-      jpSevenRow.add(jtfType);
+      jpSevenRow.add(addDropList);
       jtfType.setEditable(false);
       
       jlStatus = new JLabel("Status: ", SwingConstants.RIGHT);
+      JComboBox statusDropList = new JComboBox(statusList);
+      statusDropList.setSelectedIndex(2);
       jtfStatus = new JTextField(10);
       jpEightRow.add(jlStatus);
-      jpEightRow.add(jtfStatus);
+      jpEightRow.add(statusDropList);
       jtfStatus.setEditable(false);
       
       jpLeftPanel.add(jpFirstRow);
