@@ -105,9 +105,6 @@ public class ProjectView extends JFrame{
       jbClose = new JButton("Close");
       jbClose.addActionListener((new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            Faculty gui = new Faculty();
-            gui.setVisible(true);
-            dispose();
          }
       }));
 

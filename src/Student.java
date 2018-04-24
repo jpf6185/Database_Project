@@ -40,20 +40,17 @@ public class Student extends JFrame //implements ActionListener
     private JTextField jtfGrade;
 
     private JLabel jlType;
-    private JTextField jtfType;
 
     private JLabel jlStatus;
-    private JTextField jtfStatus;
 
     private JLabel jlCurrentFaculty;
     private JTextField jtfCurrentFaculty;
 
     private JLabel jlRole;
-    private String[] roleList = { "Student", "Faculty", "Staff" };
+    private String[] roleList = { "Chair","Reader1","Reader2" };
 
-    private String[] addList = { "Sample1", "Sample2", "Sample3" };
+    private String[] addList = { "Project","Thesis" };
 
-    private String[] statusList = {"Status1", "Status2", "Status3"};
 
     private JLabel jlEmail;
     private JTextField jtfEmail;
@@ -73,12 +70,13 @@ public class Student extends JFrame //implements ActionListener
     private Client c;
     Vector<StatusInfo> statusVec=null;
     int StatusItemNum;
-    //private JLabel jlDate4;
-
+    private JComboBox statusDropList;
     private JScrollPane jScrollPane1;
 
     //CapstoneInfo Object
     CapstoneInfo capstoneInfos;
+
+    private JComboBox typeList;
 
     //private JTextField jtfDate4;
 
@@ -164,21 +162,17 @@ public class Student extends JFrame //implements ActionListener
         jtfGrade.setEditable(false);
 
         jlType = new JLabel("Type: ", SwingConstants.RIGHT);
-        JComboBox addDropList = new JComboBox(addList);
-        addDropList.setSelectedIndex(2);
+        typeList = new JComboBox(addList);
+        typeList.setEnabled(false);
         jpSevenRow.add(jlType);
-        jpSevenRow.add(addDropList);
-        addDropList.setEnabled(false);
+        jpSevenRow.add(typeList);
+        typeList.setEnabled(false);
         statusVec = c.getStatuses();
         jlStatus = new JLabel("Status: ", SwingConstants.RIGHT);
-        JComboBox statusDropList = new JComboBox(statusVec);
-        boolean foundMatch=false;
-        for(int i=0; i<statusDropList.getItemCount(); i++){
-            if(((StatusInfo)statusDropList.getItemAt(i)).getStatusName().equals(capstoneInfos.GetVersions().get(0).getStatus())){
-                StatusItemNum=i;
-                statusDropList.setSelectedIndex(i);
-            }
-        }
+        // creates the droplist and has the right item shown
+        statusDropList = new JComboBox(statusVec);
+        statusDropList.setEnabled(false);
+        UpdateShownStatus();
 
         jpEightRow.add(jlStatus);
         jpEightRow.add(statusDropList);
@@ -259,8 +253,8 @@ public class Student extends JFrame //implements ActionListener
                             jtfDescription.setEditable(descEdit);
                             jtfPlagiarism.setEditable(plagEdit);
                             jtfGrade.setEditable(gradEdit);
-                            jtfType.setEditable(TypeEdit);
-                            jtfStatus.setEditable(StatusEdit);
+                            statusDropList.setEnabled(StatusEdit);
+                            typeList.setEnabled(TypeEdit);
                         }
                         else if(jbEdit.getText().equals("save")){
 
@@ -273,15 +267,14 @@ public class Student extends JFrame //implements ActionListener
                             jtfDescription.setEditable(false);
                             jtfPlagiarism.setEditable(false);
                             jtfGrade.setEditable(false);
-                            jtfType.setEditable(false);
-                            jtfStatus.setEditable(false);
+                            statusDropList.setEnabled(false);
+                            typeList.setEnabled(false);
                             // gets the new values of the fields
                             capstoneInfos.GetVersions().get(0).setTitle(jtfProject.getText());
                             capstoneInfos.GetVersions().get(0).setDescription(jtfDescription.getText());
                             capstoneInfos.setPlagiarismScore(jtfPlagiarism.getText());
                             capstoneInfos.setGrade(jtfGrade.getText());
-                            capstoneInfos.GetVersions().get(0).setType(jtfType.getText());
-                            capstoneInfos.GetVersions().get(0).setStatus(jtfStatus.getText());
+                            capstoneInfos.GetVersions().get(0).setType((String)typeList.getSelectedItem());
                             capstoneInfos=c.saveCapstone(capstoneInfos);
                             updateFields();
                         }
@@ -309,7 +302,7 @@ public class Student extends JFrame //implements ActionListener
                 {
                     public void actionPerformed(ActionEvent e)
                     {
-                        JOptionPane.showMessageDialog(null, jtfDate.getText() + " " + jtfProject.getText() + " " + jtfStatus.getText());
+                        JOptionPane.showMessageDialog(null, jtfDate.getText() + " " + jtfProject.getText());
                     }
                 });
 
@@ -386,10 +379,28 @@ public class Student extends JFrame //implements ActionListener
         jtfDescription.setText(capstoneInfos.GetVersions().get(0).getDescription());
         jtfPlagiarism.setText(capstoneInfos.getPlagiarismScore());
         jtfGrade.setText(capstoneInfos.getGrade());
-        jtfType.setText(capstoneInfos.GetVersions().get(0).getType());
-        jtfStatus.setText(capstoneInfos.GetVersions().get(0).getStatus());
+        UpdateShownStatus();
+        UpdateShownType();
     }
-
+    // sets the status dropdown to show the correct item
+    private void UpdateShownStatus(){
+        boolean foundMatch=false;
+        for(int i=0; i<statusDropList.getItemCount(); i++){
+            if(((StatusInfo)statusDropList.getItemAt(i)).getStatusName().equals(capstoneInfos.GetVersions().get(0).getStatus())){
+                StatusItemNum=i;
+                statusDropList.setSelectedIndex(i);
+            }
+        }
+    }
+    // sets the project type dropdown to display the correct value
+    private void UpdateShownType(){
+        if(capstoneInfos.GetVersions().get(0).getType().equals("Project")){
+            typeList.setSelectedIndex(0);
+        }
+        else{
+            typeList.setSelectedIndex(1);
+        }
+    }
 
     private String capstoneInfo;
     private String date;
