@@ -38,8 +38,6 @@ public class Client extends JFrame {
    //private String password;
    
    //Attributes for Connection
-   String url = "jdbc:mysql://localhost/Project_Database?autoReconnect=true&useSSL=false";
-   String driver = "com.mysql.jdbc.Driver";
    //String user = "iste330t21";
    //String password = "ChrJacIanVin"; //My password is root on my laptop
    
@@ -110,7 +108,7 @@ public class Client extends JFrame {
        studentGui=new Student(this, this.getUser());
     }
     public void openFaculty(){
-       facultyGui=new Faculty(this,getUser());
+     //  facultyGui=new Faculty();
     }
     public void openStaff(){}
 
@@ -195,5 +193,29 @@ public class Client extends JFrame {
        }
        return null;
     }
-
+// sends an invite to a facult
+    public boolean sendInvite(commitee_info info){
+        try{
+            System.out.println("step 1 good");
+            outputStream.writeObject("addInvite");
+            outputStream.flush();
+            System.out.println("step 2 good");
+            info.setTracking("0");
+            outputStream.writeObject(info);
+            outputStream.flush();
+            System.out.println("step 3 good");
+            Boolean res=inputStream.readBoolean();
+            System.out.println("step 4 good");
+            return res;
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("error when sending an invite a faculty member ot the committe");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("unexpected error when sending an invite to a faculty member ot the committe");
+        }
+        return false;
+    }
 } // end Client Class

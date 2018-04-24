@@ -339,20 +339,36 @@ public class Student extends JFrame //implements ActionListener
         jpCenterLeftPanel.add(jlRole);
         jpCenterLeftPanel.add(jcbRoleDropList);
 
-        jlEmail = new JLabel("Email Address: ", SwingConstants.RIGHT);
-        jtfEmail = new JTextField(10);
+        jlEmail = new JLabel("Email Address or Name: ", SwingConstants.RIGHT);
+        jtfEmail = new JTextField(50);
         jpCenterLeftPanel.add(jlEmail);
         jpCenterLeftPanel.add(jtfEmail);
-
         jbInvite = new JButton("Send an Invitation");
         jbInvite.addActionListener(
                 new ActionListener()
                 {
+                    // sends a invite to the faculty specified
                     public void actionPerformed(ActionEvent e)
                     {
-
+                        String usernameOrName="";
+                        if(jtfEmail.getText().contains("@")){
+                            usernameOrName=jtfEmail.getText().split("@")[0];
+                        }
+                        else{
+                            usernameOrName=jtfEmail.getText();
+                        }
+                        commitee_info invite=new commitee_info(usernameOrName);
+                        invite.setPosition((String)jcbRoleDropList.getSelectedItem());
+                        invite.setCapStoneID(capstoneInfos.getCapstoneID());
+                        if(!(c.sendInvite(invite))){
+                            JOptionPane.showMessageDialog(null,"An error has occured when sending the invite, please insure the name or email is correct","error",JOptionPane.ERROR_MESSAGE);
+                        }
+                        else{
+                            jtfEmail.setText("");
+                        }
                     }
-                });
+                    }
+                );
 
         jpCenterRightPanel.add(jbInvite);
 

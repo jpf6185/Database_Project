@@ -157,6 +157,8 @@ public class CapstoneTrackerDbServer extends Thread{
                     break;
                     case "getallcapstones": callGetAllCapstones();
                     break;
+                    case "addinvite": callAddInvite();
+                    break;
                     default: keepGoing=false;
 
                 }
@@ -309,5 +311,19 @@ public class CapstoneTrackerDbServer extends Thread{
             System.out.println("the following exception has occured trying to get get all the capstones"+e.getMessage());
         }
     }
-
+    // method to add an invite that was sent
+    private void callAddInvite(){
+        try{
+            commitee_info info=(commitee_info)input.readObject();
+            boolean success=dbInterface.addInvite(info);
+            output.writeBoolean(success);
+            output.flush();
+        }
+        catch(IOException ioe){
+            System.out.println("the following IOException has occured trying to send an invite"+ ioe.getMessage());
+        }
+        catch(Exception e){
+            System.out.println("the following exception has occured trying to send an invite"+e.getMessage());
+        }
+    }
 }
