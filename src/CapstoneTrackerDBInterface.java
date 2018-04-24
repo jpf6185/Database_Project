@@ -547,10 +547,10 @@ public class CapstoneTrackerDBInterface {
         }
     }
     // code to get a list of all of the statuses in the status table
-    ArrayList<StatusInfo> getAllStatuses(){
+    Vector<StatusInfo> getAllStatuses(){
 
         ArrayList<ArrayList<String>>results;
-        ArrayList<StatusInfo>outObj=new ArrayList<StatusInfo>();
+        Vector<StatusInfo>outObj=new Vector<StatusInfo>();
         try{
             String selectStatement="SELECT SID,Name FROM status_code;";
             db.connect();

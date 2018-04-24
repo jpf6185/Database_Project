@@ -164,11 +164,7 @@ public class LoginGUI extends JFrame{
          
          Object choice = ae.getSource();
          if (status){
-            
-            // Username MUST BE LEAST 7 CHAR 
-            if(status && !(currentUsername.length() == MAX_LENGTH)){
-               status = showErrorMsg("Please enter username at least 7 characters.", 1);
-            }
+
             // Password cannot be entered nothing
             if (status && (currentPassword == null)){
                status = showErrorMsg("Please enter your password.", 2);

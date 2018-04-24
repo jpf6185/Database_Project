@@ -1,4 +1,6 @@
-public class StatusInfo {
+import java.io.Serializable;
+
+public class StatusInfo implements Serializable {
     private String StatusName;
     private String StatusNumber;
 
@@ -22,5 +24,9 @@ public class StatusInfo {
 
     public void setStatusNumber(String statusNumber) {
         StatusNumber = statusNumber;
+    }
+
+    public String toString(){
+        return this.getStatusName();
     }
 }

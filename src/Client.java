@@ -32,6 +32,7 @@ public class Client extends JFrame {
    private UserInfo user;
    private LoginGUI loginGui;
    private Student studentGui;
+   private Faculty facultyGui;
 
    
    //private String password;
@@ -106,9 +107,11 @@ public class Client extends JFrame {
     }
     // methods to open the various guis
     public void openStudent(){
-       studentGui=new Student(this);
+       studentGui=new Student(this, this.getUser());
     }
-    public void openFaculty(){}
+    public void openFaculty(){
+       facultyGui=new Faculty(this,getUser());
+    }
     public void openStaff(){}
 
     // getters and setters
@@ -126,6 +129,9 @@ public class Client extends JFrame {
         this.outputStream = outputStream;
     }
 
+    //gets
+
+    // gets capstone info
     public CapstoneInfo getCapstoneInfo(){
        try{
            outputStream.writeObject("getcommitees");
@@ -172,4 +178,22 @@ public class Client extends JFrame {
        }
        return null;
     }
+    public Vector<StatusInfo> getStatuses(){
+       try{
+            outputStream.writeObject("getstatuses");
+            outputStream.flush();
+            Vector<StatusInfo> res=(Vector<StatusInfo>)inputStream.readObject();
+            return res;
+       }
+       catch (IOException ioe){
+           ioe.printStackTrace();
+           System.out.println("error when getting a list of all statuses");
+       }
+       catch (Exception e){
+           e.printStackTrace();
+           System.out.println("unexpected error when getting a list of all statuses");
+       }
+       return null;
+    }
+
 } // end Client Class

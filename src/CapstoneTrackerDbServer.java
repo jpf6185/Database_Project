@@ -9,6 +9,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Vector;
 
 
 public class CapstoneTrackerDbServer extends Thread{
@@ -150,6 +151,8 @@ public class CapstoneTrackerDbServer extends Thread{
                     break;
                     case "getcommitees": callGetCommitees();
                     break;
+                    case "getstatuses": callGetStatuses();
+                    break;
                     default: keepGoing=false;
 
                 }
@@ -160,6 +163,22 @@ public class CapstoneTrackerDbServer extends Thread{
             System.out.println("A error occured in operation");
         }
     }
+
+    // gets all the possible statuses of a project
+    private void callGetStatuses(){
+        try {
+            Vector<StatusInfo> info =dbInterface.getAllStatuses();
+            output.writeObject(info);
+            output.flush();
+        }
+        catch(IOException ioe){
+            System.out.println("the following IOException has occured trying to get a list of statuses: "+ ioe.getMessage());
+        }
+        catch(Exception e){
+            System.out.println("the following exception has occured trying to get a list of satuses "+e.getMessage());
+        }
+    }
+
     // updates a capstone with the values recived
     private void callUpdateCapstone(){
         try{

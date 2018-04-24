@@ -3,6 +3,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * 04/06/2018
@@ -69,8 +71,8 @@ public class Student extends JFrame //implements ActionListener
     private UserInfo user;
     // the main client class that handels comumication
     private Client c;
-
-
+    Vector<StatusInfo> statusVec=null;
+    int StatusItemNum;
     //private JLabel jlDate4;
 
     private JScrollPane jScrollPane1;
@@ -81,13 +83,13 @@ public class Student extends JFrame //implements ActionListener
     //private JTextField jtfDate4;
 
     //Default Constructor
-    public Student(Client client)
+    public Student(Client client, UserInfo _user)
     {
         //This will show at the top Title
         setTitle("Student Information");
         this.c=client;
-        user=c.getUser();
-        userType=c.getUser().getUserType();
+        user=_user;
+        userType=user.getUserType();
         capstoneInfos=c.getCapstoneInfo();
         // JPanel Setup
         jpNorthPanel = new JPanel(new GridLayout(0,2,30,30));
@@ -166,16 +168,20 @@ public class Student extends JFrame //implements ActionListener
         addDropList.setSelectedIndex(2);
         jpSevenRow.add(jlType);
         jpSevenRow.add(addDropList);
-        jtfType.setEditable(false);
-
+        addDropList.setEnabled(false);
+        statusVec = c.getStatuses();
         jlStatus = new JLabel("Status: ", SwingConstants.RIGHT);
-        JComboBox statusDropList = new JComboBox(statusList);
-        statusDropList.setSelectedIndex(2);
-        jtfStatus = new JTextField(capstoneInfos.GetVersions().get(0).getStatus(),50);
+        JComboBox statusDropList = new JComboBox(statusVec);
+        boolean foundMatch=false;
+        for(int i=0; i<statusDropList.getItemCount(); i++){
+            if(((StatusInfo)statusDropList.getItemAt(i)).getStatusName().equals(capstoneInfos.GetVersions().get(0).getStatus())){
+                StatusItemNum=i;
+                statusDropList.setSelectedIndex(i);
+            }
+        }
+
         jpEightRow.add(jlStatus);
         jpEightRow.add(statusDropList);
-        jtfStatus.setEditable(false);
-
         jpLeftPanel.add(jpFirstRow);
         jpLeftPanel.add(jpSecondRow);
         jpLeftPanel.add(jpThirdRow);
