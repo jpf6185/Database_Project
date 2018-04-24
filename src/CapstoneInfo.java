@@ -4,7 +4,7 @@
  */
 import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.Vector;
 
 /* This class is a contain to hold the info stored in the capstonInfo table, as well as to store all associated
 * Capstone Version Objects, which represent entries in the Capstone Version Table
@@ -83,5 +83,24 @@ public class CapstoneInfo implements Serializable {
 
     public ArrayList<CapstoneVersion> GetVersions(){
         return Versions;
+    }
+    // returns a vector of certian values for constructing faculthy GUI
+    public Vector<String> getFacultyGuiInfo(){
+        Vector<String> capstoneSummary=new Vector<String>();
+        capstoneSummary.add(getAuthor());
+        // if the data has been added to the array properly
+        if(Versions.size()>0){
+            capstoneSummary.add(Versions.get(0).getTitle());
+            capstoneSummary.add(Versions.get(0).getStatus());
+            capstoneSummary.add(Versions.get(0).getDate());
+        }
+        // adds blank string to prevent any error from wrong length of versio
+        else{
+            capstoneSummary.add("");
+            capstoneSummary.add("");
+            capstoneSummary.add("");
+        }
+        return capstoneSummary;
+
     }
 }
