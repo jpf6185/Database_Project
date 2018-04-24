@@ -179,6 +179,7 @@ public class Faculty extends JFrame
           
          pack();
          setJMenuBar(menuBar);
+         setTitle("Faculty Information");
          setLocationRelativeTo(null);
          setVisible(true);
          setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
