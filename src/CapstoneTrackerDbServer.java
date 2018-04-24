@@ -153,6 +153,10 @@ public class CapstoneTrackerDbServer extends Thread{
                     break;
                     case "getstatuses": callGetStatuses();
                     break;
+                    case "gettrackedcapstones": callGetTrackedCapstones();
+                    break;
+                    case "getallcapstones": callGetAllCapstones();
+                    break;
                     default: keepGoing=false;
 
                 }
@@ -253,10 +257,10 @@ public class CapstoneTrackerDbServer extends Thread{
 
         }
         catch(IOException ioe){
-            System.out.println("the following IOException has occured trying to get info on a user"+ ioe.getMessage());
+            System.out.println("the following IOException has occured trying to get a list of committes a user in on"+ ioe.getMessage());
         }
         catch(Exception e){
-            System.out.println("the following exception has occured trying to get the info on a user"+e.getMessage());
+            System.out.println("the following exception has occured trying to get a list of committes a user in on"+e.getMessage());
         }
     }
     // gets all the pending invites a faculty has;
@@ -269,10 +273,40 @@ public class CapstoneTrackerDbServer extends Thread{
 
         }
         catch(IOException ioe){
-            System.out.println("the following IOException has occured trying to get info on a user"+ ioe.getMessage());
+            System.out.println("the following IOException has occured trying to get info on a user pending invites"+ ioe.getMessage());
         }
         catch(Exception e){
-            System.out.println("the following exception has occured trying to get the info on a user"+e.getMessage());
+            System.out.println("the following exception has occured trying to get the info on a users pending invites"+e.getMessage());
+        }
+    }
+// gets all the capstones a faculty meber is tracker
+    private void callGetTrackedCapstones(){
+        try{
+            UserInfo info=(UserInfo)input.readObject();
+            ArrayList<CapstoneInfo>capstones=dbInterface.GetTrackedCapstones(info);
+            output.writeObject(capstones);
+            output.flush();
+
+        }
+        catch(IOException ioe){
+            System.out.println("the following IOException has occured trying to get all the tracked capstone for a faculty"+ ioe.getMessage());
+        }
+        catch(Exception e){
+            System.out.println("the following exception has occured trying to get get all the tracked capstone for a faculty"+e.getMessage());
+        }
+    }
+    private void callGetAllCapstones(){
+        try{
+            ArrayList<CapstoneInfo>capstones=dbInterface.GetAllCapstones();
+            output.writeObject(capstones);
+            output.flush();
+
+        }
+        catch(IOException ioe){
+            System.out.println("the following IOException has occured trying to get all the capstones"+ ioe.getMessage());
+        }
+        catch(Exception e){
+            System.out.println("the following exception has occured trying to get get all the capstones"+e.getMessage());
         }
     }
 

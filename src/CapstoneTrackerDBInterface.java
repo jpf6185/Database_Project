@@ -486,8 +486,10 @@ public class CapstoneTrackerDBInterface {
     // adds an invite to the database or adds a tracking to a project.
     boolean addInvite(commitee_info input){
         try{
-            String sql="INSERT INTO committe VALUES (?,?,0,0,?,?);";
+            String sql="INSERT INTO committe VALUES ((SELECT distinct Username FROM users WHERE Username=? OR Name=?),?,0,0,?,?);";
             ArrayList<String>values=new ArrayList<String>();
+            // two usersnames are added because of the sub query this is not a mistake
+            values.add(input.getUserName());
             values.add(input.getUserName());
             values.add(input.getCapStoneID());
             values.add(input.getPosition());
