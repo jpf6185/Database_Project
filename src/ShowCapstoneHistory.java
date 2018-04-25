@@ -67,6 +67,7 @@ public class ShowCapstoneHistory extends JFrame  {
             public boolean isCellEditable(int _arg0, int _arg1) { 
                return false; }
          };
+      model.removeRow(0);
       capstoneHistory = new JTable();
       capstoneHistory.addMouseListener(
          new java.awt.event.MouseAdapter() {
@@ -89,10 +90,10 @@ public class ShowCapstoneHistory extends JFrame  {
       JPanel jpNorthRow = new JPanel(new FlowLayout(FlowLayout.CENTER,10,10));
       JPanel jpBottomRow = new JPanel(new FlowLayout());
       JPanel jpFirstTabPanel = new JPanel(new FlowLayout());
-            
-   
+
+
       jpNorthRow.add(new JScrollPane(capstoneHistory));
-      jpFirstTabPanel.add(jpNorthRow, BorderLayout.NORTH);   
+      jpFirstTabPanel.add(jpNorthRow, BorderLayout.NORTH);
       add(jpFirstTabPanel);
       populateInfo();
       pack();
@@ -110,6 +111,7 @@ public class ShowCapstoneHistory extends JFrame  {
          DefaultTableModel model=(DefaultTableModel)capstoneHistory.getModel();
          ArrayList<CapstoneVersion> versions=capstone.GetVersions();
          for(CapstoneVersion aVersion : versions){
+             System.out.println(aVersion.getTitle());
             model.addRow(new String[]{aVersion.getTitle(),aVersion.getStatus(),aVersion.getDate()});
          }
       }
@@ -118,17 +120,7 @@ public class ShowCapstoneHistory extends JFrame  {
          System.out.println("This message shold not display, this means teh castinf of the tablemodel to defaultablemodel in showcaspstonhistory failed");
       }
    }
-   
-   
 
-   protected JComponent makeTextPanel(String text){
-      JPanel panel = new JPanel(false);
-      JLabel filler = new JLabel(text);
-      filler.setHorizontalAlignment(JLabel.CENTER);
-      panel.setLayout(new GridLayout(1,1));
-      panel.add(filler);
-      return panel;
-   }
    
    public void windowClosing(WindowEvent e) {
       dispose();

@@ -218,7 +218,10 @@ public class Client extends JFrame {
     // method to get all the version of a capstone from a serverio
     public CapstoneInfo getCapstoneVersions(CapstoneInfo info){
         try{
+
             outputStream.writeObject("getcapstoneversions");
+            outputStream.flush();
+            outputStream.writeObject(new CapstoneInfo(info.getCapstoneID()));
             outputStream.flush();
             // reads and stores the resulta and then returns it
             CapstoneInfo res=(CapstoneInfo)inputStream.readObject();
