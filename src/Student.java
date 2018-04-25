@@ -197,6 +197,16 @@ public class Student extends JFrame //implements ActionListener
                 {
                     public void actionPerformed(ActionEvent e)
                     {
+                        // asks for them to enter the path to the file they want to ulpad
+                        String res=JOptionPane.showInputDialog(null,"Please enter the path to the file you want to upload","Enter file path");
+                        // stores that in a capstoneInfo object created using the current one as a template
+                        CapstoneInfo temp=capstoneInfos;
+                        temp.GetVersions().get(0).setFilePath(res);
+                        if(c.UploadFile(temp,user)){
+                        }
+                        else{
+                            System.out.println("An error happend");
+                        }
 
                     }
                 });
