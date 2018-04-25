@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
-import java.util.*;
 
 public class Staff extends JFrame implements ActionListener{
 
@@ -17,23 +16,21 @@ public class Staff extends JFrame implements ActionListener{
    
    // Attributes
    private String[] columnNames = {"Student Name","Project Title", "Current Status","Date"};
-   private Object[][] tableData = null;
-   
-   private Client c;
-   private UserInfo user;
-   private ArrayList<CapstoneInfo> capstoneData = null;
+   private Object[][] dataStatus ={
+   {"Vincent Venutolo", "Test Name", "Approved", "04-23-18"},
+   {"Jacob Feiner", "Test Name", "Approved", "04-23-18"},
+   {"Ian Anyala", "Test Name", "Approved", "04-23-18"},
+   {"Chris Bonsu", "Test Name", "Approved", "04-23-18"},
+   {"Vincent Venutolo", "Test Name", "Approved", "04-23-18"},
+   {"Vincent Venutolo", "Test Name", "Approved", "04-23-18"}};
    
    // Main Method
-   public static void main(String [] args){}
+   public static void main(String [] args){
+      Staff gui = new Staff();
+   }
    
    // Constructor
-   public Staff(Client _client, UserInfo _user){
-      
-      // Getting all of the data
-      this.c = _client;
-      this.user = _user;
-      capstoneData = c.getAllCapstoneData();
-      fillTable(capstoneData);
+   public Staff(){
       
       // North Panel Setup
       jpNorthPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30,10));
@@ -43,7 +40,7 @@ public class Staff extends JFrame implements ActionListener{
       
       // Center Panel Setup
       jpCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,30,10));
-      jStaffTable = new JTable(tableData, columnNames);
+      jStaffTable = new JTable(getDataObject(), columnNames);
       jScrollPane = new JScrollPane(jStaffTable);
       jStaffTable.setFillsViewportHeight(true);
       
@@ -77,29 +74,8 @@ public class Staff extends JFrame implements ActionListener{
       
    }
    
-   public Object[][] fillTable(ArrayList<CapstoneInfo> _capstoneData){
-      
-      tableData = new Object[4][_capstoneData.size()];
-      
-      String studentName;
-      String projectTitle;
-      String currentStatus;
-      String date;
-      
-      // Begins iterating through all Capstone objects
-      for(int i=0; i < _capstoneData.size(); i++){
-         
-         studentName = _capstoneData.get(i).getAuthor();
-         projectTitle = _capstoneData.get(i).GetVersions().get(3).toString();
-         currentStatus = _capstoneData.get(i).GetVersions().get(2).toString();
-         date = _capstoneData.get(i).GetVersions().get(0).toString();
-         
-         tableData[1][i] = studentName;
-         tableData[2][i] = projectTitle;
-         tableData[3][i] = currentStatus;
-         tableData[4][i] = date;
-      }
-      
-      return tableData;
+   public Object[][] getDataObject(){
+      Object[][]data=null;
+      return data;
    }
 } // end class

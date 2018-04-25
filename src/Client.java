@@ -33,18 +33,17 @@ public class Client extends JFrame {
    private LoginGUI loginGui;
    private Student studentGui;
    private Faculty facultyGui;
-   private Staff staffGui;
 
    
    //private String password;
    
    //Attributes for Connection
-   String url = "jdbc:mysql://localhost/capstone_tracker?autoReconnect=true&useSSL=false";
+   String url = "jdbc:mysql://localhost/Project_Database?autoReconnect=true&useSSL=false";
    String driver = "com.mysql.jdbc.Driver";
    //String user = "iste330t21";
    //String password = "ChrJacIanVin"; //My password is root on my laptop
    
-   //String user = "root";
+ // String user = "root";
    String password = "student"; //My password is root on my laptop
 
    Connection conn = null;
@@ -111,11 +110,9 @@ public class Client extends JFrame {
        studentGui=new Student(this, this.getUser());
     }
     public void openFaculty(){
-       //facultyGui=new Faculty(this,getUser());
+       facultyGui=new Faculty(this,getUser());
     }
-    public void openStaff(){
-      staffGui = new Staff(this, getUser());
-    }
+    public void openStaff(){}
 
     // getters and setters
 
@@ -132,27 +129,7 @@ public class Client extends JFrame {
         this.outputStream = outputStream;
     }
 
-    // gets all capstone info
-    public ArrayList<CapstoneInfo> getAllCapstoneData(){
-      
-      ArrayList<CapstoneInfo> capstoneData = null;
-      try{
-         outputStream.writeObject("getallcapstones");
-         outputStream.flush();
-         capstoneData = (ArrayList<CapstoneInfo>)inputStream.readObject();
-         
-         
-      }
-      catch (IOException ioe){
-         ioe.printStackTrace();
-         System.out.println("Error ioe @ Client class -> getAllCapstone() method");
-      }
-      catch (ClassNotFoundException cnfe){
-         cnfe.printStackTrace();
-         System.out.println("Error cnfe @ Client class -> getAllCapstone() method");
-      }
-      return capstoneData;
-    }
+    //gets
 
     // gets capstone info
     public CapstoneInfo getCapstoneInfo(){
