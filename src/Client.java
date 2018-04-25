@@ -38,8 +38,6 @@ public class Client extends JFrame {
    //private String password;
    
    //Attributes for Connection
-   String url = "jdbc:mysql://localhost/Project_Database?autoReconnect=true&useSSL=false";
-   String driver = "com.mysql.jdbc.Driver";
    //String user = "iste330t21";
    //String password = "ChrJacIanVin"; //My password is root on my laptop
    
@@ -110,7 +108,7 @@ public class Client extends JFrame {
        studentGui=new Student(this, this.getUser());
     }
     public void openFaculty(){
-       facultyGui=new Faculty(this,getUser());
+     //  facultyGui=new Faculty();
     }
     public void openStaff(){}
 
@@ -176,6 +174,7 @@ public class Client extends JFrame {
            e.printStackTrace();
            System.out.println("unexpected error when updating capstone info");
        }
+       JOptionPane.showMessageDialog(null,"Error","An error has occured when trying to save the changes to the capstone",JOptionPane.ERROR_MESSAGE);
        return null;
     }
     public Vector<StatusInfo> getStatuses(){
@@ -195,5 +194,84 @@ public class Client extends JFrame {
        }
        return null;
     }
+// sends an invite to a facult
+    public boolean sendInvite(commitee_info info){
+        try{
+            outputStream.writeObject("addInvite");
+            outputStream.flush();
+            info.setTracking("0");
+            outputStream.writeObject(info);
+            outputStream.flush();
+            Boolean res=inputStream.readBoolean();
+            return res;
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("error when sending an invite a faculty member ot the committe");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("unexpected error when sending an invite to a faculty member ot the committe");
+        }
+        return false;
+    }
+    // method to get all the version of a capstone from a serverio
+    public CapstoneInfo getCapstoneVersions(CapstoneInfo info){
+        try{
 
+            outputStream.writeObject("getcapstoneversions");
+            outputStream.flush();
+            outputStream.writeObject(new CapstoneInfo(info.getCapstoneID()));
+            outputStream.flush();
+            // reads and stores the resulta and then returns it
+            CapstoneInfo res=(CapstoneInfo)inputStream.readObject();
+            return res;
+
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("error when getting all versions of a capstone from the server");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("unexpected error when getting all versions of a capstone from the server");
+        }
+        return null;
+    }
+    // method to read in a file and send it to the server
+    public boolean UploadFile(CapstoneInfo capstone,UserInfo user){
+       try{
+           // gest teh soruce file path from the object provided
+           File source=new File(capstone.GetVersions().get(0).getFilePath());
+           // tells the server it wants to upload a file
+           outputStream.writeObject("uploadfile");
+           outputStream.flush();
+           // writes out the username of the user uploading the file
+           outputStream.writeObject(user.getUsername());
+           // creates a byte array of the files to be uploaded to the server
+           // casting could get into trouble since I am casting a long to a int but its unlikely as the filesize would have to be at lease over 250mb to cause problems
+           byte[]fileBytes=new byte[(int)source.length()];
+           // tells the server what length file to excepct
+           outputStream.writeInt((int)source.length());
+
+           // prepares the input stream to read the file in
+           FileInputStream fis=new FileInputStream(source);
+           BufferedInputStream fileIn=new BufferedInputStream(fis);
+           // reads in the file
+           fileIn.read(fileBytes,0,fileBytes.length);
+           fileIn.close();
+           // then sends the file
+           outputStream.write(fileBytes,0,fileBytes.length);
+           outputStream.flush();
+       }
+       catch (IOException ioe){
+           ioe.printStackTrace();
+           System.out.println("error when uploading a file to the server");
+       }
+       catch (Exception e){
+           e.printStackTrace();
+           System.out.println("unexpected error when uploading a file to the server");
+       }
+       return false;
+    }
 } // end Client Class

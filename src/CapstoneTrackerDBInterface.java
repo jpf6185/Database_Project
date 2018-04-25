@@ -132,8 +132,8 @@ public class CapstoneTrackerDBInterface {
         try {
 
             // sql statement to pull out data from database
-            String sqlStatement = "Select CapstoneId, `Date:`,name,Title,Capstone_Version.description,`Type`,FileLocation " +
-                    "FROM capstone_Version JOIN status_code on capstone_Version.Status=status_code.SID Where capstoneId=?;";
+                String sqlStatement = "Select CapstoneId, `Date:`,name,Title,Capstone_Version.description,`Type`,FileLocation " +
+                        "FROM capstone_Version JOIN status_code on capstone_Version.Status=status_code.SID Where capstoneId=? ORDER BY `Date:`;";
             // arraylist of paramaters for the folliwing method
             ArrayList<String> Params = new ArrayList<String>();
             Params.add(outObj.getCapstoneID());
@@ -482,7 +482,8 @@ public class CapstoneTrackerDBInterface {
         }
 
     }
-    
+
+
     // adds an invite to the database or adds a tracking to a project.
     boolean addInvite(commitee_info input){
         try{
