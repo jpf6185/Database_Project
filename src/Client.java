@@ -248,12 +248,13 @@ public class Client extends JFrame {
            outputStream.flush();
            // writes out the username of the user uploading the file
            outputStream.writeObject(user.getUsername());
+           outputStream.flush();
            // creates a byte array of the files to be uploaded to the server
            // casting could get into trouble since I am casting a long to a int but its unlikely as the filesize would have to be at lease over 250mb to cause problems
            byte[]fileBytes=new byte[(int)source.length()];
            // tells the server what length file to excepct
            outputStream.writeInt((int)source.length());
-
+           outputStream.flush();
            // prepares the input stream to read the file in
            FileInputStream fis=new FileInputStream(source);
            BufferedInputStream fileIn=new BufferedInputStream(fis);
@@ -263,6 +264,7 @@ public class Client extends JFrame {
            // then sends the file
            outputStream.write(fileBytes,0,fileBytes.length);
            outputStream.flush();
+           return true;
        }
        catch (IOException ioe){
            ioe.printStackTrace();

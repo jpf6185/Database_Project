@@ -367,8 +367,9 @@ public class CapstoneTrackerDbServer extends Thread {
             while(!(isUnique)){
 
                 fullPath=curPath+"/"+userName+"/"+randomString();
+                System.out.println(fullPath);
                 uploadedFile=new File(fullPath);
-                if(uploadedFile.exists()==false){
+                if(!(uploadedFile.exists())){
                     isUnique=true;
                 }
             }
@@ -378,6 +379,7 @@ public class CapstoneTrackerDbServer extends Thread {
             // then creates a buffer of the correct size
             byte[]fileByes=new byte[fileLength];
             // creats writer to write the file
+            uploadedFile.createNewFile();
             FileOutputStream fis=new FileOutputStream(uploadedFile);
             // reads in all of the bytes
             input.readFully(fileByes,0,fileLength);
@@ -386,14 +388,14 @@ public class CapstoneTrackerDbServer extends Thread {
             fis.close();
             output.writeBoolean(true);
 
-
         } catch (IOException ioe) {
             System.out.println("the following IOException has occured trying to save a capstone " + ioe.getMessage());
+            ioe.printStackTrace();
         } catch (Exception e) {
             System.out.println("the following exception has occured trying to save a capstone " + e.getMessage());
         }
         try {
-            output.writeBoolean(false);
+
         }
         catch (Exception e){
             e.printStackTrace();
@@ -407,7 +409,7 @@ public class CapstoneTrackerDbServer extends Thread {
         StringBuilder randomeBuilder=new StringBuilder();
         // random generator
         Random rnd=new Random();
-        while(allowedChars.length()<30){
+        while(randomeBuilder.length()<30){
             // generates a random number between 0 and 1 and uses that to select a number that represent the length of the stirng
             int charToAppened=(int)(rnd.nextFloat()*allowedChars.length());
             // appends the cahricter

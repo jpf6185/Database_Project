@@ -31,7 +31,7 @@ public class Student extends JFrame //implements ActionListener
     private JTextField jtfProject;
 
     private JLabel jlDescription;
-    private JTextField jtfDescription;
+    private JTextArea jtaDescription;
 
     private JLabel jlPlagiarism;
     private JTextField jtfPlagiarism;
@@ -56,7 +56,7 @@ public class Student extends JFrame //implements ActionListener
     private JTextField jtfEmail;
 
     private JPanel jpNorthPanel, jpSouthPanel, jpLeftPanel, jpRightPanel;
-    private JPanel jpFirstRow, jpSecondRow, jpThirdRow, jpFourRow, jpFiveRow, jpSixRow, jpSevenRow, jpEightRow;
+    private JPanel jpFirstRow, jpSecondRow, jpThirdRow, jpFourRow, jpFiveRow, jpSixRow, jpSevenRow, jpEightRow, jpNineRow;
     private JPanel jpFirstBtnRow, jpSecondBtnRow, jpThirdBtnRow, jpFourBtnRow, jpFiveBtnRow;
 
     private JPanel jpCenterPanel,jpPaddedCenterPanel;
@@ -74,7 +74,8 @@ public class Student extends JFrame //implements ActionListener
     private JScrollPane jScrollPane1;
 
     // ui elements realted to the defense date
-
+    JLabel jlDefenseDate;
+    JTextField jtfDefenseDate;
     //CapstoneInfo Object
     CapstoneInfo capstoneInfos;
 
@@ -97,7 +98,7 @@ public class Student extends JFrame //implements ActionListener
         jpPaddedCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30,30));
         add(jpNorthPanel, BorderLayout.NORTH);
 
-        jpLeftPanel = new JPanel(new GridLayout(8,0));
+        jpLeftPanel = new JPanel(new GridLayout(9,0));
         jpRightPanel = new JPanel(new GridLayout(5,0));
 
         jpCenterFirstRow = new JPanel(new GridLayout(2,2));
@@ -114,7 +115,7 @@ public class Student extends JFrame //implements ActionListener
         jpSixRow = new JPanel(new GridLayout(0,2));
         jpSevenRow = new JPanel(new GridLayout(0,2));
         jpEightRow = new JPanel(new GridLayout(0,2));
-
+        jpNineRow  = new JPanel(new GridLayout(0,2));
         // JPanel Setup for Buttons
         jpFirstBtnRow = new JPanel(new FlowLayout());
         jpSecondBtnRow = new JPanel(new FlowLayout());
@@ -144,10 +145,10 @@ public class Student extends JFrame //implements ActionListener
         jtfProject.setEditable(false);
 
         jlDescription = new JLabel("Description: ", SwingConstants.RIGHT);
-        jtfDescription = new JTextField(capstoneInfos.GetVersions().get(0).getDescription(),50);
+        jtaDescription = new JTextArea(capstoneInfos.GetVersions().get(0).getDescription(),2,50);
         jpFourRow.add(jlDescription);
-        jpFourRow.add(jtfDescription);
-        jtfDescription.setEditable(false);
+        jpFourRow.add(jtaDescription);
+        jtaDescription.setEditable(false);
 
 
         jlPlagiarism = new JLabel("Plagiarism Score: ", SwingConstants.RIGHT);
@@ -174,6 +175,13 @@ public class Student extends JFrame //implements ActionListener
         // creates the droplist and has the right item shown
         statusDropList = new JComboBox(statusVec);
         statusDropList.setEnabled(false);
+
+        jlDefenseDate=new JLabel("Defense date: (use the YYYY-MM-DD format):",SwingConstants.RIGHT);
+        jtfDefenseDate=new JTextField(capstoneInfos.getDefenseDate(),50);
+        jtfDefenseDate.setEnabled(false);
+        jpNineRow.add(jlDefenseDate);
+        jpNineRow.add(jtfDefenseDate);
+
         UpdateShownStatus();
 
         jpEightRow.add(jlStatus);
@@ -186,7 +194,7 @@ public class Student extends JFrame //implements ActionListener
         jpLeftPanel.add(jpSixRow);
         jpLeftPanel.add(jpSevenRow);
         jpLeftPanel.add(jpEightRow);
-
+        jpLeftPanel.add(jpNineRow);
         jpNorthPanel.add(jpLeftPanel, BorderLayout.WEST);
 
         // Button Right Panel Setup
@@ -238,12 +246,14 @@ public class Student extends JFrame //implements ActionListener
                             boolean gradEdit = false;
                             boolean TypeEdit = false;
                             boolean StatusEdit = false;
+                            boolean defenseEdit=false;
                             switch (userType.toLowerCase()) {
                                 case "student":
                                     nameEdit = true;
                                     projectEdit = true;
                                     descEdit = true;
                                     TypeEdit = true;
+                                    defenseEdit=false;
                                     jbEdit.setText("save");
                                     break;
                                 case "faculty":
@@ -262,7 +272,7 @@ public class Student extends JFrame //implements ActionListener
 
                             jtfName.setEditable(nameEdit);
                             jtfProject.setEditable(projectEdit);
-                            jtfDescription.setEditable(descEdit);
+                            jtaDescription.setEditable(descEdit);
                             jtfPlagiarism.setEditable(plagEdit);
                             jtfGrade.setEditable(gradEdit);
                             statusDropList.setEnabled(StatusEdit);
@@ -276,7 +286,7 @@ public class Student extends JFrame //implements ActionListener
                             // disables edditing on fields
                             jtfName.setEditable(false);
                             jtfProject.setEditable(false);
-                            jtfDescription.setEditable(false);
+                            jtaDescription.setEditable(false);
                             jtfPlagiarism.setEditable(false);
                             jtfGrade.setEditable(false);
                             statusDropList.setEnabled(false);
@@ -284,7 +294,7 @@ public class Student extends JFrame //implements ActionListener
                             // gets the new values of the fields and stores them temporarly
                             CapstoneInfo tempValues=capstoneInfos;
                             tempValues.GetVersions().get(0).setTitle(jtfProject.getText());
-                            tempValues.GetVersions().get(0).setDescription(jtfDescription.getText());
+                            tempValues.GetVersions().get(0).setDescription(jtaDescription.getText());
                             tempValues.setPlagiarismScore(jtfPlagiarism.getText());
                             tempValues.setGrade(jtfGrade.getText());
                             tempValues.GetVersions().get(0).setType((String)typeList.getSelectedItem());
@@ -412,7 +422,7 @@ public class Student extends JFrame //implements ActionListener
         jtfDate.setText(capstoneInfos.getLatestDate());
         jtfName.setText(capstoneInfos.getAuthor());
         jtfProject.setText(capstoneInfos.GetVersions().get(0).getTitle());
-        jtfDescription.setText(capstoneInfos.GetVersions().get(0).getDescription());
+        jtaDescription.setText(capstoneInfos.GetVersions().get(0).getDescription());
         jtfPlagiarism.setText(capstoneInfos.getPlagiarismScore());
         jtfGrade.setText(capstoneInfos.getGrade());
         UpdateShownStatus();

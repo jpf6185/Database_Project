@@ -4,3 +4,4 @@ writeLog.txt
 .idea/misc.xml
 src.zip
 *.class
+src/jpf6185/
