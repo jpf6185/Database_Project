@@ -174,6 +174,7 @@ public class Client extends JFrame {
            e.printStackTrace();
            System.out.println("unexpected error when updating capstone info");
        }
+       JOptionPane.showMessageDialog(null,"Error","An error has occured when trying to save the changes to the capstone",JOptionPane.ERROR_MESSAGE);
        return null;
     }
     public Vector<StatusInfo> getStatuses(){
@@ -196,16 +197,12 @@ public class Client extends JFrame {
 // sends an invite to a facult
     public boolean sendInvite(commitee_info info){
         try{
-            System.out.println("step 1 good");
             outputStream.writeObject("addInvite");
             outputStream.flush();
-            System.out.println("step 2 good");
             info.setTracking("0");
             outputStream.writeObject(info);
             outputStream.flush();
-            System.out.println("step 3 good");
             Boolean res=inputStream.readBoolean();
-            System.out.println("step 4 good");
             return res;
         }
         catch (IOException ioe){
@@ -217,5 +214,26 @@ public class Client extends JFrame {
             System.out.println("unexpected error when sending an invite to a faculty member ot the committe");
         }
         return false;
+    }
+    // method to read in a file and send it to the server
+    public boolean UploadFile(File source,CapstoneInfo capstone){
+       try{
+           // tells the server it wants to upload a file
+           outputStream.writeObject("uploadfile");
+           outputStream.flush();
+
+           // creates a byte array of the files to be uploaded to the server
+           // casting could get into trouble since I am casting a long to a int but its unlikely as the filesize would have to be at lease over 250mb to cause problems
+           byte[]fileBytes=new byte[(int)source.length()];
+           FileInputStream fis=new FileInputStream(source);
+       }
+       catch (IOException ioe){
+           ioe.printStackTrace();
+           System.out.println("error when uploading a file to the server");
+       }
+       catch (Exception e){
+           e.printStackTrace();
+           System.out.println("unexpected error when uploading a file to the server");
+       }
     }
 } // end Client Class

@@ -73,6 +73,8 @@ public class Student extends JFrame //implements ActionListener
     private JComboBox statusDropList;
     private JScrollPane jScrollPane1;
 
+    // ui elements realted to the defense date
+
     //CapstoneInfo Object
     CapstoneInfo capstoneInfos;
 
@@ -121,7 +123,7 @@ public class Student extends JFrame //implements ActionListener
         jpFiveBtnRow = new JPanel(new FlowLayout());
 
         // Project Details Left Panel Setup
-        jlDate = new JLabel("Date: ", SwingConstants.RIGHT);
+        jlDate = new JLabel("Last Edited:", SwingConstants.RIGHT);
         jtfDate = new JTextField(capstoneInfos.getLatestDate(),50);
 
         jpFirstRow.add(jlDate);
@@ -153,6 +155,7 @@ public class Student extends JFrame //implements ActionListener
         jpFiveRow.add(jlPlagiarism);
         jpFiveRow.add(jtfPlagiarism);
         jtfPlagiarism.setEditable(false);
+\
 
 
         jlGrade = new JLabel("Grade: ", SwingConstants.RIGHT);
@@ -269,13 +272,19 @@ public class Student extends JFrame //implements ActionListener
                             jtfGrade.setEditable(false);
                             statusDropList.setEnabled(false);
                             typeList.setEnabled(false);
-                            // gets the new values of the fields
-                            capstoneInfos.GetVersions().get(0).setTitle(jtfProject.getText());
-                            capstoneInfos.GetVersions().get(0).setDescription(jtfDescription.getText());
-                            capstoneInfos.setPlagiarismScore(jtfPlagiarism.getText());
-                            capstoneInfos.setGrade(jtfGrade.getText());
-                            capstoneInfos.GetVersions().get(0).setType((String)typeList.getSelectedItem());
-                            capstoneInfos=c.saveCapstone(capstoneInfos);
+                            // gets the new values of the fields and stores them temporarly
+                            CapstoneInfo tempValues=capstoneInfos;
+                            tempValues.GetVersions().get(0).setTitle(jtfProject.getText());
+                            tempValues.GetVersions().get(0).setDescription(jtfDescription.getText());
+                            tempValues.setPlagiarismScore(jtfPlagiarism.getText());
+                            tempValues.setGrade(jtfGrade.getText());
+                            tempValues.GetVersions().get(0).setType((String)typeList.getSelectedItem());
+                            // then tries to save the new value and stores the return
+                            tempValues=c.saveCapstone(tempValues);
+                            if(tempValues!=null){
+                                capstoneInfos=tempValues;
+                            }
+                            // only saves the return if it is not null
                             updateFields();
                         }
                         else{}

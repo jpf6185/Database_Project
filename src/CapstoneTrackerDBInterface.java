@@ -482,7 +482,8 @@ public class CapstoneTrackerDBInterface {
         }
 
     }
-    
+
+
     // adds an invite to the database or adds a tracking to a project.
     boolean addInvite(commitee_info input){
         try{
