@@ -310,7 +310,9 @@ public class Student extends JFrame //implements ActionListener
                 {
                     public void actionPerformed(ActionEvent e)
                     {
-                        JOptionPane.showMessageDialog(null, jtfDate.getText() + " " + jtfProject.getText());
+                        // gets all verisno of a cpastone from the client and then calls a showCApstoneHistory to show it
+                        CapstoneInfo allVersion=c.getCapstoneVersions(capstoneInfos);
+                        new ShowCapstoneHistory(allVersion);
                     }
                 });
 

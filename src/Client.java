@@ -215,15 +215,36 @@ public class Client extends JFrame {
         }
         return false;
     }
+    // method to get all the version of a capstone from a serverio
+    public CapstoneInfo getCapstoneVersions(CapstoneInfo info){
+        try{
+            outputStream.writeObject("getcapstoneversions");
+            outputStream.flush();
+            // reads and stores the resulta and then returns it
+            CapstoneInfo res=(CapstoneInfo)inputStream.readObject();
+            return res;
+
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("error when getting all versions of a capstone from the server");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("unexpected error when getting all versions of a capstone from the server");
+        }
+        return null;
+    }
     // method to read in a file and send it to the server
-    public boolean UploadFile(CapstoneInfo capstone){
+    public boolean UploadFile(CapstoneInfo capstone,UserInfo user){
        try{
            // gest teh soruce file path from the object provided
            File source=new File(capstone.GetVersions().get(0).getFilePath());
            // tells the server it wants to upload a file
            outputStream.writeObject("uploadfile");
            outputStream.flush();
-
+           // writes out the username of the user uploading the file
+           outputStream.writeObject(user.getUsername());
            // creates a byte array of the files to be uploaded to the server
            // casting could get into trouble since I am casting a long to a int but its unlikely as the filesize would have to be at lease over 250mb to cause problems
            byte[]fileBytes=new byte[(int)source.length()];
