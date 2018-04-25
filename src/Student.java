@@ -155,7 +155,6 @@ public class Student extends JFrame //implements ActionListener
         jpFiveRow.add(jlPlagiarism);
         jpFiveRow.add(jtfPlagiarism);
         jtfPlagiarism.setEditable(false);
-\
 
 
         jlGrade = new JLabel("Grade: ", SwingConstants.RIGHT);

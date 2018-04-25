@@ -216,8 +216,10 @@ public class Client extends JFrame {
         return false;
     }
     // method to read in a file and send it to the server
-    public boolean UploadFile(File source,CapstoneInfo capstone){
+    public boolean UploadFile(CapstoneInfo capstone){
        try{
+           // gest teh soruce file path from the object provided
+           File source=new File(capstone.GetVersions().get(0).getFilePath());
            // tells the server it wants to upload a file
            outputStream.writeObject("uploadfile");
            outputStream.flush();
@@ -225,7 +227,18 @@ public class Client extends JFrame {
            // creates a byte array of the files to be uploaded to the server
            // casting could get into trouble since I am casting a long to a int but its unlikely as the filesize would have to be at lease over 250mb to cause problems
            byte[]fileBytes=new byte[(int)source.length()];
+           // tells the server what length file to excepct
+           outputStream.writeInt((int)source.length());
+
+           // prepares the input stream to read the file in
            FileInputStream fis=new FileInputStream(source);
+           BufferedInputStream fileIn=new BufferedInputStream(fis);
+           // reads in the file
+           fileIn.read(fileBytes,0,fileBytes.length);
+           fileIn.close();
+           // then sends the file
+           outputStream.write(fileBytes,0,fileBytes.length);
+           outputStream.flush();
        }
        catch (IOException ioe){
            ioe.printStackTrace();
@@ -235,5 +248,6 @@ public class Client extends JFrame {
            e.printStackTrace();
            System.out.println("unexpected error when uploading a file to the server");
        }
+       return false;
     }
 } // end Client Class
