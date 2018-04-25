@@ -100,7 +100,7 @@ public class ShowCapstoneHistory extends JFrame  {
      // setJMenuBar(menuBar);
       setLocationRelativeTo(null);
       setVisible(true);
-      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
          
          
          
@@ -121,11 +121,6 @@ public class ShowCapstoneHistory extends JFrame  {
       }
    }
 
-   
-   public void windowClosing(WindowEvent e) {
-      dispose();
-      System.exit(0);
-   }
 
    
    public static void main(String [] args)

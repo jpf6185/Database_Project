@@ -99,6 +99,8 @@ public class Client extends JFrame {
             loginGui.setVisible(false);
             loginGui.dispose();
             break;
+            case "graddirector": openStaff();
+            break;
             default: break;
 
         }
@@ -137,7 +139,7 @@ public class Client extends JFrame {
            outputStream.writeObject(user);
            outputStream.flush();
            user=(UserInfo)inputStream.readObject();
-           String id=user.getCommitees().get(0).getCapStoneID();
+           String id = user.getCommitees().get(0).getCapStoneID();
            CapstoneInfo cap=new CapstoneInfo();
            cap.setCapstoneID(id);
            outputStream.writeObject("getcapstoneinfo");

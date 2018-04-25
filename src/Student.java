@@ -253,7 +253,7 @@ public class Student extends JFrame //implements ActionListener
                                     projectEdit = true;
                                     descEdit = true;
                                     TypeEdit = true;
-                                    defenseEdit=false;
+                                    defenseEdit=true;
                                     jbEdit.setText("save");
                                     break;
                                 case "faculty":
@@ -277,6 +277,7 @@ public class Student extends JFrame //implements ActionListener
                             jtfGrade.setEditable(gradEdit);
                             statusDropList.setEnabled(StatusEdit);
                             typeList.setEnabled(TypeEdit);
+                            jtfDefenseDate.setEnabled(defenseEdit);
                         }
                         else if(jbEdit.getText().equals("save")){
 
@@ -291,6 +292,7 @@ public class Student extends JFrame //implements ActionListener
                             jtfGrade.setEditable(false);
                             statusDropList.setEnabled(false);
                             typeList.setEnabled(false);
+                            jtfDefenseDate.setEnabled(false);
                             // gets the new values of the fields and stores them temporarly
                             CapstoneInfo tempValues=capstoneInfos;
                             tempValues.GetVersions().get(0).setTitle(jtfProject.getText());
@@ -346,13 +348,13 @@ public class Student extends JFrame //implements ActionListener
 
 
         // Currently Faculty Member Panel Setup
-        jlCurrentFaculty = new JLabel("Currently Invited Faculty Members: ", SwingConstants.LEFT);
+        //jlCurrentFaculty = new JLabel("Currently Invited Faculty Members: ", SwingConstants.LEFT);
 
-        jtfCurrentFaculty = new JTextField(10);
-        jpCenterFirstRow.add(jtfCurrentFaculty, 1,0);
-        jpCenterFirstRow.add((new JLabel(" ")), 0,1);
-        jpCenterFirstRow.add(jlCurrentFaculty, 0,0);
-        jpCenterFirstRow.add((new JLabel(" ")), 1,1);
+        //jtfCurrentFaculty = new JTextField(10);
+        //jpCenterFirstRow.add(jtfCurrentFaculty, 1,0);
+        //jpCenterFirstRow.add((new JLabel(" ")), 0,1);
+        //jpCenterFirstRow.add(jlCurrentFaculty, 0,0);
+        //jpCenterFirstRow.add((new JLabel(" ")), 1,1);
 
         // Send Invitation Panel Setup
         jlRole = new JLabel("Roles: ", SwingConstants.RIGHT);

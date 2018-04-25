@@ -588,4 +588,8 @@ public class CapstoneTrackerDBInterface {
         }
     }
 
+    //boolean createNewCapstone(UserInfo user){
+
+    //}
+
 }
