@@ -304,15 +304,41 @@ public class Client extends JFrame {
 
     public ArrayList<CapstoneInfo> getCommiteeCapstones() {
         try {
-
+            outputStream.writeObject("getcommiteecapstones");
+            outputStream.flush();
+            outputStream.writeObject(user);
+            outputStream.flush();
+            ArrayList<CapstoneInfo>capstoneInfos=(ArrayList<CapstoneInfo>)inputStream.readObject();
+            return capstoneInfos;
         }
         catch (IOException ioe){
             ioe.printStackTrace();
-            System.out.println("error when uploading a file to the server");
+            System.out.println("error when getting all capstones for a user a committee member of");
         }
         catch (Exception e){
             e.printStackTrace();
-            System.out.println("unexpected error when uploading a file to the server");
+            System.out.println("unexpected error when getting all capstones for a user a committee member of");
         }
+        return null;
+    }
+
+    public ArrayList<CapstoneInfo> getTrackedCapstones(){
+        try {
+            outputStream.writeObject("gettrackedcapstones");
+            outputStream.flush();
+            outputStream.writeObject(user);
+            outputStream.flush();
+            ArrayList<CapstoneInfo>capstoneInfos=(ArrayList<CapstoneInfo>)inputStream.readObject();
+            return capstoneInfos;
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("error when getting all capstones for a user a committee member of");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("unexpected error when getting all capstones for a user a committee member of");
+        }
+        return null;
     }
 } // end Client Class

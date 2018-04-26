@@ -173,8 +173,8 @@ public class Faculty extends JFrame
       menu.add(jMenuItem2); 
          
       jMenuItem3 = new JMenuItem("Invitations");
-      menu.add(jMenuItem3);
-      defaultTable(); 
+       menu.add(jMenuItem3);
+      this.defaultTable();
          
    }//end of faculty constructor
    
@@ -186,13 +186,20 @@ public class Faculty extends JFrame
 
    public void defaultTable()
    {
-       ArrayList<CapstoneInfo>tracking=C.get
+      ArrayList<CapstoneInfo>capstones=C.getCommiteeCapstones();
       
-      for (CapstoneInfo capInfo : capstone)
+      for (CapstoneInfo capInfo : capstones)
       {
-
+          model1.addRow(capInfo.getFacultyGuiInfo());
       }
-      model1.fireTableDataChanged();   
+      model1.fireTableDataChanged();
+
+      ArrayList<CapstoneInfo>tracked=C.getTrackedCapstones();
+      for(CapstoneInfo capInfo : tracked){
+          model2.addRow(capInfo.getFacultyGuiInfo());
+      }
+        model2.fireTableDataChanged();
+
       display();                
    }
    

@@ -434,7 +434,7 @@ public class CapstoneTrackerDBInterface {
         ArrayList<String> params = new ArrayList<String>();
         params.add(user.getUsername());
         return GetMultipleCapstones(" WHERE users.UserType='student' AND capstone_info.CapstoneID = " +
-                "(SELECT capstoneID FROM committe WHERE username=? AND Tracking=1);", params);
+                "(SELECT capstoneID FROM committe WHERE username=? AND Tracking=1) AND capstone_info.Lattest_Date=capstone_version.`Date:`;", params);
     }
     // gets all  the pending invites to a commite a faculty has
     ArrayList<InviteInfo> getPendingInvites(UserInfo user){
