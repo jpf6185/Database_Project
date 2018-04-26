@@ -6,9 +6,11 @@
 *  choice to make things simpler for now
 */
 
+import javax.print.attribute.standard.JobOriginatingUserName;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Vector;
 
 
@@ -168,8 +170,8 @@ public class CapstoneTrackerDbServer extends Thread {
                     case "addinvite":
                         callAddInvite();
                         break;
-//                    case "uploadfile": storeFile();
-//                        break;
+                    case "uploadfile": storeFile();
+                        break;
                     default:
                         keepGoing = false;
 
@@ -338,5 +340,84 @@ public class CapstoneTrackerDbServer extends Thread {
         }
     }
     // method to store a file uploaded
+    // this is horribly inficiant as it store the whole file in ram before writing it but its what was easiest to write
+    private void storeFile(){
+        // username of the user uplaodin a file
+        String userName;
+        // the path the program is running in
+        String curPath=System.getProperty("user.dir");
+        // the full path the file will be stored in
+        String fullPath;
+        //length fo the file in byte
+        int fileLength;
+        //file object for the uploaded file
+        File uploadedFile=null;
+        try {
+            // reads in the username of the user uploading the file
+            userName=(String)input.readObject();
+            //file object that represent the users directory
+            File userDir=new File(curPath+"/"+userName);
+            // if the directory curpath/username does not exist
+            if(!(userDir.exists() && userDir.isDirectory())){
+                userDir.mkdir();
+            }
+            // generates a random series of digits and appends that to the current path and username to create the full path
+            boolean isUnique=false;
+            //insures the path is unique
+            while(!(isUnique)){
+
+                fullPath=curPath+"/"+userName+"/"+randomString();
+                System.out.println(fullPath);
+                uploadedFile=new File(fullPath);
+                if(!(uploadedFile.exists())){
+                    isUnique=true;
+                }
+            }
+
+            // reads in the file length
+            fileLength=input.readInt();
+            // then creates a buffer of the correct size
+            byte[]fileByes=new byte[fileLength];
+            // creats writer to write the file
+            uploadedFile.createNewFile();
+            FileOutputStream fis=new FileOutputStream(uploadedFile);
+            // reads in all of the bytes
+            input.readFully(fileByes,0,fileLength);
+            // and then writes them all out
+            fis.write(fileByes,0,fileLength);
+            fis.close();
+            output.writeBoolean(true);
+
+        } catch (IOException ioe) {
+            System.out.println("the following IOException has occured trying to save a capstone " + ioe.getMessage());
+            ioe.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("the following exception has occured trying to save a capstone " + e.getMessage());
+        }
+        try {
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    // generates random string for storing file
+    public String randomString(){
+        // charcters the random string consists off
+        String allowedChars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        // stringubild to build the string
+        StringBuilder randomeBuilder=new StringBuilder();
+        // random generator
+        Random rnd=new Random();
+        while(randomeBuilder.length()<30){
+            // generates a random number between 0 and 1 and uses that to select a number that represent the length of the stirng
+            int charToAppened=(int)(rnd.nextFloat()*allowedChars.length());
+            // appends the cahricter
+            randomeBuilder.append(allowedChars.charAt(charToAppened));
+
+        }
+        String randomString= randomeBuilder.toString();
+        return randomString;
+    }
 
 }
