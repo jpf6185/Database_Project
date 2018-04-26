@@ -17,8 +17,8 @@ public class MySQLDatabase
    String uri = "jdbc:mysql://localhost/Capstone_Tracker?autoReconnect=true&useSSL=false";
    String driver = "com.mysql.jdbc.Driver";
    String user = "root";
-   String password = "student";
-   //String password="RYcGEpo!OVQklmdZ3Zf0";
+   //String password = "student";
+   String password="RYcGEpo!OVQklmdZ3Zf0";
    Connection conn = null;        
    Statement stmt = null; 
    

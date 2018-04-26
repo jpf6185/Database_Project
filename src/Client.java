@@ -111,7 +111,7 @@ public class Client extends JFrame {
        studentGui=new Student(this, this.getUser());
     }
     public void openFaculty(){
-     //  facultyGui=new Faculty();
+       facultyGui=new Faculty(this, user);
     }
     public void openStaff(){
       staffGui = new Staff(this, getUser());
@@ -300,5 +300,19 @@ public class Client extends JFrame {
            System.out.println("unexpected error when uploading a file to the server");
        }
        return false;
+    }
+
+    public ArrayList<CapstoneInfo> getCommiteeCapstones() {
+        try {
+
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("error when uploading a file to the server");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("unexpected error when uploading a file to the server");
+        }
     }
 } // end Client Class

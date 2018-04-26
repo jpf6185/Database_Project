@@ -179,7 +179,7 @@ public class CapstoneTrackerDBInterface {
             ArrayList<String>Params3=new ArrayList<String>();
             String insertStatement = "Insert INTO Capstone_Version Values(NOW(),?,?,?,?,?,?);";
             String dateStatement="SELECT MAX(`Date:`) FROM capstone_version WHERE capstoneID=?;";
-            String updateStatement="Update Capstone_Info Set Lattest_Date=? Where CapstoneID=?";
+            String updateStatement="Update Capstone_Info Set Lattest_Date=? defensedate=? Where CapstoneID=?";
             //sets the paramaters useing inObj1 and inObj2
             Params.add(inObj2.getCapstoneID());
             Params.add(inObj2.getStatusCode());
@@ -193,6 +193,7 @@ public class CapstoneTrackerDBInterface {
             db.setData(insertStatement,Params);
             // gets the latest data from database then adds it to the third set of params
             Params3.add((db.getData(dateStatement,Params2)).get(0).get(0));
+            Params3.add(inObj.getDefenseDate());
             Params3.add(inObj2.getCapstoneID());
             db.setData(updateStatement,Params3);
             db.endTrans();
