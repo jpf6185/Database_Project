@@ -41,18 +41,17 @@ public class ProjectView extends JFrame implements ActionListener{
     private String getRole = "Faculty";
     private String changeTitle;
 
-    // Main Method
-    //public static void main(String [] args){
-    //   ProjectView gui = new ProjectView();
-    //}
 
     // Constructor
-    public ProjectView(Client _client, Staff _staff,CapstoneInfo _selectedCapstoneData){
-
+    public ProjectView(Client _client, Staff _staff, CapstoneInfo _selectedCapstoneData){
         // Gets Client Socket & CapstoneInfo Object
         this.c = _client;
-        this.s = _staff;
         this.selectedCapstoneData = _selectedCapstoneData;
+        this.s = _staff;
+        openGUI();
+    }
+
+    public void openGUI(){
 
         if (!getRole.equals("Faculty")){
             changeTitle = "Project Management";
@@ -91,13 +90,9 @@ public class ProjectView extends JFrame implements ActionListener{
         jpSouthPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         if (!getRole.equals("Faculty")){
-            jbChangeStatus = new JButton("Change Status");
-            jbChangeStatus.addActionListener(this);
-            jpSouthPanel.add(jbChangeStatus);
-
-            jbPlagiarismScore = new JButton("Enter a Plagiarism Score");
-            jbPlagiarismScore.addActionListener(this);
-            jpSouthPanel.add(jbPlagiarismScore);
+            jbFinalGrade = new JButton("Enter a final grade");
+            jbFinalGrade.addActionListener(this);
+            jpSouthPanel.add(jbFinalGrade);
 
             jbApply = new JButton("Apply");
             jbApply.addActionListener(this);
@@ -105,9 +100,13 @@ public class ProjectView extends JFrame implements ActionListener{
         }
         else{
             // This else when role is Staff
-            jbFinalGrade = new JButton("Enter a final grade");
-            jbFinalGrade.addActionListener(this);
-            jpSouthPanel.add(jbFinalGrade);
+            jbChangeStatus = new JButton("Change Status");
+            jbChangeStatus.addActionListener(this);
+            jpSouthPanel.add(jbChangeStatus);
+
+            jbPlagiarismScore = new JButton("Enter a Plagiarism Score");
+            jbPlagiarismScore.addActionListener(this);
+            jpSouthPanel.add(jbPlagiarismScore);
         }
 
         jbClose = new JButton("Close");
@@ -133,6 +132,7 @@ public class ProjectView extends JFrame implements ActionListener{
                               }
                           }
         );
+
     }
 
     // fillCapstoneTable Method
@@ -192,23 +192,18 @@ public class ProjectView extends JFrame implements ActionListener{
             Vector<StatusInfo> statusChoices = c.getStatuses();
 
             for (StatusInfo sc : statusChoices){
-                if ((sc.getStatusNumber() == selectedCapstoneData.GetVersions().get(0).getStatusCode()))
+                if ((sc.getStatusName().equals(selectedCapstoneData.GetVersions().get(0).getStatus())))
                     break;
                 else
                     index++;
             }
 
             String input = (String) JOptionPane.showInputDialog(null, "Choose status: ", "Change Capstone's Status",
-                                                    JOptionPane.QUESTION_MESSAGE, null, statusChoices.toArray(), statusChoices.get(index));
+                                                    JOptionPane.QUESTION_MESSAGE, null, statusChoices.toArray(), statusChoices.get(index).getStatusName());
 
             CapstoneInfo tempValues = selectedCapstoneData;
-            for (StatusInfo sc : statusChoices){
-                if ((sc.getStatusName()) == input){
-                    tempValues.GetVersions().get(0).setStatusCode(sc.getStatusNumber());
-                    tempValues = c.saveCapstone(tempValues);
-                    break;
-                }
-            }
+            tempValues.GetVersions().get(0).setStatus(input);
+            tempValues = c.saveCapstone(tempValues);
             if(tempValues!=null){
                 selectedCapstoneData=tempValues;
                 tableCapstoneData[7][1] = selectedCapstoneData.GetVersions().get(0).getStatus();

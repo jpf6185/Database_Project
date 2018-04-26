@@ -134,14 +134,14 @@ public class Client extends JFrame {
 
     // gets all capstone info
     public ArrayList<CapstoneInfo> getAllCapstoneData(){
-      
+
       ArrayList<CapstoneInfo> capstoneData = null;
       try{
          outputStream.writeObject("getallcapstones");
          outputStream.flush();
          capstoneData = (ArrayList<CapstoneInfo>)inputStream.readObject();
-         
-         
+
+
       }
       catch (IOException ioe){
          ioe.printStackTrace();
@@ -182,6 +182,7 @@ public class Client extends JFrame {
        }
        return null;
     }
+
     public CapstoneInfo saveCapstone(CapstoneInfo info){
        try{
            outputStream.writeObject("updatecapstone");
