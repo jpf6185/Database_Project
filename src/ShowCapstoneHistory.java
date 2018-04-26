@@ -75,7 +75,7 @@ public class ShowCapstoneHistory extends JFrame  {
             public void mouseClicked(java.awt.event.MouseEvent mouse) {
                if (mouse.getClickCount() == 2) {
                      //create an object from ProjectView class
-                  ProjectView view = new ProjectView();
+                  //ProjectView view = new ProjectView();
                }
             }
          });

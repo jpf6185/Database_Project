@@ -110,7 +110,7 @@ public class CapstoneTrackerDbServer extends Thread {
                     connect.close();
                 }
             }
-            // if the loop w
+            // if the loop
             if (quit == false) {
                 controllerFunction();
             }

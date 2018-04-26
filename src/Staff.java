@@ -1,7 +1,9 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.io.*;
+import java.util.*;
 
 public class Staff extends JFrame implements ActionListener{
 
@@ -15,22 +17,22 @@ public class Staff extends JFrame implements ActionListener{
    private JScrollPane jScrollPane;
    
    // Attributes
-   private String[] columnNames = {"Student Name","Project Title", "Current Status","Date"};
-   private Object[][] dataStatus ={
-   {"Vincent Venutolo", "Test Name", "Approved", "04-23-18"},
-   {"Jacob Feiner", "Test Name", "Approved", "04-23-18"},
-   {"Ian Anyala", "Test Name", "Approved", "04-23-18"},
-   {"Chris Bonsu", "Test Name", "Approved", "04-23-18"},
-   {"Vincent Venutolo", "Test Name", "Approved", "04-23-18"},
-   {"Vincent Venutolo", "Test Name", "Approved", "04-23-18"}};
+   private Client c;
+   private UserInfo user;
+   private CapstoneInfo selectedCapstoneData;
+   private ArrayList<CapstoneInfo> allCapstoneData = null;
+   private int selectedRow;
    
-   // Main Method
-   public static void main(String [] args){
-      Staff gui = new Staff();
-   }
+   private String[] columnNames = {"Student Name","Project Title", "Current Status","Date"};
+   private Object[][] tableData = null;
    
    // Constructor
-   public Staff(){
+   public Staff(Client _client, UserInfo _user){
+      
+      // Getting all of the data
+      this.c = _client;
+      this.user = _user;
+      allCapstoneData = c.getAllCapstoneData();
       
       // North Panel Setup
       jpNorthPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30,10));
@@ -39,8 +41,8 @@ public class Staff extends JFrame implements ActionListener{
       add(jpNorthPanel, BorderLayout.NORTH);
       
       // Center Panel Setup
-      jpCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,30,10));
-      jStaffTable = new JTable(getDataObject(), columnNames);
+      jpCenterPanel = new JPanel(new BorderLayout(30,30));
+      jStaffTable = new JTable(fillTable(allCapstoneData), columnNames);
       jScrollPane = new JScrollPane(jStaffTable);
       jStaffTable.setFillsViewportHeight(true);
       
@@ -64,18 +66,72 @@ public class Staff extends JFrame implements ActionListener{
       setVisible(true);
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
    }
+
+    // fillTable Method
+    public Object[][] fillTable(ArrayList<CapstoneInfo> _capstoneData){
+
+        try {
+            tableData = new Object[_capstoneData.size()][4];
+
+            String studentName;
+            String projectTitle;
+            String currentStatus;
+            String date;
+
+            // Begins iterating through all Capstone objects
+            for (int i = 0; i < _capstoneData.size(); i++) {
+
+                studentName = _capstoneData.get(i).getAuthor();
+                projectTitle = _capstoneData.get(i).GetVersions().get(0).getTitle();
+                currentStatus = _capstoneData.get(i).GetVersions().get(0).getStatus();
+                date = _capstoneData.get(i).GetVersions().get(0).getDate();
+
+                tableData[i][0] = studentName;
+                tableData[i][1] = projectTitle;
+                tableData[i][2] = currentStatus;
+                tableData[i][3] = date;
+            }
+        }
+        catch (Exception e){
+            System.out.println("Error at fillTable() Method: " + e.getMessage());
+        }
+
+        return tableData;
+    } // fillTable Method
+
+    // Method to update AllCapstoneData object after closing ProjectView
+    public Boolean updateAllCapstoneData(CapstoneInfo _updatedCapstoneData){
+
+       Boolean status = false;
+
+        if (allCapstoneData.get(selectedRow).getCapstoneID() == _updatedCapstoneData.getCapstoneID()){
+            allCapstoneData.set(selectedRow, _updatedCapstoneData);
+
+            fillTable(allCapstoneData);
+
+            status = true;
+        }
+        else{
+            status = false;
+        }
+        return status;
+    } // end updateAllCapstoneData Method
+
+    @Override
+    public void actionPerformed(ActionEvent ae){
+
+       selectedRow = jStaffTable.getSelectedRow();
+        if (selectedRow <= allCapstoneData.size()){
+            if (ae.getSource() == jbOpenProjectMgmt){
+
+                selectedCapstoneData = allCapstoneData.get(selectedRow);
+
+                ProjectView staffProjectView = new ProjectView(c, this, selectedCapstoneData);
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Please select Capstone Project on table first.", "Error Message", JOptionPane.ERROR_MESSAGE);
+        }
+    }
    
-   @Override
-   public void actionPerformed(ActionEvent ae){
-      Object choice = ae.getSource();
-   }
-   
-   public void openProjectManagementWindow(){
-      
-   }
-   
-   public Object[][] getDataObject(){
-      Object[][]data=null;
-      return data;
-   }
 } // end class

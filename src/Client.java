@@ -33,6 +33,7 @@ public class Client extends JFrame {
    private LoginGUI loginGui;
    private Student studentGui;
    private Faculty facultyGui;
+   private Staff staffGui;
 
    
    //private String password;
@@ -110,7 +111,9 @@ public class Client extends JFrame {
     public void openFaculty(){
      //  facultyGui=new Faculty();
     }
-    public void openStaff(){}
+    public void openStaff(){
+      staffGui = new Staff(this, getUser());
+    }
 
     // getters and setters
 
@@ -127,7 +130,27 @@ public class Client extends JFrame {
         this.outputStream = outputStream;
     }
 
-    //gets
+    // gets all capstone info
+    public ArrayList<CapstoneInfo> getAllCapstoneData(){
+      
+      ArrayList<CapstoneInfo> capstoneData = null;
+      try{
+         outputStream.writeObject("getallcapstones");
+         outputStream.flush();
+         capstoneData = (ArrayList<CapstoneInfo>)inputStream.readObject();
+         
+         
+      }
+      catch (IOException ioe){
+         ioe.printStackTrace();
+         System.out.println("Error ioe @ Client class -> getAllCapstone() method");
+      }
+      catch (ClassNotFoundException cnfe){
+         cnfe.printStackTrace();
+         System.out.println("Error cnfe @ Client class -> getAllCapstone() method");
+      }
+      return capstoneData;
+    }
 
     // gets capstone info
     public CapstoneInfo getCapstoneInfo(){
@@ -194,7 +217,7 @@ public class Client extends JFrame {
        }
        return null;
     }
-// sends an invite to a facult
+    // sends an invite to a facult
     public boolean sendInvite(commitee_info info){
         try{
             outputStream.writeObject("addInvite");
