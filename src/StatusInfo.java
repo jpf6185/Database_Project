@@ -2,11 +2,11 @@ import java.io.Serializable;
 
 public class StatusInfo implements Serializable {
     private String StatusName;
-    private String StatusNumber;
+    private int StatusNumber;
 
     public StatusInfo(String statusName, String statusNumber) {
         StatusName = statusName;
-        StatusNumber = statusNumber;
+        StatusNumber = Integer.parseInt(statusNumber);
     }
     public StatusInfo(){}
 
@@ -19,11 +19,11 @@ public class StatusInfo implements Serializable {
     }
 
     public String getStatusNumber() {
-        return StatusNumber;
+        return Integer.toString(StatusNumber);
     }
 
     public void setStatusNumber(String statusNumber) {
-        StatusNumber = statusNumber;
+        StatusNumber = Integer.parseInt(statusNumber);
     }
 
     public String toString(){

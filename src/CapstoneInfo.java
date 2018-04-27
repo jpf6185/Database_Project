@@ -11,9 +11,9 @@ import java.util.Vector;
  */
 public class CapstoneInfo implements Serializable {
     // fields of the Capstone_Info Table on
-    private String CapstoneID;
+    private int CapstoneID;
     private String LatestDate;
-    private String PlagiarismScore;
+    private int PlagiarismScore;
     private String Grade;
     private String DefenseDate;
     // the full name of the user who wrote the capstone gotten from the user table using some sql
@@ -27,63 +27,78 @@ public class CapstoneInfo implements Serializable {
     }
     // constructor with both the bare minum of info as well as one for all atributes
     public CapstoneInfo(String _CapstoneID) {
-        CapstoneID = _CapstoneID;
+        CapstoneID = Integer.parseInt(_CapstoneID);
         Versions=new ArrayList<CapstoneVersion>();
     }
 
     // acessors and mutators
     public String getCapstoneID() {
-        return CapstoneID;
+
+        return Integer.toString(CapstoneID);
     }
 
     public void setCapstoneID(String capstoneID) {
-        CapstoneID = capstoneID;
+
+        CapstoneID = Integer.parseInt(capstoneID);
     }
 
     public void setAuthor(String author){
+
         Author=author;
     }
     public String getAuthor(){
-        return Author;
+        return
+                Author;
     }
     public String getLatestDate() {
+
         return LatestDate;
     }
 
     public void setLatestDate(String latestDate) {
+
         LatestDate = latestDate;
     }
 
     public String getPlagiarismScore() {
-        return PlagiarismScore;
+
+        return Integer.toString(PlagiarismScore);
     }
 
     public void setPlagiarismScore(String plagiarismScore) {
-        PlagiarismScore = plagiarismScore;
+
+        PlagiarismScore = Integer.parseInt(plagiarismScore);
     }
 
     public String getGrade() {
+
         return Grade;
     }
 
     public void setGrade(String grade) {
+
         Grade = grade;
     }
 
     public String getDefenseDate() {
+
         return DefenseDate;
     }
 
     public void setDefenseDate(String defenseDate) {
+
         DefenseDate = defenseDate;
     }
     public void addVersion(CapstoneVersion _Version){
+
         Versions.add(_Version);
     }
 
     public ArrayList<CapstoneVersion> GetVersions(){
+
         return Versions;
     }
+
     // returns a vector of certian values for constructing faculthy GUI
     public Vector<String> getFacultyGuiInfo(){
         Vector<String> capstoneSummary=new Vector<String>();
@@ -91,7 +106,7 @@ public class CapstoneInfo implements Serializable {
         // if the data has been added to the array properly
         if(Versions.size()>0){
             capstoneSummary.add(Versions.get(0).getTitle());
-            capstoneSummary.add(Versions.get(0).getStatus());
+            capstoneSummary.add(Versions.get(0).getStatusName());
             capstoneSummary.add(Versions.get(0).getDate());
         }
         // adds blank string to prevent any error from wrong length of versio

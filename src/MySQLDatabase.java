@@ -207,7 +207,7 @@ public class MySQLDatabase
          }
       }
       catch(SQLException sqle){
-         System.out.println("SQL Exception Error"); 
+         System.out.println("SQL Exception Error" + sqle.getMessage());
          throw new DLException(sqle );
       }
    }//end 2nd setdata method

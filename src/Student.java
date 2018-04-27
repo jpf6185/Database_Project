@@ -176,7 +176,7 @@ public class Student extends JFrame //implements ActionListener
         statusDropList = new JComboBox(statusVec);
         statusDropList.setEnabled(false);
 
-        jlDefenseDate=new JLabel("Defense date: (use the YYYY-MM-DD format):",SwingConstants.RIGHT);
+        jlDefenseDate=new JLabel("Defense Date (use the YYYY-MM-DD format):",SwingConstants.RIGHT);
         jtfDefenseDate=new JTextField(capstoneInfos.getDefenseDate(),50);
         jtfDefenseDate.setEnabled(false);
         jpNineRow.add(jlDefenseDate);
@@ -434,7 +434,7 @@ public class Student extends JFrame //implements ActionListener
     private void UpdateShownStatus(){
         boolean foundMatch=false;
         for(int i=0; i<statusDropList.getItemCount(); i++){
-            if(((StatusInfo)statusDropList.getItemAt(i)).getStatusName().equals(capstoneInfos.GetVersions().get(0).getStatus())){
+            if(((StatusInfo)statusDropList.getItemAt(i)).getStatusName().equals(capstoneInfos.GetVersions().get(0).getStatusName())){
                 StatusItemNum=i;
                 statusDropList.setSelectedIndex(i);
             }

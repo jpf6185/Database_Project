@@ -18,7 +18,7 @@ public class ProjectView extends JFrame implements ActionListener{
 
     // ArrayList Attributes
     private String[] dataHeaders = {
-            "Date:",
+            "Date",
             "Student Name:",
             "Project Title:",
             "Description:",
@@ -150,14 +150,14 @@ public class ProjectView extends JFrame implements ActionListener{
                 headersFinished = true;
             }
 
-            tableCapstoneData[0][1] = _capstoneInfoData.GetVersions().get(0).getDate();
+            tableCapstoneData[0][1] = _capstoneInfoData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).getDate();
             tableCapstoneData[1][1] = _capstoneInfoData.getAuthor();
-            tableCapstoneData[2][1] = _capstoneInfoData.GetVersions().get(0).getTitle();
-            tableCapstoneData[3][1] = _capstoneInfoData.GetVersions().get(0).getDescription();
+            tableCapstoneData[2][1] = _capstoneInfoData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).getTitle();
+            tableCapstoneData[3][1] = _capstoneInfoData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).getDescription();
             tableCapstoneData[4][1] = _capstoneInfoData.getPlagiarismScore();
             tableCapstoneData[5][1] = _capstoneInfoData.getGrade();
-            tableCapstoneData[6][1] = _capstoneInfoData.GetVersions().get(0).getType();
-            tableCapstoneData[7][1] = _capstoneInfoData.GetVersions().get(0).getStatus();
+            tableCapstoneData[6][1] = _capstoneInfoData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).getType();
+            tableCapstoneData[7][1] = _capstoneInfoData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).getStatusName();
 
             for (int i = 0; i < tableCapstoneData.length; i++){
                 if (tableCapstoneData[i][1] == null){
@@ -187,28 +187,48 @@ public class ProjectView extends JFrame implements ActionListener{
 
         // ChangeStatus button is clicked
         if (ae.getSource() == jbChangeStatus){
-
-            int index = 0;
-            Vector<StatusInfo> statusChoices = c.getStatuses();
-
-            for (StatusInfo sc : statusChoices){
-                if ((sc.getStatusName().equals(selectedCapstoneData.GetVersions().get(0).getStatus())))
-                    break;
-                else
+            try {
+                int index = 0;
+                int matchedIndex = 0;
+                Vector<StatusInfo> statusChoices = c.getStatuses();
+                String[] statusNameArray = new String[statusChoices.size()];
+                String[] statusCodeArray = new String[statusChoices.size()];
+                for (StatusInfo sc : statusChoices) {
+                    statusNameArray[index] = (sc.getStatusName());
+                    statusCodeArray[index] = (sc.getStatusNumber());
+                    if ((sc.getStatusName().equals(selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).getStatusName()))) {
+                        matchedIndex = index;
+                    }
                     index++;
+                }
+
+                String input = (String) JOptionPane.showInputDialog(null, "Choose status: ", "Change Capstone's Status",
+                        JOptionPane.QUESTION_MESSAGE, null, statusNameArray, statusNameArray[matchedIndex] );
+
+                for (int i = 0; i < statusNameArray.length; i++){
+                    if (statusNameArray[i].equals(input)) {
+                        matchedIndex = i;
+                        break;
+                    }
+                }
+
+                if ((input != null) && (input.length() > 0)) {
+                    String tempStatusName = selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).getStatusName();
+                    String tempStatusCode = selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).getStatusCode();
+                    selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).setStatusName(statusNameArray[matchedIndex]);
+                    selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).setStatusCode(statusCodeArray[matchedIndex]);
+                    selectedCapstoneData = c.saveCapstone(selectedCapstoneData);
+                    if (selectedCapstoneData != null) {
+                        selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 2).setStatusName(tempStatusName);
+                        selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 2).setStatusCode(tempStatusCode);
+                        c.saveCapstone(selectedCapstoneData);
+                        tableCapstoneData[7][1] = selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).getStatusName();
+                    }
+                }
             }
-
-            String input = (String) JOptionPane.showInputDialog(null, "Choose status: ", "Change Capstone's Status",
-                                                    JOptionPane.QUESTION_MESSAGE, null, statusChoices.toArray(), statusChoices.get(index).getStatusName());
-
-            CapstoneInfo tempValues = selectedCapstoneData;
-            tempValues.GetVersions().get(0).setStatus(input);
-            tempValues = c.saveCapstone(tempValues);
-            if(tempValues!=null){
-                selectedCapstoneData=tempValues;
-                tableCapstoneData[7][1] = selectedCapstoneData.GetVersions().get(0).getStatus();
+            catch (Exception e){
+                System.out.println("Error:ProjectView:actionPerformed-ChangeStatus:" + e.getMessage());
             }
-
         }
 
         // PlagiarismScore button is clicked

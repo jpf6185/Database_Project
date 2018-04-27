@@ -112,7 +112,7 @@ public class ShowCapstoneHistory extends JFrame  {
          ArrayList<CapstoneVersion> versions=capstone.GetVersions();
          for(CapstoneVersion aVersion : versions){
              System.out.println(aVersion.getTitle());
-            model.addRow(new String[]{aVersion.getTitle(),aVersion.getStatus(),aVersion.getDate()});
+            model.addRow(new String[]{aVersion.getTitle(),aVersion.getStatusName(),aVersion.getDate()});
          }
       }
       catch (Exception e){

@@ -77,11 +77,11 @@ public class CapstoneTrackerDBInterface {
         ArrayList<ArrayList<String>> Values;
         try {
             // sql statement to pull out data from database
-            String sqlStatement = "select capstone_info.CapStoneId,`Date:`," +
+            String sqlStatement = "select capstone_info.CapStoneId,`Date`," +
                     "Plagerism_Score,Grade,DefenseDate,Title,Capstone_Version.Description,FileLocation,Name,`type`,status from" +
                     " Capstone_Info JOIN capstone_Version ON capstone_info.capstoneId=capstone_Version.capstoneId" +
                     " JOIN status_code ON status_code.SID=capstone_Version.status WHERE capstone_info.capstoneId=?" +
-                    " AND Lattest_Date=`Date:`; ";
+                    " AND Lattest_Date=`Date`; ";
             // arraylist of paramaters for the folliwing method
             ArrayList<String> Params = new ArrayList<String>();
             Params.add(outObj.getCapstoneID());
@@ -115,10 +115,9 @@ public class CapstoneTrackerDBInterface {
             // sets the rest of the paramater for object 2
             outObj2.setTitle(Values.get(0).get(5));
             outObj2.setDescription(Values.get(0).get(6));
-            outObj2.setFilePath(Values.get(0).get(7));
-            outObj2.setStatus(Values.get(0).get(8));
+            outObj2.setStatusCode(Values.get(0).get(7));
+            outObj2.setFilePath(Values.get(0).get(8));
             outObj2.setType(Values.get(0).get(9));
-            outObj2.setStatusCode(Values.get(0).get(10));
         }
         catch(Exception E){
             return null;
@@ -132,8 +131,8 @@ public class CapstoneTrackerDBInterface {
         try {
 
             // sql statement to pull out data from database
-                String sqlStatement = "Select CapstoneId, `Date:`,name,Title,Capstone_Version.description,`Type`,FileLocation " +
-                        "FROM capstone_Version JOIN status_code on capstone_Version.Status=status_code.SID Where capstoneId=? ORDER BY `Date:`;";
+                String sqlStatement = "Select CapstoneId, `Date`,name,Title,Capstone_Version.description,`Type`,FileLocation " +
+                        "FROM capstone_Version JOIN status_code on capstone_Version.Status=status_code.SID Where capstoneId=? ORDER BY `Date`;";
             // arraylist of paramaters for the folliwing method
             ArrayList<String> Params = new ArrayList<String>();
             Params.add(outObj.getCapstoneID());
@@ -154,11 +153,11 @@ public class CapstoneTrackerDBInterface {
             // loops over each entry in the array lis and creates a corispond Capstonversion object and adds it to the capstone info object
             for (ArrayList<String> info : Values) {
                 CapstoneVersion outObj2 = new CapstoneVersion(info.get(0), info.get(1));
-                outObj2.setStatus(info.get(2));
+                outObj2.setStatusCode(info.get(2));
                 outObj2.setTitle(info.get(3));
                 outObj2.setDescription(info.get(4));
-                outObj2.setType(info.get(5));
-                outObj2.setFilePath(info.get(6));
+                outObj2.setFilePath(info.get(5));
+                outObj2.setType(info.get(6));
                 outObj.addVersion(outObj2);
             }
         } catch (Exception E) {
@@ -171,22 +170,27 @@ public class CapstoneTrackerDBInterface {
     Boolean updateCapstone(CapstoneInfo inObj){
         try {
             // grabs the capstone version object that conatins much of the data, asside from capstoneID
-
             CapstoneVersion inObj2=inObj.GetVersions().get(0);
 
             ArrayList<String>Params=new ArrayList<String>();
             ArrayList<String>Params2=new ArrayList<String>();
             ArrayList<String>Params3=new ArrayList<String>();
-            String insertStatement = "Insert INTO Capstone_Version Values(NOW(),?,?,?,?,?,?);";
-            String dateStatement="SELECT MAX(`Date:`) FROM capstone_version WHERE capstoneID=?;";
+            String insertStatement = "Insert INTO Capstone_Version"
+                                    + "(Date,CapstoneID,Status,Title,Description,FileLocation,Type)"
+                                    + "Values(?,?,?,?,?,?,?);";
+            String dateStatement="SELECT MAX(`Date`) FROM capstone_version WHERE capstoneID=?;";
             String updateStatement="Update Capstone_Info Set Lattest_Date=? Where CapstoneID=?";
+
+
             //sets the paramaters useing inObj1 and inObj2
+
+            Params.add(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
             Params.add(inObj2.getCapstoneID());
             Params.add(inObj2.getStatusCode());
             Params.add(inObj2.getTitle());
             Params.add(inObj2.getDescription());
-            Params.add(inObj2.getType());
             Params.add(inObj2.getFilePath());
+            Params.add(inObj2.getType());
             Params2.add(inObj.getCapstoneID());
             db.connect();
             db.startTrans();
@@ -200,7 +204,7 @@ public class CapstoneTrackerDBInterface {
             return true;
         }
         catch(DLException dle){
-            System.out.println("an error has ocured when trying to update the capstone project");
+            System.out.println("an error has ocurred when trying to update the capstone project");
             try {
                 db.rollback();
                 db.close();
@@ -400,7 +404,7 @@ public class CapstoneTrackerDBInterface {
                 // creates a capstoneversion object with the date retrived and capstoneID
                 CapstoneVersion capVer=new CapstoneVersion(r.get(0),r.get(4));
                 // adds the current status of the project
-                capVer.setStatus(r.get(2));
+                capVer.setStatusName(r.get(2));
                 // and its title
                 capVer.setTitle(r.get(1));
                 // and then adds capstone version to capstone info
@@ -418,7 +422,7 @@ public class CapstoneTrackerDBInterface {
     }
     // gets a list of all capstones
     ArrayList<CapstoneInfo>GetAllCapstones(){
-        return GetMultipleCapstones(" WHERE users.userType='student' AND capstone_version.`Date:`=capstone_info.Lattest_Date;",new ArrayList<String>());
+        return GetMultipleCapstones(" WHERE users.userType='student' AND capstone_version.`Date`=capstone_info.Lattest_Date;",new ArrayList<String>());
     }
     // gets all the capstones a faculty is a commitee member of
     ArrayList<CapstoneInfo>GetCommiteeCapstones(UserInfo user){
@@ -445,7 +449,7 @@ public class CapstoneTrackerDBInterface {
             // gets all the pending none accped,declined or tracking invites using this sql
             String sql ="SELECT Author,Title,Position,Lattest_Date,committe.CapstoneID,Username FROM committe" +
                     " JOIN capstone_info ON committe.CapstoneID = capstone_info.CapstoneID" +
-                    " JOIN capstone_version ON capstone_info.CapstoneID = capstone_version.capstoneID AND capstone_info.Lattest_Date=capstone_version.`Date:`\n" +
+                    " JOIN capstone_version ON capstone_info.CapstoneID = capstone_version.capstoneID AND capstone_info.Lattest_Date=capstone_version.`Date`\n" +
                     " WHERE Username=? AND Tracking=0 AND HasAccepted=0 and HasDecline=0;";
             ArrayList<String>params=new ArrayList<String>();
             params.add(user.getUsername());

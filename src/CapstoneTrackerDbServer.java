@@ -199,7 +199,7 @@ public class CapstoneTrackerDbServer extends Thread {
     // updates a capstone with the values recived
     private void callUpdateCapstone() {
         try {
-            // gets the capstoninfo
+            // gets the capstoneinfo
             CapstoneInfo info = (CapstoneInfo) input.readObject();
             dbInterface.updateCapstone(info);
             info = dbInterface.GetCapstoneInfo(info);

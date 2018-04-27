@@ -82,9 +82,9 @@ public class Staff extends JFrame implements ActionListener{
             for (int i = 0; i < _capstoneData.size(); i++) {
 
                 studentName = _capstoneData.get(i).getAuthor();
-                projectTitle = _capstoneData.get(i).GetVersions().get(0).getTitle();
-                currentStatus = _capstoneData.get(i).GetVersions().get(0).getStatus();
-                date = _capstoneData.get(i).GetVersions().get(0).getDate();
+                projectTitle = _capstoneData.get(i).GetVersions().get(_capstoneData.get(i).GetVersions().size() - 1).getTitle();
+                currentStatus = _capstoneData.get(i).GetVersions().get(_capstoneData.get(i).GetVersions().size() - 1).getStatusName();
+                date = _capstoneData.get(i).GetVersions().get(_capstoneData.get(i).GetVersions().size() - 1).getDate();
 
                 tableData[i][0] = studentName;
                 tableData[i][1] = projectTitle;

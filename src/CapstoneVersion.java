@@ -10,36 +10,36 @@ import java.io.Serializable;
  */
 public class CapstoneVersion implements Serializable {
     private String Date;
-    private String CapstoneID;
-    private String Status;
+    private int CapstoneID;
+    private String StatusName;
     private String Title;
     private String Description;
     private String FilePath;
     private String Type;
-    private String StatusCode;
+    private int StatusCode;
 // constructor with the bare
         public CapstoneVersion(String _CapstoneID,String _Date){
             Date=_Date;
-            CapstoneID=_CapstoneID;
+            CapstoneID=Integer.parseInt(_CapstoneID);
         }
 
     public CapstoneVersion(String date, String capstoneID, String status, String title, String description, String filePath,String type,String statusCode) {
         Date = date;
-        CapstoneID = capstoneID;
-        Status = status;
+        CapstoneID = Integer.parseInt(capstoneID);
+        StatusName = status;
         Title = title;
         Description = description;
         FilePath = filePath;
         Type=type;
-        StatusCode=statusCode;
+        StatusCode=Integer.parseInt(statusCode);
     }
 
     public String getStatusCode() {
-        return StatusCode;
+        return Integer.toString(StatusCode);
     }
 
     public void setStatusCode(String statusCode) {
-        StatusCode = statusCode;
+        StatusCode = Integer.parseInt(statusCode);
     }
 
     public String getType() {
@@ -67,19 +67,19 @@ public class CapstoneVersion implements Serializable {
     }
 
     public String getCapstoneID() {
-        return CapstoneID;
+        return Integer.toString(CapstoneID);
     }
 
     public void setCapstoneID(String capstoneID) {
-        CapstoneID = capstoneID;
+        CapstoneID = Integer.parseInt(capstoneID);
     }
 
-    public String getStatus() {
-        return Status;
+    public String getStatusName() {
+        return StatusName;
     }
 
-    public void setStatus(String status) {
-        Status = status;
+    public void setStatusName(String status) {
+        StatusName = status;
     }
 
     public String getTitle() {
