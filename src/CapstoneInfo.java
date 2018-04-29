@@ -14,7 +14,7 @@ public class CapstoneInfo implements Serializable {
     private int CapstoneID;
     private String LatestDate;
     private int PlagiarismScore;
-    private String Grade;
+    private int Grade;
     private String DefenseDate;
     // the full name of the user who wrote the capstone gotten from the user table using some sql
     private String Author;
@@ -67,17 +67,26 @@ public class CapstoneInfo implements Serializable {
 
     public void setPlagiarismScore(String plagiarismScore) {
 
-        PlagiarismScore = Integer.parseInt(plagiarismScore);
+        try {
+            PlagiarismScore = Integer.parseInt(plagiarismScore);
+        }
+        catch (NumberFormatException e){
+            PlagiarismScore = 0;
+        }
     }
 
     public String getGrade() {
 
-        return Grade;
+        return Integer.toString(Grade);
     }
 
     public void setGrade(String grade) {
-
-        Grade = grade;
+        try {
+            Grade = Integer.parseInt(grade);
+        }
+        catch (NumberFormatException e){
+            Grade = 0;
+        }
     }
 
     public String getDefenseDate() {

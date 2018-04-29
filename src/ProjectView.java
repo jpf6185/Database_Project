@@ -221,7 +221,6 @@ public class ProjectView extends JFrame implements ActionListener{
                     if (selectedCapstoneData != null) {
                         selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 2).setStatusName(tempStatusName);
                         selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 2).setStatusCode(tempStatusCode);
-                        c.saveCapstone(selectedCapstoneData);
                         tableCapstoneData[7][1] = selectedCapstoneData.GetVersions().get(selectedCapstoneData.GetVersions().size() - 1).getStatusName();
                     }
                 }
@@ -266,11 +265,11 @@ public class ProjectView extends JFrame implements ActionListener{
                 JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
 
             if (s != null) {
-                //if (this.s.updateAllCapstoneData(selectedCapstoneData)) {
-                //    System.out.println("SUCCESS: Passed Inserted updated Capstone Info back to Staff's allCapstoneData between Staff n ProjectView classes.");
-                //} else {
-                //    System.out.println("UNSUCCESS: Passed Inserted updated Capstone Info back to Staff's allCapstoneData between Staff n ProjectView classes.");
-                //}
+                if (this.s.updateAllCapstoneData(selectedCapstoneData)) {
+                    System.out.println("SUCCESS: Passed Inserted updated Capstone Info back to Staff's allCapstoneData between Staff n ProjectView classes.");
+                } else {
+                    System.out.println("UNSUCCESS: Passed Inserted updated Capstone Info back to Staff's allCapstoneData between Staff n ProjectView classes.");
+                }
             }
             if (f != null){
 
