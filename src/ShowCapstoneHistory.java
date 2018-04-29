@@ -37,6 +37,8 @@ public class ShowCapstoneHistory extends JFrame  {
    //attributes
    private JTable capstoneHistory;
    CapstoneInfo capstone;
+   private JButton jbDownload;
+   private ArrayList<CapstoneVersion>versions;
    
    private String [] columns = {
       "Project Title", "Status", "Date"
@@ -89,12 +91,17 @@ public class ShowCapstoneHistory extends JFrame  {
          //create a View Committies GUI
       JPanel jpNorthRow = new JPanel(new FlowLayout(FlowLayout.CENTER,10,10));
       JPanel jpBottomRow = new JPanel(new FlowLayout());
+      jpBottomRow.setAlignmentX(Component.CENTER_ALIGNMENT);
       JPanel jpFirstTabPanel = new JPanel(new FlowLayout());
+
+      jbDownload=new JButton("Download");
+      jpBottomRow.add(jbDownload);
 
 
       jpNorthRow.add(new JScrollPane(capstoneHistory));
       jpFirstTabPanel.add(jpNorthRow, BorderLayout.NORTH);
       add(jpFirstTabPanel);
+       add(jpBottomRow);
       populateInfo();
       pack();
      // setJMenuBar(menuBar);

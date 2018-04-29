@@ -348,4 +348,9 @@ public class Client extends JFrame {
         }
         return null;
     }
+    //
+    public boolean download(CapstoneVersion version){
+       try
+
+    }
 } // end Client Class
