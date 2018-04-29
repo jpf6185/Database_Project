@@ -104,7 +104,7 @@ public class Staff extends JFrame implements ActionListener{
 
         Boolean status = false;
 
-        if (allCapstoneData.get(selectedRow).getCapstoneID() == _updatedCapstoneData.getCapstoneID()){
+        if (allCapstoneData.get(selectedRow).getCapstoneID().equals(_updatedCapstoneData.getCapstoneID())){
             allCapstoneData.set(selectedRow, _updatedCapstoneData);
 
             fillTable(allCapstoneData);

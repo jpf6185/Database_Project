@@ -78,7 +78,7 @@ public class CapstoneTrackerDBInterface {
         try {
             // sql statement to pull out data from database
             String sqlStatement = "select capstone_info.CapStoneId,`Date`," +
-                    "Plagerism_Score,Grade,DefenseDate,Title,Capstone_Version.Description,FileLocation,Name,`type`,status from" +
+                    "Plagerism_Score,Grade,DefenseDate,Title,Capstone_Version.Description,FileLocation,name,`type`,status from" +
                     " Capstone_Info JOIN capstone_Version ON capstone_info.capstoneId=capstone_Version.capstoneId" +
                     " JOIN status_code ON status_code.SID=capstone_Version.status WHERE capstone_info.capstoneId=?" +
                     " AND Lattest_Date=`Date`; ";
@@ -115,9 +115,9 @@ public class CapstoneTrackerDBInterface {
             // sets the rest of the paramater for object 2
             outObj2.setTitle(Values.get(0).get(5));
             outObj2.setDescription(Values.get(0).get(6));
-            outObj2.setStatusCode(Values.get(0).get(7));
-            outObj2.setFilePath(Values.get(0).get(8));
-            outObj2.setType(Values.get(0).get(9));
+            outObj2.setFilePath(Values.get(0).get(7));
+            outObj2.setStatusName(Values.get(0).get(8));
+            outObj2.setStatusCode(Values.get(0).get(10));
         }
         catch(Exception E){
             return null;
@@ -197,7 +197,6 @@ public class CapstoneTrackerDBInterface {
             db.setData(insertStatement,Params);
             // gets the latest data from database then adds it to the third set of params
             Params3.add((db.getData(dateStatement,Params2)).get(0).get(0));
-            //Params3.add(inObj.getDefenseDate());
             Params3.add(inObj2.getCapstoneID());
             db.setData(updateStatement,Params3);
             db.endTrans();
