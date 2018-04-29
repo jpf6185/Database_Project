@@ -184,6 +184,7 @@ public class CapstoneTrackerDBInterface {
 
 
             //sets the paramaters useing inObj1 and inObj2
+            Params.add(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
             Params.add(inObj2.getCapstoneID());
             Params.add(inObj2.getStatusCode());
             Params.add(inObj2.getTitle());
@@ -196,7 +197,7 @@ public class CapstoneTrackerDBInterface {
             db.setData(insertStatement,Params);
             // gets the latest data from database then adds it to the third set of params
             Params3.add((db.getData(dateStatement,Params2)).get(0).get(0));
-            Params3.add(inObj.getDefenseDate());
+            //Params3.add(inObj.getDefenseDate());
             Params3.add(inObj2.getCapstoneID());
             db.setData(updateStatement,Params3);
             db.endTrans();
