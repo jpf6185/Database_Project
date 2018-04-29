@@ -347,7 +347,7 @@ public class CapstoneTrackerDbServer extends Thread {
         // the path the program is running in
         String curPath=System.getProperty("user.dir");
         // the full path the file will be stored in
-        String fullPath;
+        String fullPath="";
         //length fo the file in byte
         int fileLength;
         //file object for the uploaded file
@@ -386,20 +386,48 @@ public class CapstoneTrackerDbServer extends Thread {
             // and then writes them all out
             fis.write(fileByes,0,fileLength);
             fis.close();
-            output.writeBoolean(true);
 
-        } catch (IOException ioe) {
+
+        }
+        catch (IOException ioe) {
             System.out.println("the following IOException has occured trying to save a capstone " + ioe.getMessage());
             ioe.printStackTrace();
+            try{
+                output.writeBoolean(false);
+            }
+            catch (Exception e){
+                System.out.println("an error occured reutnring value to the client");
+            }
+            return;
         } catch (Exception e) {
             System.out.println("the following exception has occured trying to save a capstone " + e.getMessage());
+            try{
+                output.writeBoolean(false);
+            }
+            catch (Exception e1){
+                System.out.println("an error occured reutnring value to the client");
+            }
+            return;
         }
+        // second try catch for modifying the databse, so that i can know if it was the file upload that failed or the modification to the database
         try {
 
+            CapstoneInfo info=(CapstoneInfo)input.readObject();
+            // sets the file path the server has set for it
+            info.GetVersions().get(0).setFilePath(fullPath);
+            dbInterface.updateCapstone(info);
+            output.writeBoolean(true);
         }
         catch (Exception e){
+            System.out.println("An error occured tryign to make the changes to the database");
             e.printStackTrace();
-        }
+            try{
+                output.writeBoolean(false);
+            }
+            catch (Exception e1){
+                System.out.println("an error occured reutnring value to the client");
+            } }
+
     }
     // generates random string for storing file
     public String randomString(){

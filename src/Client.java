@@ -266,6 +266,9 @@ public class Client extends JFrame {
     }
     // method to read in a file and send it to the server
     public boolean UploadFile(CapstoneInfo capstone,UserInfo user){
+       // boolean that will be returned to determien if the method succedded
+       boolean success=false;
+
        try{
            // gest teh soruce file path from the object provided
            File source=new File(capstone.GetVersions().get(0).getFilePath());
@@ -290,7 +293,8 @@ public class Client extends JFrame {
            // then sends the file
            outputStream.write(fileBytes,0,fileBytes.length);
            outputStream.flush();
-           return true;
+           outputStream.writeObject(capstone);
+           success=inputStream.readBoolean();
        }
        catch (IOException ioe){
            ioe.printStackTrace();
@@ -300,7 +304,9 @@ public class Client extends JFrame {
            e.printStackTrace();
            System.out.println("unexpected error when uploading a file to the server");
        }
-       return false;
+       return success;
+       // read at the end becuase the other m
+
     }
 
     public ArrayList<CapstoneInfo> getCommiteeCapstones() {

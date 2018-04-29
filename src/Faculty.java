@@ -60,13 +60,13 @@ public class Faculty extends JFrame
    //default constructor 
    public Faculty(Client c, UserInfo user)
    {
-         this.C=c;
-         this.user=user;
-         // Tracking table with data
-      committeesTable = new JTable(rowData, columns);
-      model1.setColumnIdentifiers( columns);
-      committeesTable.setModel(model1);
-      committeesTable.setRowHeight(30);
+               this.C=c;
+               this.user=user;
+               // Tracking table with data
+            committeesTable = new JTable(rowData, columns);
+            model1.setColumnIdentifiers( columns);
+            committeesTable.setModel(model1);
+            committeesTable.setRowHeight(30);
          
          // Committees Table with data
       trackingTable = new JTable();
