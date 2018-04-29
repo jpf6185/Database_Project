@@ -1,0 +1,3 @@
+-- For Getting MasterStart
+Select startDate FROM StudentDetails JOIN Term ON StudentDetails.MasterStart=Term.term WHERE username='?';
+Select startDate FROM StudentDetails JOIN Term ON StudentDetails.CapstoneStart=Term.term WHERE username='?';

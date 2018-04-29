@@ -50,18 +50,18 @@ public class Faculty extends JFrame
    };
    
    private Object[][] rowData;
-   private Socket cs;
-   private BufferedReader br;
-   private PrintWriter pw;
+   private Client C;
+   private UserInfo user;
    
    DefaultTableModel model1 = new DefaultTableModel();
    DefaultTableModel model2 = new DefaultTableModel();
    DefaultTableModel model3 = new DefaultTableModel();
 
    //default constructor 
-   public Faculty()
+   public Faculty(Client c, UserInfo user)
    {
-         
+         this.C=c;
+         this.user=user;
          // Tracking table with data
       committeesTable = new JTable(rowData, columns);
       model1.setColumnIdentifiers( columns);
@@ -173,8 +173,8 @@ public class Faculty extends JFrame
       menu.add(jMenuItem2); 
          
       jMenuItem3 = new JMenuItem("Invitations");
-      menu.add(jMenuItem3);
-      defaultTable(); 
+       menu.add(jMenuItem3);
+      this.defaultTable();
          
    }//end of faculty constructor
    
@@ -186,20 +186,20 @@ public class Faculty extends JFrame
 
    public void defaultTable()
    {
-      ArrayList<CapstoneInfo> capstone = new ArrayList<CapstoneInfo>();
-      CapstoneInfo cap1 = new CapstoneInfo();
-      cap1.setAuthor("person1");
-      capstone.add(cap1);
-      capstone.add(cap1);
-      capstone.add(cap1);
+      ArrayList<CapstoneInfo>capstones=C.getCommiteeCapstones();
       
-      for (CapstoneInfo capInfo : capstone)
+      for (CapstoneInfo capInfo : capstones)
       {
-         model1.addRow(capInfo.getFacultyGuiInfo());
-         model2.addRow(capInfo.getFacultyGuiInfo());
-         model3.addRow(capInfo.getFacultyGuiInfo());
+          model1.addRow(capInfo.getFacultyGuiInfo());
       }
-      model1.fireTableDataChanged();   
+      model1.fireTableDataChanged();
+
+      ArrayList<CapstoneInfo>tracked=C.getTrackedCapstones();
+      for(CapstoneInfo capInfo : tracked){
+          model2.addRow(capInfo.getFacultyGuiInfo());
+      }
+        model2.fireTableDataChanged();
+
       display();                
    }
    
@@ -227,18 +227,6 @@ public class Faculty extends JFrame
       System.exit(0);
    }
 
-   
-   public static void main(String [] args)
-   {
-      SwingUtilities.invokeLater(
-         new Runnable(){
-            public void run(){
-               UIManager.put("swing.boldMetal", Boolean.FALSE);
-            //createAndShowGUI();
-               Faculty gui = new Faculty();
-            }
-         });
-      
-   }
+
    
 }//end of faculty class
