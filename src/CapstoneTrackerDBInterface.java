@@ -199,20 +199,23 @@ public class CapstoneTrackerDBInterface {
             // gets the latest data from database then adds it to the third set of params
             switch (inObj2.getStatusCode()){
                 case "800":
-                    updateStatement="Update Capstone_Info Set Lattest_Date=?, Plagerism_Score=? Where CapstoneID=?";
+                    updateStatement="Update Capstone_Info Set Lattest_Date=?, Defensedate=?, Plagerism_Score=? Where CapstoneID=?";
                     Params3.add((db.getData(dateStatement,Params2)).get(0).get(0));
+                    Params3.add(inObj.getDefenseDate());
                     Params3.add(inObj.getPlagiarismScore());
                     Params3.add(inObj2.getCapstoneID());
                     break;
                 case "1600":
-                    updateStatement="Update Capstone_Info Set Lattest_Date=?, Grade=? Where CapstoneID=?";
+                    updateStatement="Update Capstone_Info Set Lattest_Date=?, Defensedate=?, Grade=? Where CapstoneID=?";
                     Params3.add((db.getData(dateStatement,Params2)).get(0).get(0));
+                    Params3.add(inObj.getDefenseDate());
                     Params3.add(inObj.getGrade());
                     Params3.add(inObj2.getCapstoneID());
                     break;
                 default:
-                    updateStatement="Update Capstone_Info Set Lattest_Date=? Where CapstoneID=?";
+                    updateStatement="Update Capstone_Info Set Lattest_Date=?, Defensedate=? Where CapstoneID=?";
                     Params3.add((db.getData(dateStatement,Params2)).get(0).get(0));
+                    Params3.add(inObj.getDefenseDate());
                     Params3.add(inObj2.getCapstoneID());
                     break;
             }

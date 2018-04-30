@@ -301,19 +301,17 @@ public class Student extends JFrame //implements ActionListener
                             typeList.setEnabled(false);
                             jtfDefenseDate.setEnabled(false);
                             // gets the new values of the fields and stores them temporarly
-                            CapstoneInfo tempValues=capstoneInfos;
-                            tempValues.GetVersions().get(0).setTitle(jtfProject.getText());
-                            tempValues.GetVersions().get(0).setDescription(jtaDescription.getText());
-                            tempValues.setPlagiarismScore(jtfPlagiarism.getText());
-                            tempValues.setGrade(jtfGrade.getText());
-                            tempValues.GetVersions().get(0).setType((String)typeList.getSelectedItem());
+                            capstoneInfos.GetVersions().get(capstoneInfos.GetVersions().size() - 1).setTitle(jtfProject.getText());
+                            capstoneInfos.GetVersions().get(capstoneInfos.GetVersions().size() - 1).setDescription(jtaDescription.getText());
+                            capstoneInfos.setPlagiarismScore(jtfPlagiarism.getText());
+                            capstoneInfos.setGrade(jtfGrade.getText());
+                            capstoneInfos.GetVersions().get(capstoneInfos.GetVersions().size() - 1).setType((String)typeList.getSelectedItem());
+                            capstoneInfos.setDefenseDate(jtfDefenseDate.getText());
                             // then tries to save the new value and stores the return
-                            tempValues=c.saveCapstone(tempValues);
-                            if(tempValues!=null){
-                                capstoneInfos=tempValues;
+                            capstoneInfos=c.saveCapstone(capstoneInfos);
+                            if(capstoneInfos!=null){
+                                updateFields();
                             }
-                            // only saves the return if it is not null
-                            updateFields();
                         }
                         else{}
                     }
@@ -430,10 +428,11 @@ public class Student extends JFrame //implements ActionListener
     public void updateFields(){
         jtfDate.setText(capstoneInfos.getLatestDate());
         jtfName.setText(capstoneInfos.getAuthor());
-        jtfProject.setText(capstoneInfos.GetVersions().get(0).getTitle());
-        jtaDescription.setText(capstoneInfos.GetVersions().get(0).getDescription());
+        jtfProject.setText(capstoneInfos.GetVersions().get(capstoneInfos.GetVersions().size() - 1).getTitle());
+        jtaDescription.setText(capstoneInfos.GetVersions().get(capstoneInfos.GetVersions().size() - 1).getDescription());
         jtfPlagiarism.setText(capstoneInfos.getPlagiarismScore());
         jtfGrade.setText(capstoneInfos.getGrade());
+        jtfDefenseDate.setText(capstoneInfos.getDefenseDate());
         UpdateShownStatus();
         UpdateShownType();
     }

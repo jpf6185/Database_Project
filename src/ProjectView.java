@@ -94,9 +94,6 @@ public class ProjectView extends JFrame implements ActionListener{
             jbFinalGrade.addActionListener(this);
             jpSouthPanel.add(jbFinalGrade);
 
-            jbApply = new JButton("Apply");
-            jbApply.addActionListener(this);
-            jpSouthPanel.add(jbApply);
         }
         else if (s != null){
             // This else when role is Staff
@@ -187,11 +184,6 @@ public class ProjectView extends JFrame implements ActionListener{
                 matchedIndex = index;
             }
             index++;
-        }
-
-        // Apply button is clicked
-        if (ae.getSource() == jbApply){
-            c.saveCapstone(selectedCapstoneData);
         }
 
         // Close button is clicked

@@ -104,7 +104,6 @@ public class CapstoneInfo implements Serializable {
     }
 
     public ArrayList<CapstoneVersion> GetVersions(){
-
         return Versions;
     }
 
