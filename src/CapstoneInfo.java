@@ -114,11 +114,11 @@ public class CapstoneInfo implements Serializable {
         capstoneSummary.add(getAuthor());
         // if the data has been added to the array properly
         if(Versions.size()>0){
-            capstoneSummary.add(Versions.get(0).getTitle());
-            capstoneSummary.add(Versions.get(0).getStatusName());
-            capstoneSummary.add(Versions.get(0).getDate());
+            capstoneSummary.add(Versions.get(Versions.size() - 1).getTitle());
+            capstoneSummary.add(Versions.get(Versions.size() - 1).getStatusName());
+            capstoneSummary.add(Versions.get(Versions.size() - 1).getDate());
         }
-        // adds blank string to prevent any error from wrong length of versio
+        // adds blank string to prevent any error from wrong length of versions
         else{
             capstoneSummary.add("");
             capstoneSummary.add("");
