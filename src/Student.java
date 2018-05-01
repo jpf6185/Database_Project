@@ -212,7 +212,7 @@ public class Student extends JFrame //implements ActionListener
                         if(returnedVal == JFileChooser.APPROVE_OPTION) {
                             CapstoneInfo temp=capstoneInfos;
                             temp.GetVersions().get(0).setFilePath(fileChooser.getSelectedFile().getPath());
-                            if(c.UploadFile(temp,user)){
+                            if(c.UploadFile(temp)){
                                 // if the upload was successful updates all the displayed fields
                                 capstoneInfos=c.getCapstoneInfo();
                                 Student.this.updateFields();
@@ -233,7 +233,13 @@ public class Student extends JFrame //implements ActionListener
                 {
                     public void actionPerformed(ActionEvent e)
                     {
-
+                        boolean success=c.download(capstoneInfos.GetVersions().get(0));
+                        if(success){
+                            JOptionPane.showMessageDialog(null,"download successful","download ",JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null,"download failed","download ",JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 });
 
@@ -244,69 +250,32 @@ public class Student extends JFrame //implements ActionListener
                 {
                     public void actionPerformed(ActionEvent e)
                     {
-                        // bunch of booleans to control what is editable
                         if(jbEdit.getText().toLowerCase().equals("edit")) {
-                            boolean nameEdit = false;
-                            boolean projectEdit = false;
-                            boolean descEdit = false;
-                            boolean plagEdit = false;
-                            boolean gradEdit = false;
-                            boolean TypeEdit = false;
-                            boolean StatusEdit = false;
-                            boolean defenseEdit=false;
-                            switch (userType.toLowerCase()) {
-                                case "student":
-                                    nameEdit = true;
-                                    projectEdit = true;
-                                    descEdit = true;
-                                    TypeEdit = true;
-                                    defenseEdit=true;
-                                    jbEdit.setText("save");
-                                    break;
-                                case "faculty":
-                                    gradEdit = true;
-                                    jbEdit.setText("save");
-                                    break;
-                                case "staff":
-                                    StatusEdit = true;
-                                    jbEdit.setText("save");
-                                    break;
-                                default:
-                                    break;
-
-                            }
 
 
-                            jtfName.setEditable(nameEdit);
-                            jtfProject.setEditable(projectEdit);
-                            jtaDescription.setEditable(descEdit);
-                            jtfPlagiarism.setEditable(plagEdit);
-                            jtfGrade.setEditable(gradEdit);
-                            statusDropList.setEnabled(StatusEdit);
-                            typeList.setEnabled(TypeEdit);
-                            jtfDefenseDate.setEnabled(defenseEdit);
+
+                            jtfName.setEditable(true);
+                            jtfProject.setEditable(true);
+                            jtaDescription.setEditable(true);
+                            typeList.setEnabled(true);
+                            jtfDefenseDate.setEnabled(true);
+                            jbEdit.setText("save");
                         }
                         else if(jbEdit.getText().equals("save")){
-
-
 
                             jbEdit.setText("edit");
                             // disables edditing on fields
                             jtfName.setEditable(false);
                             jtfProject.setEditable(false);
                             jtaDescription.setEditable(false);
-                            jtfPlagiarism.setEditable(false);
-                            jtfGrade.setEditable(false);
-                            statusDropList.setEnabled(false);
                             typeList.setEnabled(false);
                             jtfDefenseDate.setEnabled(false);
                             // gets the new values of the fields and stores them temporarly
                             CapstoneInfo tempValues=capstoneInfos;
                             tempValues.GetVersions().get(0).setTitle(jtfProject.getText());
                             tempValues.GetVersions().get(0).setDescription(jtaDescription.getText());
-                            tempValues.setPlagiarismScore(jtfPlagiarism.getText());
-                            tempValues.setGrade(jtfGrade.getText());
                             tempValues.GetVersions().get(0).setType((String)typeList.getSelectedItem());
+                            tempValues.setDefenseDate(jtfDefenseDate.getText());
                             // then tries to save the new value and stores the return
                             tempValues=c.saveCapstone(tempValues);
                             if(tempValues!=null){
@@ -424,6 +393,22 @@ public class Student extends JFrame //implements ActionListener
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+
+        WindowListener exitListener = new WindowAdapter() {
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            int confirm = JOptionPane.showOptionDialog(
+                    null, "Are you sude you want to close the program?",
+                    "Exit Confirmation", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if (confirm == 0) {
+                c.close();
+                System.exit(0);
+            }
+        }
+    };
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 

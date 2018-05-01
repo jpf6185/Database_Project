@@ -264,50 +264,8 @@ public class Client extends JFrame {
         }
         return null;
     }
-    // method to read in a file and send it to the server
-    public boolean UploadFile(CapstoneInfo capstone,UserInfo user){
-       // boolean that will be returned to determien if the method succedded
-       boolean success=false;
 
-       try{
-           // gest teh soruce file path from the object provided
-           File source=new File(capstone.GetVersions().get(0).getFilePath());
-           // tells the server it wants to upload a file
-           outputStream.writeObject("uploadfile");
-           outputStream.flush();
-           // writes out the username of the user uploading the file
-           outputStream.writeObject(user.getUsername());
-           outputStream.flush();
-           // creates a byte array of the files to be uploaded to the server
-           // casting could get into trouble since I am casting a long to a int but its unlikely as the filesize would have to be at lease over 250mb to cause problems
-           byte[]fileBytes=new byte[(int)source.length()];
-           // tells the server what length file to excepct
-           outputStream.writeInt((int)source.length());
-           outputStream.flush();
-           // prepares the input stream to read the file in
-           FileInputStream fis=new FileInputStream(source);
-           BufferedInputStream fileIn=new BufferedInputStream(fis);
-           // reads in the file
-           fileIn.read(fileBytes,0,fileBytes.length);
-           fileIn.close();
-           // then sends the file
-           outputStream.write(fileBytes,0,fileBytes.length);
-           outputStream.flush();
-           outputStream.writeObject(capstone);
-           success=inputStream.readBoolean();
-       }
-       catch (IOException ioe){
-           ioe.printStackTrace();
-           System.out.println("error when uploading a file to the server");
-       }
-       catch (Exception e){
-           e.printStackTrace();
-           System.out.println("unexpected error when uploading a file to the server");
-       }
-       return success;
-       // read at the end becuase the other m
 
-    }
 
     public ArrayList<CapstoneInfo> getCommiteeCapstones() {
         try {
@@ -348,9 +306,111 @@ public class Client extends JFrame {
         }
         return null;
     }
-    //
-    public boolean download(CapstoneVersion version){
-       try
 
+    // method to read in a file and send it to the server
+    public boolean UploadFile(CapstoneInfo capstone){
+        // boolean that will be returned to determien if the method succedded
+        boolean success=false;
+
+        try{
+            // gest teh soruce file path from the object provided
+            File source=new File(capstone.GetVersions().get(0).getFilePath());
+            // tells the server it wants to upload a file
+            outputStream.writeObject("uploadfile");
+            outputStream.flush();
+            // writes out the username of the user uploading the file
+            outputStream.writeObject(user.getUsername());
+            outputStream.flush();
+            outputStream.writeObject(source.getName());
+            outputStream.flush();
+            // creates a byte array of the files to be uploaded to the server
+            // casting could get into trouble since I am casting a long to a int but its unlikely as the filesize would have to be at lease over 250mb to cause problems
+            byte[]fileBytes=new byte[(int)source.length()];
+            // tells the server what length file to excepct
+            outputStream.writeInt((int)source.length());
+            outputStream.flush();
+            // prepares the input stream to read the file in
+            FileInputStream fis=new FileInputStream(source);
+            BufferedInputStream fileIn=new BufferedInputStream(fis);
+            // reads in the file
+            fileIn.read(fileBytes,0,fileBytes.length);
+            fileIn.close();
+            // then sends the file
+            outputStream.write(fileBytes,0,fileBytes.length);
+            outputStream.flush();
+            outputStream.writeObject(capstone);
+            outputStream.flush();
+            success=inputStream.readBoolean();
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("error when uploading a file to the server");
+            success=false;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("unexpected error when uploading a file to the server");
+            success=false;
+        }
+        return success;
+        // read at the end becuase the other m
+
+    }
+    // downloads the file associated with a specific version of a capstone
+    public boolean download(CapstoneVersion version){
+       try{
+           // tells the server that the client wants to dwonload a file and sedns the capstoneVersion object that the server will use to determine the path
+           outputStream.writeObject("getfile");
+            outputStream.flush();
+            outputStream.writeObject(version);
+            outputStream.flush();
+            Boolean fileDoesNotExist=inputStream.readBoolean();
+            if(fileDoesNotExist){
+                return false;
+            }
+            // the name of the file about to be sent
+            String fileName=(String)inputStream.readObject();
+
+            // insures that the file is created with a unique name by looping through and appending (1),(2), ect until it is unique
+            int itterations=0;
+            String path=System.getProperty("user.dir")+"/"+fileName;
+            File downloadFile=new File(path);
+            while(downloadFile.exists()){
+                itterations++;
+                downloadFile=new File(path+"("+itterations+")");
+            }
+            // gets the length of the file to be red and creates an array to store the bytes
+            int fileLength=inputStream.readInt();
+            byte[]fileByes=new byte[fileLength];
+            // reads in the bytes and them writes them out to a file
+            inputStream.read(fileByes,0,fileLength);
+            FileOutputStream fos=new FileOutputStream(downloadFile);
+            fos.write(fileByes,0,fileByes.length);
+            fos.close();
+            return true;
+       }
+       catch (IOException ioe){
+           ioe.printStackTrace();
+           System.out.println("error when attempting to download the user capstone");
+       }
+       catch (Exception e){
+           e.printStackTrace();
+           System.out.println("unexpected error when attempting to download the user capstone");
+       }
+       return false;
+    }
+    public void close(){
+       try{
+           outputStream.writeObject("exit");
+           outputStream.flush();
+       }
+       catch (IOException ioe){
+           ioe.printStackTrace();
+           System.out.println("error when telling the server about closing");
+       }
+       catch (Exception e){
+           e.printStackTrace();
+           System.out.println("unexpected error when telling the server about closing");
+       }
     }
 } // end Client Class

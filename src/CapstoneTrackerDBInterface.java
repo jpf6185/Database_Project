@@ -118,6 +118,7 @@ public class CapstoneTrackerDBInterface {
             outObj2.setFilePath(Values.get(0).get(7));
             outObj2.setStatusName(Values.get(0).get(8));
             outObj2.setStatusCode(Values.get(0).get(10));
+            outObj2.setType(Values.get(0).get(9));
         }
         catch(Exception E){
             return null;
@@ -165,6 +166,36 @@ public class CapstoneTrackerDBInterface {
         }
         return outObj;
     }
+
+    // gets the FileLocation for a specified version of a capstone used for dwonloading said file
+    String getFilePath(CapstoneVersion version){
+        try{
+            String sql="SELECT fileLocation from capstone_version WHERE capstoneID=? and date=?;";
+            ArrayList<String> params=new ArrayList<String>();
+            params.add(version.getCapstoneID());
+            params.add(version.getDate());
+            ArrayList<ArrayList<String>> res=db.getData(sql,params);
+            String path=res.get(0).get(0);
+            return path;
+        }
+        catch (DLException dle) {
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e){}
+            System.out.println("An error occured attempting to get a casptoneVerisons filePAth");
+            return null;
+        }
+        catch (Exception e){
+            // closes the database if it is open since an exception occured
+            try{ db.close(); }
+            catch (Exception e2){}
+            System.out.println("An unxepcted error occured attempting to get a capstoneversions Filepath");
+            return null;
+        }
+
+    }
+
+
     // updates the capstone info by inserts new capstone version and changing the lattest date in capstone_info table to
     // the date in the provided capstoneVersion Object
     Boolean updateCapstone(CapstoneInfo inObj){

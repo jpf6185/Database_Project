@@ -54,7 +54,6 @@ public class CapstoneTrackerDbServer extends Thread {
                 System.out.println("Output created");
                 login();
 
-
             }
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
@@ -172,6 +171,8 @@ public class CapstoneTrackerDbServer extends Thread {
                         break;
                     case "uploadfile": storeFile();
                         break;
+                    case "getfile": getFile();
+                    break;
                     default:
                         keepGoing = false;
 
@@ -339,6 +340,25 @@ public class CapstoneTrackerDbServer extends Thread {
             System.out.println("the following exception has occured trying to get all versions of a capstone " + e.getMessage());
         }
     }
+
+    // generates random string for storing file
+    public String randomString(){
+        // charcters the random string consists off
+        String allowedChars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        // stringubild to build the string
+        StringBuilder randomeBuilder=new StringBuilder();
+        // random generator
+        Random rnd=new Random();
+        while(randomeBuilder.length()<20){
+            // generates a random number between 0 and 1 and uses that to select a number that represent the length of the stirng
+            int charToAppened=(int)(rnd.nextFloat()*allowedChars.length());
+            // appends the cahricter
+            randomeBuilder.append(allowedChars.charAt(charToAppened));
+
+        }
+        String randomString= randomeBuilder.toString();
+        return randomString;
+    }
     // method to store a file uploaded
     // this is horribly inficiant as it store the whole file in ram before writing it but its what was easiest to write
     private void storeFile(){
@@ -363,13 +383,14 @@ public class CapstoneTrackerDbServer extends Thread {
             }
             // generates a random series of digits and appends that to the current path and username to create the full path
             boolean isUnique=false;
+            // gets the name of the file to be uploaded
+            String curName=(String)input.readObject();
             //insures the path is unique
-            while(!(isUnique)){
 
-                fullPath=curPath+"/"+userName+"/"+randomString();
-                System.out.println(fullPath);
+            while(!(isUnique)){
+                fullPath=curPath+"/"+userName+"/"+curName+randomString();
                 uploadedFile=new File(fullPath);
-                if(!(uploadedFile.exists())){
+                if(uploadedFile.exists()==false){
                     isUnique=true;
                 }
             }
@@ -417,6 +438,7 @@ public class CapstoneTrackerDbServer extends Thread {
             info.GetVersions().get(0).setFilePath(fullPath);
             dbInterface.updateCapstone(info);
             output.writeBoolean(true);
+            output.flush();
         }
         catch (Exception e){
             System.out.println("An error occured tryign to make the changes to the database");
@@ -426,26 +448,51 @@ public class CapstoneTrackerDbServer extends Thread {
             }
             catch (Exception e1){
                 System.out.println("an error occured reutnring value to the client");
-            } }
+            }
+        }
 
     }
-    // generates random string for storing file
-    public String randomString(){
-        // charcters the random string consists off
-        String allowedChars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        // stringubild to build the string
-        StringBuilder randomeBuilder=new StringBuilder();
-        // random generator
-        Random rnd=new Random();
-        while(randomeBuilder.length()<30){
-            // generates a random number between 0 and 1 and uses that to select a number that represent the length of the stirng
-            int charToAppened=(int)(rnd.nextFloat()*allowedChars.length());
-            // appends the cahricter
-            randomeBuilder.append(allowedChars.charAt(charToAppened));
+    // lets a client downlaod a file
+    public void getFile(){
+        try{
+            // gets the file path for the download from the database and creates the file object
+            CapstoneVersion version=(CapstoneVersion)input.readObject();
+            String filePath=dbInterface.getFilePath(version);
+            File capstone=new File(filePath);
+            // checks the file exists and is readable
+            if (capstone.exists() && capstone.canWrite()){
+                output.writeBoolean(true);
+                // removes the last 20 charictesr of the file to get its original name
+                output.writeObject(capstone.getName().substring(0,capstone.getName().length()-20));
+
+                // could case problems casing a long to a byte but only if the file is over 750mb or so
+                byte[]fileBytes=new byte[(int)capstone.length()];
+                output.writeInt((int)capstone.length());
+
+                // creates the inputstream
+                FileInputStream fis=new FileInputStream(capstone);
+                BufferedInputStream fileIn= new BufferedInputStream(fis);
+
+                // slightly sub optimal as it reads hte entire file into memory consuming addition memory as such
+                fileIn.read(fileBytes,0,fileBytes.length);
+                fileIn.close();
+                // writes out the file
+                output.write(fileBytes,0,fileBytes.length);
+                output.flush();
+            }
+            else {
+                output.writeBoolean(false);
+            }
 
         }
-        String randomString= randomeBuilder.toString();
-        return randomString;
+        catch(IOException ioe){
+            System.out.println("An error occured tryign to download a file");
+            ioe.printStackTrace();
+        }
+        catch (Exception e){
+            System.out.println("An unexpected error occured when to dowload a file");
+            e.printStackTrace();
+        }
     }
 
 }
