@@ -461,14 +461,15 @@ public class CapstoneTrackerDbServer extends Thread {
             File capstone=new File(filePath);
             // checks the file exists and is readable
             if (capstone.exists() && capstone.canWrite()){
-                output.writeBoolean(true);
+                output.writeBoolean(false);
+                output.flush();
                 // removes the last 20 charictesr of the file to get its original name
                 output.writeObject(capstone.getName().substring(0,capstone.getName().length()-20));
-
+                output.flush();
                 // could case problems casing a long to a byte but only if the file is over 750mb or so
                 byte[]fileBytes=new byte[(int)capstone.length()];
                 output.writeInt((int)capstone.length());
-
+                output.flush();
                 // creates the inputstream
                 FileInputStream fis=new FileInputStream(capstone);
                 BufferedInputStream fileIn= new BufferedInputStream(fis);

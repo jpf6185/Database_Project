@@ -1,4 +1,4 @@
-/* Group 1
+   /* Group 1
 * ISTE-330 Database Connectivity and access
 *  Written By Jacob Feiner, Ian Ayala, Chris Bonsu, Vincent Ventutolo
  */
@@ -174,7 +174,9 @@ public class CapstoneTrackerDBInterface {
             ArrayList<String> params=new ArrayList<String>();
             params.add(version.getCapstoneID());
             params.add(version.getDate());
+            db.connect();
             ArrayList<ArrayList<String>> res=db.getData(sql,params);
+            db.close();
             String path=res.get(0).get(0);
             return path;
         }

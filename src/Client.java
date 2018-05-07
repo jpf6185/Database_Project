@@ -308,13 +308,11 @@ public class Client extends JFrame {
     }
 
     // method to read in a file and send it to the server
-    public boolean UploadFile(CapstoneInfo capstone){
+    public boolean UploadFile(CapstoneInfo capstone, File source){
         // boolean that will be returned to determien if the method succedded
         boolean success=false;
 
         try{
-            // gest teh soruce file path from the object provided
-            File source=new File(capstone.GetVersions().get(0).getFilePath());
             // tells the server it wants to upload a file
             outputStream.writeObject("uploadfile");
             outputStream.flush();

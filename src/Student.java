@@ -72,7 +72,8 @@ public class Student extends JFrame //implements ActionListener
     int StatusItemNum;
     private JComboBox statusDropList;
     private JScrollPane jScrollPane1;
-
+    // file to be uploaded
+    File uploadFile;
     // ui elements realted to the defense date
     JLabel jlDefenseDate;
     JTextField jtfDefenseDate;
@@ -198,31 +199,15 @@ public class Student extends JFrame //implements ActionListener
         jpNorthPanel.add(jpLeftPanel, BorderLayout.WEST);
 
         // Button Right Panel Setup
-        jbUpload = new JButton("Upload");
+        jbUpload = new JButton("Upload a new File");
         jpFirstBtnRow.add(jbUpload);
+        jbUpload.setEnabled(false);
         jbUpload.addActionListener(
                 new ActionListener()
                 {
                     public void actionPerformed(ActionEvent e)
                     {
-                        // asks for them to select the file they want to upload
-                        JFileChooser fileChooser = new JFileChooser();
-                        int returnedVal = fileChooser.showOpenDialog(Student.this);
-                        // if they select the file gets the path and passes it to client
-                        if(returnedVal == JFileChooser.APPROVE_OPTION) {
-                            CapstoneInfo temp=capstoneInfos;
-                            temp.GetVersions().get(0).setFilePath(fileChooser.getSelectedFile().getPath());
-                            if(c.UploadFile(temp)){
-                                // if the upload was successful updates all the displayed fields
-                                capstoneInfos=c.getCapstoneInfo();
-                                Student.this.updateFields();
-                            }
-                            else{
-                                System.out.println("An error happend");
-                            }
-
-                        }
-
+                        jbUpload.setText(selectUploadFile()+" selected");
                     }
                 });
 
@@ -252,8 +237,7 @@ public class Student extends JFrame //implements ActionListener
                     {
                         if(jbEdit.getText().toLowerCase().equals("edit")) {
 
-
-
+                            jbUpload.setEnabled(true);
                             jtfName.setEditable(true);
                             jtfProject.setEditable(true);
                             jtaDescription.setEditable(true);
@@ -270,6 +254,7 @@ public class Student extends JFrame //implements ActionListener
                             jtaDescription.setEditable(false);
                             typeList.setEnabled(false);
                             jtfDefenseDate.setEnabled(false);
+                            jbUpload.setEnabled(false);
                             // gets the new values of the fields and stores them temporarly
                             CapstoneInfo tempValues=capstoneInfos;
                             tempValues.GetVersions().get(0).setTitle(jtfProject.getText());
@@ -277,14 +262,24 @@ public class Student extends JFrame //implements ActionListener
                             tempValues.GetVersions().get(0).setType((String)typeList.getSelectedItem());
                             tempValues.setDefenseDate(jtfDefenseDate.getText());
                             // then tries to save the new value and stores the return
-                            tempValues=c.saveCapstone(tempValues);
-                            if(tempValues!=null){
-                                capstoneInfos=tempValues;
+                            //if they chose a file uses the upload method witch in addition to uploading a file updates the cpastone
+                            if(jbUpload.getText().equals("Upload a new File")){
+                                capstoneInfos=c.saveCapstone(tempValues)
                             }
+                            else{
+                                // if hte uplad is a success
+                                if(c.UploadFile(tempValues,uploadFile)){
+                                    // gets the new values
+                                    capstoneInfos=c.getCapstoneInfo();
+                                }
+
+                            }
+                            jbUpload.setText("Upload a new File");
                             // only saves the return if it is not null
                             updateFields();
                         }
                         else{}
+
                     }
                 });
 
@@ -441,6 +436,20 @@ public class Student extends JFrame //implements ActionListener
             typeList.setSelectedIndex(1);
         }
     }
+// selects the file that the want to upload and store the path in capstoneInfos
+    private String selectUploadFile(){
+        // asks for them to select the file they want to upload
+        JFileChooser fileChooser = new JFileChooser();
+        int returnedVal = fileChooser.showOpenDialog(Student.this);
+        // if they select the file gets the path and passes it to client
+        if(returnedVal == JFileChooser.APPROVE_OPTION) {
+            uploadFile=fileChooser.getSelectedFile();
+            return fileChooser.getSelectedFile().getName();
+        }
+        return null;
+    }
+
+
 
     private String capstoneInfo;
     private String date;
