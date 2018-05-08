@@ -289,6 +289,7 @@ public class Student extends JFrame //implements ActionListener
                                 if(c.createCapstone(user,tempValues)){
                                     capstoneInfos=c.getCapstoneInfo();
                                     updateFields();
+                                    hasCapstone=true;
                                 }
                             }
                     }

@@ -173,7 +173,7 @@ public class CapstoneTrackerDbServer extends Thread {
                         break;
                     case "getfile": getFile();
                     break;
-                    case "createcapstone": createCapstone();
+                    case "createcapstone": callCreateCapstone();
                     break;
                     default:
                         keepGoing = false;
@@ -199,12 +199,13 @@ public class CapstoneTrackerDbServer extends Thread {
         }
     }
     // creates a capstone
-    public void createCapstone(){
+    public void callCreateCapstone(){
         try {
             UserInfo user = (UserInfo) input.readObject();
             CapstoneInfo capstone=(CapstoneInfo) input.readObject();
             boolean success=dbInterface.CreateCapstone(user,capstone);
             output.writeBoolean(success);
+            output.flush();
         }
         catch (IOException ioe) {
             System.out.println("the following IOException has occured trying to create a capstone: " + ioe.getMessage());

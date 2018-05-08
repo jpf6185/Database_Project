@@ -410,7 +410,8 @@ public class Client extends JFrame {
             outputStream.flush();
             outputStream.writeObject(capstone);
             outputStream.flush();
-            return inputStream.readBoolean();
+            boolean success=inputStream.readBoolean();
+            return success;
         }
         catch (IOException ioe){
             ioe.printStackTrace();
