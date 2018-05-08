@@ -304,9 +304,18 @@ public class Student extends JFrame //implements ActionListener
                 {
                     public void actionPerformed(ActionEvent e)
                     {
-                        //UndoManager manager = new UndoManager();
-                        //Document document = textField.getDocument();
-                        //document.addUndoableEditListener(manager);
+                        if(jbEdit.getText().equals("save")){
+                            jbEdit.setText("edit");
+                            jtfName.setEditable(false);
+                            jtfProject.setEditable(false);
+                            jtaDescription.setEditable(false);
+                            typeList.setEnabled(false);
+                            jtfDefenseDate.setEnabled(false);
+                            jbUpload.setEnabled(false);
+                            jbUpload.setText("Upload a new File");
+                            updateFields();
+
+                        }
                     }
                 });
 
@@ -428,6 +437,7 @@ public class Student extends JFrame //implements ActionListener
         jtaDescription.setText(capstoneInfos.GetVersions().get(0).getDescription());
         jtfPlagiarism.setText(capstoneInfos.getPlagiarismScore());
         jtfGrade.setText(capstoneInfos.getGrade());
+        jtfDefenseDate.setText(capstoneInfos.getDefenseDate());
         UpdateShownStatus();
         UpdateShownType();
     }

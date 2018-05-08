@@ -7,79 +7,79 @@ import java.awt.event.*;
 import java.lang.Thread.*;
 import java.sql.*;
 /*
-* @author   Vincent Venutolo, Jacob Feiner, Chris Bonsu, and Ian Anyala
-* @version  1.0
-* Client program implements an GUI application 
-* for a client logging in & manage on a Dashboard
-*/
+ * @author   Vincent Venutolo, Jacob Feiner, Chris Bonsu, and Ian Anyala
+ * @version  1.0
+ * Client program implements an GUI application
+ * for a client logging in & manage on a Dashboard
+ */
 public class Client extends JFrame {
-   
-   // JComponent Declarations
-   private JFrame login;
-   private JPanel loginPanel, loginFirstRow, loginSecondRow, loginThirdRow;
-   private JTextField jtxtUsername;
-   private JPasswordField jtxtPassword;
-   private JButton loginButton;
-   
-   // Attribute Declarations
-   private Socket cs = null;
-   private ObjectInputStream inputStream = null;
-   private ObjectOutputStream outputStream = null;
-   private BufferedReader br;
-   private PrintWriter pw;
-   private boolean loginProcess = true;
-   private String username;
-   private UserInfo user;
-   private LoginGUI loginGui;
-   private Student studentGui;
-   private Faculty facultyGui;
-   private Staff staffGui;
 
-   
-   //private String password;
-   
-   //Attributes for Connection
-   //String user = "iste330t21";
-   //String password = "ChrJacIanVin"; //My password is root on my laptop
-   
- // String user = "root";
-   String password = "student"; //My password is root on my laptop
+    // JComponent Declarations
+    private JFrame login;
+    private JPanel loginPanel, loginFirstRow, loginSecondRow, loginThirdRow;
+    private JTextField jtxtUsername;
+    private JPasswordField jtxtPassword;
+    private JButton loginButton;
 
-   Connection conn = null;
+    // Attribute Declarations
+    private Socket cs = null;
+    private ObjectInputStream inputStream = null;
+    private ObjectOutputStream outputStream = null;
+    private BufferedReader br;
+    private PrintWriter pw;
+    private boolean loginProcess = true;
+    private String username;
+    private UserInfo user;
+    private LoginGUI loginGui;
+    private Student studentGui;
+    private Faculty facultyGui;
+    private Staff staffGui;
 
 
-   // Client Constructor
-   public Client() {
-      try {
+    //private String password;
+
+    //Attributes for Connection
+    //String user = "iste330t21";
+    //String password = "ChrJacIanVin"; //My password is root on my laptop
+
+    // String user = "root";
+    String password = "student"; //My password is root on my laptop
+
+    Connection conn = null;
+
+
+    // Client Constructor
+    public Client() {
+        try {
             // Create socket to be connected to Server 
             //conn = DriverManager.getConnection(url, user, password); 
             cs = new Socket("localHost", 4242);
             System.out.println("Connected");
-            
+
             if (loginProcess){
-               loginGui = new LoginGUI(cs,this);
+                loginGui = new LoginGUI(cs,this);
             }
-            
+
             // Process Login
             //clientLogin();
-         
-         }
-         
-         catch (SocketException se) {
+
+        }
+
+        catch (SocketException se) {
             se.printStackTrace();
             System.exit(0);
-         } catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-         }
-         catch (Exception e){
+        }
+        catch (Exception e){
             e.printStackTrace();
-         }
-   } // end Client Constructor
+        }
+    } // end Client Constructor
 
-   // Main Method to start Client GUI
-   public static void main(String[] args) {
-      new Client();
-   } // end Main Method
+    // Main Method to start Client GUI
+    public static void main(String[] args) {
+        new Client();
+    } // end Main Method
     // sets the userobject for this item to be passed to the new gui opend
 
     public void setUser(UserInfo user) {
@@ -89,33 +89,32 @@ public class Client extends JFrame {
     public void OpenGui(){
         switch(user.getUserType().toLowerCase()){
             case "student": openStudent();
-            loginGui.setVisible(false);
-            loginGui.dispose();
-            break;
+                loginGui.setVisible(false);
+                loginGui.dispose();
+                break;
             case "faculty": openFaculty();
-            loginGui.setVisible(false);
-            loginGui.dispose();
-            break;
+                loginGui.setVisible(false);
+                loginGui.dispose();
+                break;
             case "staff": openStaff();
-            loginGui.setVisible(false);
-            loginGui.dispose();
-            break;
+                loginGui.setVisible(false);
+                loginGui.dispose();
+                break;
             case "graddirector": openStaff();
-            break;
+                break;
             default: break;
 
         }
     }
     // methods to open the various guis
     public void openStudent(){
-       studentGui=new Student(this, this.getUser());
-
+        studentGui=new Student(this, this.getUser());
     }
     public void openFaculty(){
-       facultyGui=new Faculty(this, user);
+        facultyGui=new Faculty(this, user);
     }
     public void openStaff(){
-      staffGui = new Staff(this, getUser());
+        staffGui = new Staff(this, getUser());
     }
 
     // getters and setters
@@ -136,93 +135,91 @@ public class Client extends JFrame {
     // gets all capstone info
     public ArrayList<CapstoneInfo> getAllCapstoneData(){
 
-      ArrayList<CapstoneInfo> capstoneData = null;
-      try{
-         outputStream.writeObject("getallcapstones");
-         outputStream.flush();
-         capstoneData = (ArrayList<CapstoneInfo>)inputStream.readObject();
-
-
-      }
-      catch (IOException ioe){
-         ioe.printStackTrace();
-         System.out.println("Error ioe @ Client class -> getAllCapstone() method");
-      }
-      catch (ClassNotFoundException cnfe){
-         cnfe.printStackTrace();
-         System.out.println("Error cnfe @ Client class -> getAllCapstone() method");
-      }
-      return capstoneData;
+        ArrayList<CapstoneInfo> capstoneData = null;
+        try{
+            outputStream.writeObject("getallcapstones");
+            outputStream.flush();
+            capstoneData = (ArrayList<CapstoneInfo>)inputStream.readObject();
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("Error ioe @ Client class -> getAllCapstone() method");
+        }
+        catch (ClassNotFoundException cnfe){
+            cnfe.printStackTrace();
+            System.out.println("Error cnfe @ Client class -> getAllCapstone() method");
+        }
+        return capstoneData;
     }
 
     // gets capstone info
     public CapstoneInfo getCapstoneInfo(){
-       try{
-           outputStream.writeObject("getcommitees");
-           outputStream.flush();
-           outputStream.writeObject(user);
-           outputStream.flush();
-           user=(UserInfo)inputStream.readObject();
-           String id = user.getCommitees().get(0).getCapStoneID();
-           CapstoneInfo cap=new CapstoneInfo();
-           cap.setCapstoneID(id);
-           outputStream.writeObject("getcapstoneinfo");
-           outputStream.flush();
-           outputStream.writeObject(cap);
-           outputStream.flush();
-           cap=(CapstoneInfo)inputStream.readObject();
-           return cap;
-       }
-       catch(IndexOutOfBoundsException IOB){
+        try{
+            outputStream.writeObject("getcommitees");
+            outputStream.flush();
+            outputStream.writeObject(user);
+            outputStream.flush();
+            user=(UserInfo)inputStream.readObject();
+            String id = user.getCommitees().get(0).getCapStoneID();
+            CapstoneInfo cap=new CapstoneInfo();
+            cap.setCapstoneID(id);
+            outputStream.writeObject("getcapstoneinfo");
+            outputStream.flush();
+            outputStream.writeObject(cap);
+            outputStream.flush();
+            cap=(CapstoneInfo)inputStream.readObject();
+            return cap;
+        }
+        catch(IndexOutOfBoundsException IOB){
            return null;
         }
        catch (IOException ioe){
-           ioe.printStackTrace();
-           System.out.println("error when getting capstone info");
-       }
-       catch (Exception e){
-           e.printStackTrace();
-           System.out.println("unexpected error when getting capstone info");
-       }
-       return null;
+            ioe.printStackTrace();
+            System.out.println("error when getting capstone info");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("unexpected error when getting capstone info");
+        }
+        return null;
     }
 
     public CapstoneInfo saveCapstone(CapstoneInfo info){
-       try{
-           outputStream.writeObject("updatecapstone");
-           outputStream.flush();
-           outputStream.writeObject(info);
-           outputStream.flush();
-           info=(CapstoneInfo)inputStream.readObject();
-           return info;
-       }
-       catch (IOException ioe){
-           ioe.printStackTrace();
-           System.out.println("error when updating capstone info");
-       }
-       catch (Exception e){
-           e.printStackTrace();
-           System.out.println("unexpected error when updating capstone info");
-       }
-       JOptionPane.showMessageDialog(null,"Error","An error has occured when trying to save the changes to the capstone",JOptionPane.ERROR_MESSAGE);
-       return null;
+        try{
+            outputStream.writeObject("updatecapstone");
+            outputStream.flush();
+            outputStream.writeObject(info);
+            outputStream.flush();
+            info=(CapstoneInfo)inputStream.readObject();
+            return info;
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("error when updating capstone info");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("unexpected error when updating capstone info");
+        }
+        JOptionPane.showMessageDialog(null,"Error","An error has occured when trying to save the changes to the capstone",JOptionPane.ERROR_MESSAGE);
+        return null;
     }
     public Vector<StatusInfo> getStatuses(){
-       try{
+        try{
             outputStream.writeObject("getstatuses");
             outputStream.flush();
             Vector<StatusInfo> res=(Vector<StatusInfo>)inputStream.readObject();
             return res;
-       }
-       catch (IOException ioe){
-           ioe.printStackTrace();
-           System.out.println("error when getting a list of all statuses");
-       }
-       catch (Exception e){
-           e.printStackTrace();
-           System.out.println("unexpected error when getting a list of all statuses");
-       }
-       return null;
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("error when getting a list of all statuses");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("unexpected error when getting a list of all statuses");
+        }
+        return null;
     }
     // sends an invite to a facult
     public boolean sendInvite(commitee_info info){

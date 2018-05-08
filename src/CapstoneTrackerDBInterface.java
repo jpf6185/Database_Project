@@ -267,7 +267,7 @@ public class CapstoneTrackerDBInterface {
         try {
             // grabs the capstone version object that conatins much of the data, asside from capstoneID
 
-            CapstoneVersion inObj2=inObj.GetVersions().get(0);
+            CapstoneVersion inObj2=inObj.GetVersions().get(inObj.GetVersions().size() - 1);
 
             ArrayList<String>Params=new ArrayList<String>();
             ArrayList<String>Params2=new ArrayList<String>();
@@ -276,7 +276,7 @@ public class CapstoneTrackerDBInterface {
                                     + "(Date,CapstoneID,Status,Title,Description,FileLocation,Type)"
                                     + "Values(?,?,?,?,?,?,?);";
             String dateStatement="SELECT MAX(`Date`) FROM capstone_version WHERE capstoneID=?;";
-            String updateStatement="Update Capstone_Info Set Lattest_Date=? Where CapstoneID=?";
+            String updateStatement = null;
 
 
             //sets the paramaters useing inObj1 and inObj2
@@ -291,9 +291,30 @@ public class CapstoneTrackerDBInterface {
             db.connect();
             db.startTrans();
             db.setData(insertStatement,Params);
+
             // gets the latest data from database then adds it to the third set of params
-            Params3.add((db.getData(dateStatement,Params2)).get(0).get(0));
-            Params3.add(inObj2.getCapstoneID());
+            switch (inObj2.getStatusCode()){
+                case "800":
+                    updateStatement="Update Capstone_Info Set Lattest_Date=?, Defensedate=?, Plagerism_Score=? Where CapstoneID=?";
+                    Params3.add((db.getData(dateStatement,Params2)).get(0).get(0));
+                    Params3.add(inObj.getDefenseDate());
+                    Params3.add(inObj.getPlagiarismScore());
+                    Params3.add(inObj2.getCapstoneID());
+                    break;
+                case "1600":
+                    updateStatement="Update Capstone_Info Set Lattest_Date=?, Defensedate=?, Grade=? Where CapstoneID=?";
+                    Params3.add((db.getData(dateStatement,Params2)).get(0).get(0));
+                    Params3.add(inObj.getDefenseDate());
+                    Params3.add(inObj.getGrade());
+                    Params3.add(inObj2.getCapstoneID());
+                    break;
+                default:
+                    updateStatement="Update Capstone_Info Set Lattest_Date=?, Defensedate=? Where CapstoneID=?";
+                    Params3.add((db.getData(dateStatement,Params2)).get(0).get(0));
+                    Params3.add(inObj.getDefenseDate());
+                    Params3.add(inObj2.getCapstoneID());
+                    break;
+            }
             db.setData(updateStatement,Params3);
             db.endTrans();
             db.close();
@@ -461,10 +482,12 @@ public class CapstoneTrackerDBInterface {
         /*arraylist to store results of query, to be parrsed in seprate try block so that if a exception is thrown during
         * parsis it is distinct from one getting the data out
         */
-        ArrayList<ArrayList<String>>results;
+        ArrayList<ArrayList<String>>capstoneInfoResults;
+        ArrayList<ArrayList<String>>ver;
         // try catch for getting stuff from the database
         try {
-            String sqlStatement="SELECT capstone_info.CapstoneID, capstone_version.Title, status_code.Name, users.Name,Capstone_Info.Lattest_date"+
+            String sqlStatement="SELECT capstone_info.CapstoneID,users.Name,Capstone_Info.Lattest_date,Capstone_Info.Plagerism_Score,Capstone_Info.Grade,"+
+                                "Capstone_Info.defensedate,capstone_version.Title, status_code.Name"+
                                 " FROM users JOIN committe ON users.username=committe.username"+
                                 " JOIN capstone_Info on committe.capstoneID=capstone_info.capstoneID"+
                                 " JOIN capstone_version on capstone_info.capstoneID=capstone_version.CapstoneID"+
@@ -472,8 +495,14 @@ public class CapstoneTrackerDBInterface {
 
             // Monster SQL statement to get info from database, its huge cause it traverses 5 tables
             db.connect();
-            results=db.getData(sqlStatement,paramInfo);
+            capstoneInfoResults=db.getData(sqlStatement,paramInfo);
             db.close();
+
+            sqlStatement="SELECT a.Date,a.CapstoneID,b.Name,a.Title,a.Description,a.FileLocation,a.Type,a.Status FROM capstone_version a JOIN status_code b on a.status=b.sid;";
+            db.connect();
+            ver=db.getData(sqlStatement);
+            db.close();
+
         }
         catch (DLException dle){
             // closes the database if it is open since an exception occured
@@ -492,20 +521,26 @@ public class CapstoneTrackerDBInterface {
         // try catch for parsing said stuff
         try{
             // for each loop to go over each row in the results
-            for(ArrayList<String>r :results){
+            for(ArrayList<String>r :capstoneInfoResults){
                 // creates the capstoneInfo object and sets the capstoneID
                 CapstoneInfo capInfo=new CapstoneInfo(r.get(0));
                 // adds the name of the author
-                capInfo.setAuthor(r.get(3));
-                // creates a capstoneversion object with the date retrived and capstoneID
-                CapstoneVersion capVer=new CapstoneVersion(r.get(0),r.get(4));
-                // adds the current status of the project
-                capVer.setStatusName(r.get(2));
-                // and its title
-                capVer.setTitle(r.get(1));
-                // and then adds capstone version to capstone info
-                capInfo.addVersion(capVer);
-                // and then ads cpastone info the the arraylist
+                capInfo.setAuthor(r.get(1));
+                // adds the latest date of capstone project
+                capInfo.setLatestDate(r.get(2));
+                // adds the plagerism score
+                capInfo.setPlagiarismScore(r.get(3));
+                // adds the grade
+                capInfo.setGrade(r.get(4));
+                // adds the defense date
+                capInfo.setDefenseDate(r.get(5));
+
+                for (int i=0; i < ver.size(); i++){
+                    if(r.get(0).equals(ver.get(i).get(1))){
+                        CapstoneVersion capVer = new CapstoneVersion(ver.get(i).get(0),ver.get(i).get(1),ver.get(i).get(2),ver.get(i).get(3),ver.get(i).get(4),ver.get(i).get(5),ver.get(i).get(6),ver.get(i).get(7));
+                        capInfo.addVersion(capVer);
+                    }
+                }
                 capstones.add(capInfo);
             }
 

@@ -111,15 +111,20 @@ public class ShowCapstoneHistory extends JFrame  {
          
          
          
-   }//end of project histor constructor
+   }//end of project history constructor
 
    private void populateInfo(){
       try{
          DefaultTableModel model=(DefaultTableModel)capstoneHistory.getModel();
-         ArrayList<CapstoneVersion> versions=capstone.GetVersions();
-         for(CapstoneVersion aVersion : versions){
-             System.out.println(aVersion.getTitle());
-            model.addRow(new String[]{aVersion.getTitle(),aVersion.getStatusName(),aVersion.getDate()});
+         ArrayList<CapstoneVersion> versions = null;
+         if ((versions=capstone.GetVersions())!= null){
+            for(CapstoneVersion aVersion : versions){
+               System.out.println(aVersion.getTitle());
+               model.addRow(new String[]{aVersion.getTitle(),aVersion.getStatusName(),aVersion.getDate()});
+            }
+         }
+         else{
+             System.out.println("There are no versions returned in populateInfo method");
          }
       }
       catch (Exception e){
