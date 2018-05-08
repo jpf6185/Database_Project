@@ -82,6 +82,7 @@ public class Student extends JFrame //implements ActionListener
 
     private JComboBox typeList;
 
+    public boolean hasCapstone=true;
     //private JTextField jtfDate4;
 
     //Default Constructor
@@ -93,6 +94,11 @@ public class Student extends JFrame //implements ActionListener
         user=_user;
         userType=user.getUserType();
         capstoneInfos=c.getCapstoneInfo();
+        if(capstoneInfos==null){
+            capstoneInfos=new CapstoneInfo();
+            capstoneInfos.addVersion(new CapstoneVersion());
+            hasCapstone=false;
+        }
         // JPanel Setup
         jpNorthPanel = new JPanel(new GridLayout(0,2,30,30));
         jpCenterPanel = new JPanel(new GridLayout(2,0,30,30));
@@ -236,8 +242,9 @@ public class Student extends JFrame //implements ActionListener
                     public void actionPerformed(ActionEvent e)
                     {
                         if(jbEdit.getText().toLowerCase().equals("edit")) {
-
-                            jbUpload.setEnabled(true);
+                            if(hasCapstone) {
+                                jbUpload.setEnabled(true);
+                            }
                             jtfName.setEditable(true);
                             jtfProject.setEditable(true);
                             jtaDescription.setEditable(true);
@@ -263,22 +270,28 @@ public class Student extends JFrame //implements ActionListener
                             tempValues.setDefenseDate(jtfDefenseDate.getText());
                             // then tries to save the new value and stores the return
                             //if they chose a file uses the upload method witch in addition to uploading a file updates the cpastone
-                            if(jbUpload.getText().equals("Upload a new File")){
-                                capstoneInfos=c.saveCapstone(tempValues)
+                            if(hasCapstone) {
+                                if (jbUpload.getText().equals("Upload a new File")) {
+                                    capstoneInfos = c.saveCapstone(tempValues);
+                                } else {
+                                    // if hte uplad is a success
+                                    if (c.UploadFile(tempValues, uploadFile)) {
+                                        // gets the new values
+                                        capstoneInfos = c.getCapstoneInfo();
+                                    }
+
+                                }
+                                jbUpload.setText("Upload a new File");
+                                // only saves the return if it is not null
+                                updateFields();
                             }
                             else{
-                                // if hte uplad is a success
-                                if(c.UploadFile(tempValues,uploadFile)){
-                                    // gets the new values
+                                if(c.createCapstone(user,tempValues)){
                                     capstoneInfos=c.getCapstoneInfo();
+                                    updateFields();
                                 }
-
                             }
-                            jbUpload.setText("Upload a new File");
-                            // only saves the return if it is not null
-                            updateFields();
-                        }
-                        else{}
+                    }
 
                     }
                 });

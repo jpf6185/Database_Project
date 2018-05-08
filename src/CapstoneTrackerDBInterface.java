@@ -69,7 +69,70 @@ public class CapstoneTrackerDBInterface {
         }
 
     }
+    // creates a new capstone for a student that does not have one
+    boolean CreateCapstone(UserInfo user, CapstoneInfo capstone){
+        try {
+            // The sql statemetns that will bee needed to create the new capstone
+            // gets the max capstoneID
+            String maxID="Select Max(CapstoneID) From capstone_info;";
+            // insererts a new capstoneInfo entry
+            String insertCapstonInfo="insert INTO capstone_info (`CapstoneID`,`Author`,Lattest_Date) values(?, ?, ?);";
+            ArrayList <String>params1=new ArrayList<String>();
+            //Inserts a new committee entry
+            String insertCommitee="Insert Into committe Values(?,?,0,0,'Student',0);";
+            ArrayList<String>params2=new ArrayList<String>();
+            // inserts a new CapstoneVersion entry
+            String insertVersion="INSERT INTO capstone_version (Date, CapstoneID, Status, Title, Description,FileLocation,Type) Values(?,?,100,?,?,?,?);";
+            ArrayList <String>params3=new ArrayList<String>();
+            String date=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+            // starts a transaction
+            db.connect();
+            db.startTrans();
+            // gets the maximum id and adds 1 to it
+            ArrayList<ArrayList<String>>maxId=db.getData(maxID);
+            int ID=Integer.parseInt(maxId.get(0).get(0));
+            ID=ID+1;
+            // ands a new capstone entry
+            params1.add(Integer.toString(ID));
+            params1.add(user.getName());
+            params1.add(date);
+            db.setData(insertCapstonInfo,params1);
+            // then adds a new commitee entry
+            params2.add(user.getUsername());
+            params2.add(Integer.toString(ID));
+            db.setData(insertCommitee,params2);
+            // and then adds a new CapstoneVersion entry
+            params3.add(date);
+            params3.add(Integer.toString(ID));
+            params3.add(capstone.GetVersions().get(0).getTitle());
+            params3.add(capstone.GetVersions().get(0).getDescription());
+            params3.add(capstone.GetVersions().get(0).getFilePath());
+            params3.add(capstone.GetVersions().get(0).getTitle());
+            db.setData(insertVersion,params3);
+            return true;
+        }
+        catch (DLException dle) {
+            // closes the database if it is open since an exception occured
+            try{
+                db.rollback();
+                db.close();
+            }
 
+            catch (Exception e){}
+            System.out.println("An error occured attempting to create a new capstone");
+            return false;
+        }
+        catch (Exception e){
+            // closes the database if it is open since an exception occured
+            try{
+                db.rollback();
+                db.close();
+            }
+            catch (Exception e2){}
+            System.out.println("An unxepcted error occured attempting to create a new capstone");
+            return false;
+        }
+    }
 
     // gets the info on the most recent capstone
     CapstoneInfo GetCapstoneInfo(CapstoneInfo outObj) {

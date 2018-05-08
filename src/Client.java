@@ -109,6 +109,7 @@ public class Client extends JFrame {
     // methods to open the various guis
     public void openStudent(){
        studentGui=new Student(this, this.getUser());
+
     }
     public void openFaculty(){
        facultyGui=new Faculty(this, user);
@@ -172,6 +173,9 @@ public class Client extends JFrame {
            cap=(CapstoneInfo)inputStream.readObject();
            return cap;
        }
+       catch(IndexOutOfBoundsException IOB){
+           return null;
+        }
        catch (IOException ioe){
            ioe.printStackTrace();
            System.out.println("error when getting capstone info");
@@ -397,6 +401,27 @@ public class Client extends JFrame {
        }
        return false;
     }
+    //Creates a new cpastone if one does not already exist
+    public boolean createCapstone(UserInfo user, CapstoneInfo capstone){
+        try{
+            outputStream.writeObject("createcapstone");
+            outputStream.flush();
+            outputStream.writeObject(user);
+            outputStream.flush();
+            outputStream.writeObject(capstone);
+            outputStream.flush();
+            return inputStream.readBoolean();
+        }
+        catch (IOException ioe){
+            ioe.printStackTrace();
+            System.out.println("error createing capstone");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("error creating capstone ");
+        }
+        return false;
+    }
     public void close(){
        try{
            outputStream.writeObject("exit");
@@ -409,6 +434,6 @@ public class Client extends JFrame {
        catch (Exception e){
            e.printStackTrace();
            System.out.println("unexpected error when telling the server about closing");
-       }
+    }
     }
 } // end Client Class

@@ -173,6 +173,8 @@ public class CapstoneTrackerDbServer extends Thread {
                         break;
                     case "getfile": getFile();
                     break;
+                    case "createcapstone": createCapstone();
+                    break;
                     default:
                         keepGoing = false;
 
@@ -194,6 +196,20 @@ public class CapstoneTrackerDbServer extends Thread {
             System.out.println("the following IOException has occured trying to get a list of statuses: " + ioe.getMessage());
         } catch (Exception e) {
             System.out.println("the following exception has occured trying to get a list of satuses " + e.getMessage());
+        }
+    }
+    // creates a capstone
+    public void createCapstone(){
+        try {
+            UserInfo user = (UserInfo) input.readObject();
+            CapstoneInfo capstone=(CapstoneInfo) input.readObject();
+            boolean success=dbInterface.CreateCapstone(user,capstone);
+            output.writeBoolean(success);
+        }
+        catch (IOException ioe) {
+            System.out.println("the following IOException has occured trying to create a capstone: " + ioe.getMessage());
+        } catch (Exception e) {
+            System.out.println("the following exception has occured trying to create a capstone:" + e.getMessage());
         }
     }
 

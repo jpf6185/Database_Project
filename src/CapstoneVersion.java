@@ -22,7 +22,9 @@ public class CapstoneVersion implements Serializable {
             Date=_Date;
             CapstoneID=Integer.parseInt(_CapstoneID);
         }
+        public CapstoneVersion(){
 
+        }
     public CapstoneVersion(String date, String capstoneID, String status, String title, String description, String filePath,String type,String statusCode) {
         Date = date;
         CapstoneID = Integer.parseInt(capstoneID);
